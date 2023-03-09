@@ -1,10 +1,12 @@
 {
-    "projects": [{
-        "name": "sample",
-        "path": "./sources/contract.tact",
-        "output": "./sources/output",
-        "options":{
-            
+    "projects": [
+        {
+            "name": "safe",
+            "path": "./sources/contract.tact",
+            "output": "./sources/output",
+            "options": {
+                "masterchain": true
+            }
         }
-    }]
+    ]
 }

@@ -1,0 +1,543 @@
+PROGRAM{
+  DECLPROC __tact_verify_address
+  DECLPROC __tact_load_address
+  DECLPROC __tact_store_address
+  DECLPROC __tact_not_null
+  DECLPROC __tact_context_get
+  DECLPROC __tact_store_bool
+  DECLPROC __tact_dict_set_slice_int
+  DECLPROC __tact_dict_get_slice_int
+  DECLPROC __gen_read_SafeDeployment
+  DECLPROC __gen_read_SafeOperationTransfer
+  DECLPROC __gen_write_SafeParameters
+  DECLPROC __gen_read_SafeParameters
+  DECLPROC __gen_read_SafeOperationUpdateParameters
+  DECLPROC __gen_SafeOperationTransfer_as_optional
+  DECLPROC __gen_SafeOperationUpdateParameters_as_optional
+  DECLPROC __gen_read_SafeOperation
+  DECLPROC __gen_read_SafeRequestOperation
+  DECLPROC __gen_write_Safe
+  DECLPROC __gen_read_Safe
+  DECLPROC __gen_SafeParameters_to_external
+  DECLPROC __gen_read_$init$Safe
+  DECLPROC __gen_constructor_SafeParameters$timeout_requestPrice
+  DECLPROC $__gen_Safe_init
+  DECLPROC __gen_load_Safe
+  DECLPROC __gen_store_Safe
+  DECLPROC $send
+  DECLPROC $__gen_Safe_parameters
+  68438 DECLMETHOD $__gen_get_parameters
+  DECLPROC $__gen_Safe_treshold
+  114048 DECLMETHOD $__gen_get_treshold
+  DECLPROC $__gen_Safe_seqno
+  85143 DECLMETHOD $__gen_get_seqno
+  DECLPROC $__gen_Safe_isOwner
+  89603 DECLMETHOD $__gen_get_isOwner
+  DECLPROC $__gen_Safe_owners
+  84885 DECLMETHOD $__gen_get_owners
+  DECLPROC __gen_constructor_SendParameters$to_value_mode
+  DECLPROC $__gen_Safe_receive_SafeDeployment
+  DECLPROC $__gen_Safe_receive_SafeRequestOperation
+  DECLPROC __gen_router_Safe
+  DECLPROC recv_internal
+  113617 DECLMETHOD supported_interfaces
+  DECLPROC get_abi_ipfs
+  DECLPROC lazy_deployment_completed
+  DECLGLOBVAR __tact_context
+  DECLGLOBVAR __tact_context_sender
+  DECLGLOBVAR __tact_context_sys
+  __tact_verify_address PROCINLINE:<{
+    DUP
+    SBITS
+    267 PUSHINT
+    EQUAL
+    136 THROWIFNOT
+    DUP
+    11 PLDU
+    DUP
+    10 PUSHPOW2
+    EQUAL
+    SWAP
+    1279 PUSHINT
+    EQUAL
+    OR
+    136 THROWIFNOT
+  }>
+  __tact_load_address PROCINLINE:<{
+    LDMSGADDR
+    SWAP
+    __tact_verify_address INLINECALLDICT
+  }>
+  __tact_store_address PROCINLINE:<{
+    __tact_verify_address INLINECALLDICT
+    STSLICER
+  }>
+  __tact_not_null PROCINLINE:<{
+    DUP
+    ISNULL
+    128 THROWIF
+  }>
+  __tact_context_get PROCINLINE:<{
+    __tact_context GETGLOB
+    4 UNTUPLE
+  }>
+  __tact_store_bool PROCINLINE:<{
+    SWAP
+    1 STI
+  }>
+  __tact_dict_set_slice_int PROC:<{
+    OVER
+    ISNULL
+    IFJMP:<{
+      2DROP
+      -ROT
+      DICTDEL
+      DROP
+    }>
+    NEWC
+    SWAP
+    STIX
+    s1 s3 s3 XCHG3
+    DICTSETB
+  }>
+  __tact_dict_get_slice_int PROCINLINE:<{
+    s1 s3 s3 XCHG3
+    DICTGET
+    NULLSWAPIFNOT
+    IF:<{
+      SWAP
+      LDIX
+      DROP
+    }>ELSE<{
+      2DROP
+      PUSHNULL
+    }>
+  }>
+  __gen_read_SafeDeployment PROCINLINE:<{
+    32 LDU
+    SWAP
+    1857061459 PUSHINT
+    EQUAL
+    129 THROWIFNOT
+    __tact_load_address INLINECALLDICT
+  }>
+  __gen_read_SafeOperationTransfer PROCINLINE:<{
+    __tact_load_address INLINECALLDICT
+    SWAP
+    LDGRAMS
+    8 LDU
+    1 LDI
+    SWAP
+    IF:<{
+      LDREF
+    }>ELSE<{
+      PUSHNULL
+      SWAP
+    }>
+    4 -ROLL
+  }>
+  __gen_write_SafeParameters PROCINLINE:<{
+    s0 s2 XCHG
+    32 STU
+    SWAP
+    STGRAMS
+  }>
+  __gen_read_SafeParameters PROCINLINE:<{
+    32 LDU
+    LDGRAMS
+    -ROT
+  }>
+  __gen_read_SafeOperationUpdateParameters PROCINLINE:<{
+    __gen_read_SafeParameters INLINECALLDICT
+  }>
+  __gen_SafeOperationTransfer_as_optional PROCINLINE:<{
+    4 TUPLE
+  }>
+  __gen_SafeOperationUpdateParameters_as_optional PROCINLINE:<{
+    2 TUPLE
+  }>
+  __gen_read_SafeOperation PROCINLINE:<{
+    1 LDI
+    SWAP
+    IF:<{
+      __gen_read_SafeOperationTransfer INLINECALLDICT
+      __gen_SafeOperationTransfer_as_optional INLINECALLDICT
+    }>ELSE<{
+      PUSHNULL
+    }>
+    SWAP
+    1 LDI
+    SWAP
+    IF:<{
+      __gen_read_SafeOperationUpdateParameters INLINECALLDICT
+      __gen_SafeOperationUpdateParameters_as_optional INLINECALLDICT
+    }>ELSE<{
+      PUSHNULL
+    }>
+    s1 s2 XCHG
+  }>
+  __gen_read_SafeRequestOperation PROCINLINE:<{
+    32 LDU
+    SWAP
+    2724662621 PUSHINT
+    EQUAL
+    129 THROWIFNOT
+    __gen_read_SafeOperation INLINECALLDICT
+  }>
+  __gen_write_Safe PROCINLINE:<{
+    s5 s6 XCHG2
+    64 STU
+    s1 s3 XCHG
+    STDICT
+    257 PUSHINT
+    STIX
+    257 PUSHINT
+    STIX
+    s0 s2 XCHG
+    __gen_write_SafeParameters INLINECALLDICT
+  }>
+  __gen_read_Safe PROCINLINE:<{
+    64 LDU
+    LDDICT
+    257 PUSHINT
+    LDIX
+    257 PUSHINT
+    LDIX
+    __gen_read_SafeParameters INLINECALLDICT
+    s2 s6 XCHG
+    s2 s5 XCHG
+    s2 s4 XCHG
+    s2 s3 XCHG
+  }>
+  __gen_SafeParameters_to_external PROCINLINE:<{
+  }>
+  __gen_read_$init$Safe PROCINLINE:<{
+    __tact_load_address INLINECALLDICT
+    SWAP
+    257 PUSHINT
+    LDIX
+    -ROT
+  }>
+  __gen_constructor_SafeParameters$timeout_requestPrice PROCINLINE:<{
+  }>
+  $__gen_Safe_init PROCREF:<{
+    DROP
+    0 PUSHINT
+    PUSHNULL
+    267 PUSHINT
+    ROT
+    s0 s3 XCHG
+    TRUE
+    1 PUSHINT
+    __tact_dict_set_slice_int CALLDICT
+    1 PUSHINT
+    DUP
+    86400 PUSHINT
+    1000000000 PUSHINT
+    __gen_constructor_SafeParameters$timeout_requestPrice INLINECALLDICT
+  }>
+  __gen_load_Safe PROCINLINE:<{
+    c4 PUSH
+    CTOS
+    LDREF
+    SWAP
+    __tact_context_sys SETGLOB
+    1 LDI
+    SWAP
+    IF:<{
+      __gen_read_Safe INLINECALLDICT
+      1 6 BLKDROP2
+    }>ELSE<{
+      __gen_read_$init$Safe INLINECALLDICT
+      s0 s2 XCHG
+      ENDS
+      SWAP
+      $__gen_Safe_init INLINECALLDICT
+    }>
+  }>
+  __gen_store_Safe PROCINLINE:<{
+    NEWC
+    __tact_context_sys GETGLOB
+    SWAP
+    STREF
+    TRUE
+    SWAP
+    1 STI
+    6 -ROLL
+    __gen_write_Safe INLINECALLDICT
+    ENDC
+    c4 POP
+  }>
+  $send PROCREF:<{
+    NEWC
+    1 PUSHINT
+    SWAP
+    2 STI
+    s0 s7 XCHG2
+    __tact_store_bool INLINECALLDICT
+    0 PUSHINT
+    SWAP
+    3 STI
+    s0 s5 XCHG2
+    __tact_store_address INLINECALLDICT
+    s0 s3 XCHG2
+    STGRAMS
+    0 PUSHINT
+    SWAP
+    105 STI
+    s3 PUSH
+    ISNULL
+    NOT
+    s5 PUSH
+    ISNULL
+    NOT
+    OR
+    IF:<{
+      TRUE
+      __tact_store_bool INLINECALLDICT
+      NEWC
+      FALSE
+      __tact_store_bool INLINECALLDICT
+      FALSE
+      __tact_store_bool INLINECALLDICT
+      s4 PUSH
+      ISNULL
+      NOT
+      IF:<{
+        TRUE
+        __tact_store_bool INLINECALLDICT
+        s0 s4 XCHG
+        __tact_not_null INLINECALLDICT
+        s0 s4 XCHG2
+        STREF
+      }>ELSE<{
+        s4 POP
+        s0 s3 XCHG
+        FALSE
+        __tact_store_bool INLINECALLDICT
+      }>
+      s4 PUSH
+      ISNULL
+      NOT
+      IF:<{
+        TRUE
+        __tact_store_bool INLINECALLDICT
+        s0 s4 XCHG
+        __tact_not_null INLINECALLDICT
+        s0 s4 XCHG2
+        STREF
+      }>ELSE<{
+        s4 POP
+        s0 s3 XCHG
+        FALSE
+        __tact_store_bool INLINECALLDICT
+      }>
+      FALSE
+      __tact_store_bool INLINECALLDICT
+      s0 s2 XCHG
+      TRUE
+      __tact_store_bool INLINECALLDICT
+      s0 s2 XCHG
+      ENDC
+      ROT
+      STREF
+    }>ELSE<{
+      s3 POP
+      s3 POP
+      SWAP
+      FALSE
+      __tact_store_bool INLINECALLDICT
+    }>
+    OVER
+    ISNULL
+    NOT
+    IF:<{
+      TRUE
+      __tact_store_bool INLINECALLDICT
+      SWAP
+      __tact_not_null INLINECALLDICT
+      SWAP
+      STREF
+    }>ELSE<{
+      NIP
+      FALSE
+      __tact_store_bool INLINECALLDICT
+    }>
+    ENDC
+    SWAP
+    SENDRAWMSG
+  }>
+  $__gen_Safe_parameters PROCREF:<{
+    4 2 BLKDROP2
+  }>
+  $__gen_get_parameters PROC:<{
+    __gen_load_Safe INLINECALLDICT
+    $__gen_Safe_parameters INLINECALLDICT
+    __gen_SafeParameters_to_external INLINECALLDICT
+  }>
+  $__gen_Safe_treshold PROCREF:<{
+    s2 s5 XCHG
+    5 BLKDROP
+  }>
+  $__gen_get_treshold PROC:<{
+    __gen_load_Safe INLINECALLDICT
+    $__gen_Safe_treshold INLINECALLDICT
+  }>
+  $__gen_Safe_seqno PROCREF:<{
+    5 BLKDROP
+  }>
+  $__gen_get_seqno PROC:<{
+    __gen_load_Safe INLINECALLDICT
+    $__gen_Safe_seqno INLINECALLDICT
+  }>
+  $__gen_Safe_isOwner PROCREF:<{
+    s6 POP
+    4 BLKDROP
+    267 PUSHINT
+    ROT
+    1 PUSHINT
+    __tact_dict_get_slice_int INLINECALLDICT
+    -1 EQINT
+  }>
+  $__gen_get_isOwner PROC:<{
+    __tact_verify_address INLINECALLDICT
+    __gen_load_Safe INLINECALLDICT
+    6 ROLL
+    $__gen_Safe_isOwner INLINECALLDICT
+  }>
+  $__gen_Safe_owners PROCREF:<{
+    s4 s5 XCHG
+    5 BLKDROP
+  }>
+  $__gen_get_owners PROC:<{
+    __gen_load_Safe INLINECALLDICT
+    $__gen_Safe_owners INLINECALLDICT
+  }>
+  __gen_constructor_SendParameters$to_value_mode PROCINLINE:<{
+    TRUE
+    3 -ROLL
+    PUSHNULL
+    PUSHNULL
+    PUSHNULL
+  }>
+  $__gen_Safe_receive_SafeDeployment PROCINLINE:<{
+    0 PUSHINT
+    64 PUSHINT
+    __gen_constructor_SendParameters$to_value_mode INLINECALLDICT
+    $send INLINECALLDICT
+  }>
+  $__gen_Safe_receive_SafeRequestOperation PROCINLINE:<{
+    __tact_context_get INLINECALLDICT
+    DROP
+    s2 POP
+    46307 PUSHINT
+    267 PUSHINT
+    s10 s0 s2 PUXC2
+    1 PUSHINT
+    __tact_dict_get_slice_int INLINECALLDICT
+    -1 EQINT
+    THROWANYIFNOT
+    5165 PUSHINT
+    s1 s4 XCPU
+    GEQ
+    THROWANYIFNOT
+    0 PUSHINT
+    s0 s2 XCHG
+    ISNULL
+    NOT
+    IF:<{
+      1 PUSHINT
+      s2 POP
+    }>
+    ISNULL
+    NOT
+    IF:<{
+      INC
+    }>
+    44757 PUSHINT
+    SWAP
+    1 NEQINT
+    THROWANYIFNOT
+  }>
+  __gen_router_Safe PROCREF:<{
+    0 PUSHINT
+    OVER
+    SBITS
+    31 GTINT
+    IF:<{
+      DROP
+      DUP
+      32 PLDU
+    }>
+    s0 s2 XCHG
+    IFJMP:<{
+      2DROP
+      TRUE
+    }>
+    OVER
+    1857061459 PUSHINT
+    EQUAL
+    IFJMP:<{
+      NIP
+      __gen_read_SafeDeployment INLINECALLDICT
+      NIP
+      $__gen_Safe_receive_SafeDeployment INLINECALLDICT
+      TRUE
+    }>
+    SWAP
+    2724662621 PUSHINT
+    EQUAL
+    IFJMP:<{
+      __gen_read_SafeRequestOperation INLINECALLDICT
+      1 2 BLKDROP2
+      $__gen_Safe_receive_SafeRequestOperation INLINECALLDICT
+      TRUE
+    }>
+    DROP
+    FALSE
+  }>
+  recv_internal PROC:<{
+    SWAP
+    CTOS
+    4 LDU
+    SWAP
+    1 PUSHINT
+    AND
+    1 EQINT
+    IF:<{
+      TRUE
+    }>ELSE<{
+      FALSE
+    }>
+    SWAP
+    LDMSGADDR
+    SWAP
+    __tact_verify_address INLINECALLDICT
+    s0 s4 s2 PUXCPU
+    s0 s3 XCHG
+    4 TUPLE
+    __tact_context SETGLOB
+    s0 s2 XCHG
+    __tact_context_sender SETGLOB
+    __gen_load_Safe INLINECALLDICT
+    2 6 BLKSWAP
+    __gen_router_Safe INLINECALLDICT
+    DROP
+    __gen_store_Safe INLINECALLDICT
+  }>
+  supported_interfaces PROC:<{
+    123515602279859691144772641439386770278 PUSHINT
+    209801025412363888721030803524359905849 PUSHINT
+    42980537499636128163026532310500881091 PUSHINT
+    289074767680806556846472852687671582181 PUSHINT
+  }>
+  get_abi_ipfs PROC:<{
+    x{697066733a2f2f516d613438686a63455546715578517743646e324e45316638354b5445524b3868576450736f455741577a686863} PUSHSLICE
+  }>
+  lazy_deployment_completed PROC:<{
+    c4 PUSH
+    CTOS
+    1 LDI
+    SWAP
+  }>
+}END>c

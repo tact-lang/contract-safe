@@ -1,38 +1,47 @@
 import "@stdlib/deploy";
+import "@stdlib/ownable";
+import "./safe/safe.tact";
 
-message Add {
-    amount: Int as uint32;
-}
-
-contract SampleTactContract with Deployable {
+contract SafeDeployer with OwnableTransferable, Deployable {
 
     owner: Address;
-    counter: Int as uint32;
+    fee: Int as coins;
+    deployValue: Int as coins;
+    counter: Int as uint64; // Big enought
 
-    init(owner: Address) {
+    init(owner: Address, fee: Int, deployValue: Int) {
         self.owner = owner;
+        self.fee = fee;
+        self.deployValue = deployValue;
         self.counter = 0;
     }
 
-    fun add(v: Int) {
-        
-        // Check sender
+    receive("Deploy new Safe") {
+
+        // Check if the value is enough
         let ctx: Context = context();
-        require(ctx.sender == self.owner, "Invalid sender");
-        
-        // Update counter
-        self.counter = (self.counter + v);
-    }
+        require(ctx.value >= self.fee + self.deployValue, "Not enough value to deploy a Safe");
 
-    receive(msg: Add) {
-        self.add(msg.amount);
-    }
+        // Allocate counter
+        let counter: Int = self.counter;
+        self.counter = self.counter + 1;
 
-    receive("increment") {
-        self.add(1);
-    }
+        // Deploy Safe
+        let init: StateInit = initOf Safe(ctx.sender, counter);
+        let safeAddress: Address = contractAddress(init);
+        send(SendParameters{
+            to: safeAddress,
+            value: self.deployValue,
+            body: SafeDeployment{
+                remaining: self.owner
+            }.toCell()
+        });
 
-    get fun counter(): Int {
-        return self.counter;
+        // Send fee to owner
+        send(SendParameters{
+            to: self.owner,
+            value: 0,
+            mode: SendRemainingValue + SendIgnoreErrors
+        });
     }
 }
