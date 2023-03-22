@@ -1,43 +1,81 @@
-#pragma version =0.4.2;
-#pragma allow-post-modification;
-#pragma compute-asm-ltr;
+#include "safe_Signer.headers.fc";
+#include "safe_Signer.stdlib.fc";
+#include "safe_Signer.storage.fc";
 
-slice __tact_verify_address(slice address) inline {
-    throw_unless(136, address.slice_bits() == 267);
-    var h = address.preload_uint(11);
-    throw_unless(136, (h == 1024) | (h == 1279));
+;;
+;; Contract Signer functions
+;;
 
-    return address;
+(slice, int, int, int, cell, (tuple, tuple), int) $Signer$_contract_init(slice $safe, cell $signers, int $treshold, int $timeout, (tuple, tuple) $operation) impure inline_ref {
+    var (($operation'transfer, $operation'parameters)) = $operation;
+    var (($self'safe, $self'treshold, $self'weight, $self'timeout, $self'signers, ($self'operation'transfer, $self'operation'parameters), $self'completed)) = (null(), null(), null(), null(), null(), null(), null());
+    throw_unless(36682, __tact_address_eq(__tact_context_get_sender(), $safe));
+    $self'safe = $safe;
+    $self'treshold = $treshold;
+    $self'weight = 0;
+    $self'signers = $signers;
+    ($self'operation'transfer, $self'operation'parameters) = ($operation'transfer, $operation'parameters);
+    $self'timeout = $timeout;
+    $self'completed = false;
+    return ($self'safe, $self'treshold, $self'weight, $self'timeout, $self'signers, ($self'operation'transfer, $self'operation'parameters), $self'completed);
 }
 
-global (int, slice, int, slice) __tact_context;
-global slice __tact_context_sender;
-global cell __tact_context_sys;
-
-tuple $__gen_Signer_init() impure inline_ref {
-    tuple $self = null();
-    return $self;
+(tuple, tuple) $Signer$_fun_operation((slice, int, int, int, cell, (tuple, tuple), int) $self) impure inline_ref {
+    var (($self'safe, $self'treshold, $self'weight, $self'timeout, $self'signers, ($self'operation'transfer, $self'operation'parameters), $self'completed)) = $self;
+    return ($self'operation'transfer, $self'operation'parameters);
 }
 
-tuple __gen_load_Signer() impure inline {
-    slice $sc = get_data().begin_parse();
-    __tact_context_sys = $sc~load_ref();
-    int $loaded = $sc~load_int(1);
-    if ($loaded) {
-        return null();
-    } else {
-        return $__gen_Signer_init();
+;;
+;; Receivers of a Contract Signer
+;;
+
+((slice, int, int, int, cell, (tuple, tuple), int), ()) $Signer$_receive_text_22aee6d0a6dc146577277dd58d06ae3090a3cdd3d8a88561184208ae5f6eb039((slice, int, int, int, cell, (tuple, tuple), int) $self) impure inline {
+    var ($self'safe, $self'treshold, $self'weight, $self'timeout, $self'signers, ($self'operation'transfer, $self'operation'parameters), $self'completed) = $self;
+    throw_unless(4755, ($self'timeout > now()));
+    throw_unless(40810, (~ $self'completed));
+    slice $sender = __tact_context_get_sender();
+    int $weight = __tact_not_null(__tact_dict_get_slice_int($self'signers, 267, $sender, 1));
+    $self'signers~__tact_dict_set_slice_int(267, $sender, null(), 1);
+    $self'weight = ($self'weight + 1);
+    if (($self'weight >= $self'treshold)) {
+        $self'completed = true;
+        $global_send($SendParameters$_constructor_value_to_mode_bounce_body(0, $self'safe, (128 + 2), false, $OperationSigned$_store_cell($OperationSigned$_constructor_operation(($self'operation'transfer, $self'operation'parameters)))));
     }
+    return (($self'safe, $self'treshold, $self'weight, $self'timeout, $self'signers, ($self'operation'transfer, $self'operation'parameters), $self'completed), ());
 }
 
-() __gen_store_Signer(tuple v) impure inline {
-    builder b = begin_cell();
-    b = b.store_ref(__tact_context_sys);
-    b = b.store_int(true, 1);
-    set_data(b.end_cell());
+;;
+;; Get methods of a Contract Signer
+;;
+
+_ %operation() method_id(97427) {
+    var self = $Signer$_contract_load();
+    var res = $Signer$_fun_operation(self);
+    return $SafeOperation$_to_external(res);
 }
 
-(tuple, int) __gen_router_Signer(tuple self, int msg_bounced, slice in_msg) impure inline_ref {
+_ supported_interfaces() method_id {
+    return (
+        "org.ton.introspection.v0"H >> 128,
+        "org.ton.abi.ipfs.v0"H >> 128,
+        "org.ton.deploy.lazy.v0"H >> 128,
+        "org.ton.chain.any.v0"H >> 128
+    );
+}
+
+_ get_abi_ipfs() {
+    return "ipfs://QmUE4jTAvtFeJtV9Msh8Hr1GhptcAAgPLanh3Dh4DaSYxs";
+}
+
+_ lazy_deployment_completed() {
+    return get_data().begin_parse().load_int(1);
+}
+
+;;
+;; Routing of a Contract Signer
+;;
+
+((slice, int, int, int, cell, (tuple, tuple), int), int) $Signer$_contract_router((slice, int, int, int, cell, (tuple, tuple), int) self, int msg_bounced, slice in_msg) impure inline_ref {
     
     ;; Parse incoming message
     int op = 0;
@@ -48,6 +86,17 @@ tuple __gen_load_Signer() impure inline {
     ;; Handle bounced messages
     if (msg_bounced) {
         return (self, true);
+    }
+    
+    ;; Text Receivers
+    if (op == 0) {
+        var text_op = slice_hash(in_msg);
+        
+        ;; Receive "YES" message
+        if (text_op == 0x22aee6d0a6dc146577277dd58d06ae3090a3cdd3d8a88561184208ae5f6eb039) {
+            self~$Signer$_receive_text_22aee6d0a6dc146577277dd58d06ae3090a3cdd3d8a88561184208ae5f6eb039();
+            return (self, true);
+        }
     }
     
     return (self, false);
@@ -64,31 +113,14 @@ tuple __gen_load_Signer() impure inline {
     __tact_context_sender = msg_sender_addr;
     
     ;; Load contract data
-    var self = __gen_load_Signer();
+    var self = $Signer$_contract_load();
     
     ;; Handle operation
-    int handled = self~__gen_router_Signer(msg_bounced, in_msg);
+    int handled = self~$Signer$_contract_router(msg_bounced, in_msg);
     
     ;; Throw if not handled
     throw_unless(handled, 130);
     
     ;; Persist state
-    __gen_store_Signer(self);
-}
-
-_ supported_interfaces() method_id {
-    return (
-        "org.ton.introspection.v0"H >> 128,
-        "org.ton.abi.ipfs.v0"H >> 128,
-        "org.ton.deploy.lazy.v0"H >> 128,
-        "org.ton.chain.any.v0"H >> 128
-    );
-}
-
-_ get_abi_ipfs() {
-    return "ipfs://QmQx7u2guRkuzu9o3NHsWKqZyaKN5K57myYyTHHDDF4Ewh";
-}
-
-_ lazy_deployment_completed() {
-    return get_data().begin_parse().load_int(1);
+    $Signer$_contract_store(self);
 }

@@ -592,23 +592,77 @@ function dictValueParserSafeOperationUpdateParameters(): DictionaryValue<SafeOpe
     }
 }
 
+export type OperationSigned = {
+    $$type: 'OperationSigned';
+    operation: SafeOperation;
+}
+
+export function storeOperationSigned(src: OperationSigned) {
+    return (builder: Builder) => {
+        let b_0 = builder;
+        b_0.storeUint(3261497383, 32);
+        b_0.store(storeSafeOperation(src.operation));
+    };
+}
+
+export function loadOperationSigned(slice: Slice) {
+    let sc_0 = slice;
+    if (sc_0.loadUint(32) !== 3261497383) { throw Error('Invalid prefix'); }
+    let _operation = loadSafeOperation(sc_0);
+    return { $$type: 'OperationSigned' as const, operation: _operation };
+}
+
+function loadTupleOperationSigned(source: TupleReader) {
+    const _operation = loadTupleSafeOperation(source.readTuple());
+    return { $$type: 'OperationSigned' as const, operation: _operation };
+}
+
+function storeTupleOperationSigned(source: OperationSigned) {
+    let builder = new TupleBuilder();
+    builder.writeTuple(storeTupleSafeOperation(source.operation));
+    return builder.build();
+}
+
+function dictValueParserOperationSigned(): DictionaryValue<OperationSigned> {
+    return {
+        serialize: (src, buidler) => {
+            buidler.storeRef(beginCell().store(storeOperationSigned(src)).endCell());
+        },
+        parse: (src) => {
+            return loadOperationSigned(src.loadRef().beginParse());
+        }
+    }
+}
+
  type Signer_init_args = {
     $$type: 'Signer_init_args';
+    safe: Address;
+    signers: Dictionary<Address, boolean>;
+    treshold: bigint;
+    timeout: bigint;
+    operation: SafeOperation;
 }
 
 function initSigner_init_args(src: Signer_init_args) {
     return (builder: Builder) => {
         let b_0 = builder;
+        b_0.storeAddress(src.safe);
+        b_0.storeDict(src.signers, Dictionary.Keys.Address(), Dictionary.Values.Bool());
+        b_0.storeInt(src.treshold, 257);
+        b_0.storeInt(src.timeout, 257);
+        let b_1 = new Builder();
+        b_1.store(storeSafeOperation(src.operation));
+        b_0.storeRef(b_1.endCell());
     };
 }
 
-async function Signer_init() {
-    const __code = Cell.fromBase64('te6ccgEBBgEAzgABFP8A9KQT9LzyyAsBAgFiAgMCttAB0NMDAXGwwAGRf5Fw4gH6QAEg10mBAQu68uCIINcLCiCDCboBgQT/urHy4IhUUFMDbwT4YQL4Yu1E0NQB+GPSADCRbY6C2zziWds8MDDI+EMBzH8BygDJ7VQEBQCVoXejBOC52Hq6WVz2PQnYc6yVCjbNBOE7rGpaVsj5ZkWnXlv74sRzBOBAq4A3AM7HKZywdVyOS2WHBOGy84zdGHN4T1ltQmJrcbvLAAJtABYg10kxwh8wkX/gcA==');
-    const __system = Cell.fromBase64('te6cckEBCAEA2AABAcABAQWgWpcCART/APSkE/S88sgLAwIBYgUEAJWhd6ME4LnYerpZXPY9CdhzrJUKNs0E4TusalpWyPlmRadeW/vixHME4ECrgDcAzscpnLB1XI5LZYcE4bLzjN0Yc3hPWW1CYmtxu8sCttAB0NMDAXGwwAGRf5Fw4gH6QAEg10mBAQu68uCIINcLCiCDCboBgQT/urHy4IhUUFMDbwT4YQL4Yu1E0NQB+GPSADCRbY6C2zziWds8MDDI+EMBzH8BygDJ7VQHBgAWINdJMcIfMJF/4HAAAm3GtrQ9');
+async function Signer_init(safe: Address, signers: Dictionary<Address, boolean>, treshold: bigint, timeout: bigint, operation: SafeOperation) {
+    const __code = Cell.fromBase64('te6ccgECMwEABGcAART/APSkE/S88sgLAQIBYgIDAgLKBAUCASAvMAIBIAYHAgJxKywCASAICQIBIBARAs/YDoaYGAuNhgAMi/yLhxAP0gAJBrpMCAhd15cEQQa4WFEEGE3QDAgn/dWPlwRCooKYG3gnwwgXwxdqJoagD8MekAAMp4ErYMR0R4E4NoqoJtnnEqi+2eGGR8IYDmP4DlACq4eBNk9qpDEKAgEgDg8BjO2i7ftwIddJwh+VMCDXCx/eApJbf+ABwACOp/kBgvAirubQptwUZXcnfdWNBq4wkKPN09iohWEYQgiuX26wObrjApEw4nALAbiBEpMl+CO88vSCAJ9qIbPy9PhCFIEBCwFtcSFulVtZ9FkwmMgBzwBBM/RB4gWkUwa+jqMzf3CBAIJwU1TIWYIQwmaAJ1ADyx8C8A/JK1UgREBtbds8A94FA3/bMQwB9shxAcoBUAcBygBwAcoCUAXwCc8WUAP6AnABymgjbrMlbrOxjkx/AcoAyHABygBwAcoAJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4iRus51/AcoABCBu8tCAUATMljQDcAHKAOJwAcoAAn8BygACyVjMlzMzAXABygDiIQ0ANG6znH8BygABIG7y0IABzJUxcAHKAOLJAfsAADdkg10mBAQu68uCIINcLCiCDCboBgQT/urHy4IiAFHxC3Wc0/qAHlAAD4CfgKSrgZAWUAcRC3Wcy/gOUAAPgM+A1KOBllAHFAIBIBITAgEgHR4CASAUFQIBIBgZAAVW8EgCASAWFwArPpAAfAJAfoA0wfSAAGR1JJtAeJVMIAAPCBu8tCAbySACASAaGwIBIBwqADcUEPwCc8WAfoCEssHIW6zlX8BygDMlHAyygDigACEIG6SMG2ZIG7y0IBvJPAW4oAAFG8EgAgEgHyACASAlJgIBICEiAgEgIyQABTwHYAAPCBu8tCAbyKAABTwHoAAhCBukjBtmSBu8tCAbyLwHOKACASAnKAIBICkqAAk8B9vAYAALNMf+gBZgAA0AssfAfoCgAAUbwKAAe1+kAB8AkBgQEB1wCBAQHXANQB0IEBAdcA9ATSAAGU8BLwEZFt4gHSAAGU8BjwF5Ft4hIC0gAwEFgQVxBWEoAgEgLS4AlxQh/AJzxYVgQEBzwATgQEBzwAByIEBAc8AEvQAQAQhbrOaf1ADygAB8BPwFJVwMgLKAOIhbrOZfwHKAAHwGfAalHAyygDiygDJAcyAAbT6QAHwCQH0BIEBAdcAgQEB1wDUAdDSAAGU8BLwEZFt4gHSAAGU8BjwF5Ft4hIyECYQJRAkQwCACSb/kn2omhqAPwx6QAAyngStgxHRHgTg2iqgm2ecW2eAPgKgPgNwxMgCVvd6ME4LnYerpZXPY9CdhzrJUKNs0E4TusalpWyPlmRadeW/vixHME4ECrgDcAzscpnLB1XI5LZYcE4bLzjN0Yc3hPWW1CYmtxu8sACCCAI9K+EInxwXy9HAERVVwAAYwbFI=');
+    const __system = Cell.fromBase64('te6cckECNQEABHEAAQHAAQEFoFqXAgEU/wD0pBP0vPLICwMCAWIIBAIBIAYFAJW93owTgudh6ullc9j0J2HOslQo2zQThO6xqWlbI+WZFp15b++LEcwTgQKuANwDOxymcsHVcjktlhwThsvOM3RhzeE9ZbUJia3G7ywCSb/kn2omhqAPwx6QAAyngStgxHRHgTg2iqgm2ecW2eAPgKgPgNw0BwAGMGxSAgLKDgkCAnENCgIBIAwLAG0+kAB8AkB9ASBAQHXAIEBAdcA1AHQ0gABlPAS8BGRbeIB0gABlPAY8BeRbeISMhAmECUQJEMAgAJcUIfwCc8WFYEBAc8AE4EBAc8AAciBAQHPABL0AEAEIW6zmn9QA8oAAfAT8BSVcDICygDiIW6zmX8BygAB8BnwGpRwMsoA4soAyQHMgAHtfpAAfAJAYEBAdcAgQEB1wDUAdCBAQHXAPQE0gABlPAS8BGRbeIB0gABlPAY8BeRbeISAtIAMBBYEFcQVhKAIBICsPAgEgHhACASAXEQIBIBQSAgEgEyEADQCyx8B+gKACASAWFQALNMf+gBZgAAk8B9vAYAIBIBsYAgEgGhkAIQgbpIwbZkgbvLQgG8i8BzigAAU8B6ACASAdHAAPCBu8tCAbyKAABTwHYAIBICYfAgEgIyACASAiIQAFG8CgAAUbwSACASAlJAAhCBukjBtmSBu8tCAbyTwFuKAANxQQ/AJzxYB+gISywchbrOVfwHKAMyUcDLKAOKACASAqJwIBICkoAA8IG7y0IBvJIAArPpAAfAJAfoA0wfSAAGR1JJtAeJVMIAAFVvBIAgEgLywCASAuLQBR8Qt1nNP6gB5QAA+An4Ckq4GQFlAHEQt1nMv4DlAAD4DPgNSjgZZQBxQAN2SDXSYEBC7ry4Igg1wsKIIMJugGBBP+6sfLgiICz9gOhpgYC42GAAyL/IuHEA/SAAkGukwICF3XlwRBBrhYUQQYTdAMCCf91Y+XBEKigpgbeCfDCBfDF2omhqAPwx6QAAyngStgxHRHgTg2iqgm2ecSqL7Z4YZHwhgOY/gOUAKrh4E2T2qkNDABjO2i7ftwIddJwh+VMCDXCx/eApJbf+ABwACOp/kBgvAirubQptwUZXcnfdWNBq4wkKPN09iohWEYQgiuX26wObrjApEw4nAxAbiBEpMl+CO88vSCAJ9qIbPy9PhCFIEBCwFtcSFulVtZ9FkwmMgBzwBBM/RB4gWkUwa+jqMzf3CBAIJwU1TIWYIQwmaAJ1ADyx8C8A/JK1UgREBtbds8A94FA3/bMTIB9shxAcoBUAcBygBwAcoCUAXwCc8WUAP6AnABymgjbrMlbrOxjkx/AcoAyHABygBwAcoAJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4iRus51/AcoABCBu8tCAUATMljQDcAHKAOJwAcoAAn8BygACyVjMlzMzAXABygDiITMANG6znH8BygABIG7y0IABzJUxcAHKAOLJAfsAACCCAI9K+EInxwXy9HAERVVwg0e/BA==');
     let builder = beginCell();
     builder.storeRef(__system);
     builder.storeUint(0, 1);
-    initSigner_init_args({ $$type: 'Signer_init_args' })(builder);
+    initSigner_init_args({ $$type: 'Signer_init_args', safe, signers, treshold, timeout, operation })(builder);
     const __data = builder.endCell();
     return { code: __code, data: __data };
 }
@@ -638,20 +692,23 @@ const Signer_errors: { [key: number]: { message: string } } = {
     135: { message: `Code of a contract was not found` },
     136: { message: `Invalid address` },
     137: { message: `Masterchain support is not enabled for this contract` },
+    4755: { message: `Timeout` },
     5165: { message: `Not enough value` },
     25849: { message: `Not enough value to deploy a Safe` },
+    36682: { message: `Sender is not safe` },
+    40810: { message: `Completed` },
     44757: { message: `Exactly one operation must be specified` },
     46307: { message: `Not a member` },
 }
 
 export class Signer implements Contract {
     
-    static async init() {
-        return await Signer_init();
+    static async init(safe: Address, signers: Dictionary<Address, boolean>, treshold: bigint, timeout: bigint, operation: SafeOperation) {
+        return await Signer_init(safe, signers, treshold, timeout, operation);
     }
     
-    static async fromInit() {
-        const init = await Signer_init();
+    static async fromInit(safe: Address, signers: Dictionary<Address, boolean>, treshold: bigint, timeout: bigint, operation: SafeOperation) {
+        const init = await Signer_init(safe, signers, treshold, timeout, operation);
         const address = contractAddress(0, init);
         return new Signer(address, init);
     }
@@ -669,6 +726,25 @@ export class Signer implements Contract {
     private constructor(address: Address, init?: { code: Cell, data: Cell }) {
         this.address = address;
         this.init = init;
+    }
+    
+    async send(provider: ContractProvider, via: Sender, args: { value: bigint, bounce?: boolean| null | undefined }, message: 'YES') {
+        
+        let body: Cell | null = null;
+        if (message === 'YES') {
+            body = beginCell().storeUint(0, 32).storeStringTail(message).endCell();
+        }
+        if (body === null) { throw new Error('Invalid message type'); }
+        
+        await provider.internal(via, { ...args, body: body });
+        
+    }
+    
+    async getOperation(provider: ContractProvider) {
+        let builder = new TupleBuilder();
+        let source = (await provider.get('operation', builder.build())).stack;
+        const result = loadTupleSafeOperation(source);
+        return result;
     }
     
 }

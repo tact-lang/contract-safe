@@ -1,3 +1,4 @@
+import "@stdlib/deploy";
 import "./operations.tact";
 import "./signer.tact";
 
@@ -12,7 +13,7 @@ message SafeRequestOperation {
     operation: SafeOperation;
 }
 
-contract Safe {
+contract Safe with Deployable {
     seqno: Int as uint64; // Impossible to overflow
     owners: map<Address, Bool>;
     ownersCount: Int;

@@ -1,0 +1,116 @@
+;; __tact_address_eq
+int __tact_address_eq(slice a, slice b) inline;
+
+;; __tact_context_get_sender
+slice __tact_context_get_sender() inline;
+
+;; __tact_dict_get_slice_int
+int __tact_dict_get_slice_int(cell d, int kl, slice k, int vl) inline;
+
+;; __tact_dict_set_slice_int
+(cell, ()) __tact_dict_set_slice_int(cell d, int kl, slice k, int v, int vl) inline;
+
+;; __tact_load_address
+(slice, slice) __tact_load_address(slice cs) inline;
+
+;; __tact_not_null
+forall X -> X __tact_not_null(X x) inline;
+
+;; __tact_store_address
+builder __tact_store_address(builder b, slice address) inline;
+
+;; __tact_store_bool
+builder __tact_store_bool(builder b, int v) inline;
+
+;; __tact_verify_address
+slice __tact_verify_address(slice address) inline;
+
+;; $global_send
+() $global_send((int, slice, int, int, cell, cell, cell) $params) impure inline_ref;
+
+;; $OperationSigned$_constructor_operation
+(((tuple, tuple))) $OperationSigned$_constructor_operation((tuple, tuple) operation) inline;
+
+;; $OperationSigned$_store
+builder $OperationSigned$_store(builder build_0, ((tuple, tuple)) v) inline;
+
+;; $OperationSigned$_store_cell
+cell $OperationSigned$_store_cell(((tuple, tuple)) v) inline;
+
+;; $SafeOperation$_load
+(slice, ((tuple, tuple))) $SafeOperation$_load(slice sc_0) inline;
+
+;; $SafeOperation$_store
+builder $SafeOperation$_store(builder build_0, (tuple, tuple) v) inline;
+
+;; $SafeOperation$_to_external
+(tuple, tuple) $SafeOperation$_to_external(((tuple, tuple)) v) inline;
+
+;; $SafeOperationTransfer$_as_optional
+tuple $SafeOperationTransfer$_as_optional((slice, int, int, cell) v) inline;
+
+;; $SafeOperationTransfer$_load
+(slice, ((slice, int, int, cell))) $SafeOperationTransfer$_load(slice sc_0) inline;
+
+;; $SafeOperationTransfer$_not_null
+((slice, int, int, cell)) $SafeOperationTransfer$_not_null(tuple v) inline;
+
+;; $SafeOperationTransfer$_store
+builder $SafeOperationTransfer$_store(builder build_0, (slice, int, int, cell) v) inline;
+
+;; $SafeOperationTransfer$_to_opt_tuple
+tuple $SafeOperationTransfer$_to_opt_tuple(tuple v) inline;
+
+;; $SafeOperationTransfer$_to_tuple
+tuple $SafeOperationTransfer$_to_tuple(((slice, int, int, cell)) v) inline;
+
+;; $SafeOperationUpdateParameters$_as_optional
+tuple $SafeOperationUpdateParameters$_as_optional(((int, int)) v) inline;
+
+;; $SafeOperationUpdateParameters$_load
+(slice, (((int, int)))) $SafeOperationUpdateParameters$_load(slice sc_0) inline;
+
+;; $SafeOperationUpdateParameters$_not_null
+(((int, int))) $SafeOperationUpdateParameters$_not_null(tuple v) inline;
+
+;; $SafeOperationUpdateParameters$_store
+builder $SafeOperationUpdateParameters$_store(builder build_0, ((int, int)) v) inline;
+
+;; $SafeOperationUpdateParameters$_to_opt_tuple
+tuple $SafeOperationUpdateParameters$_to_opt_tuple(tuple v) inline;
+
+;; $SafeOperationUpdateParameters$_to_tuple
+tuple $SafeOperationUpdateParameters$_to_tuple((((int, int))) v) inline;
+
+;; $SafeParameters$_load
+(slice, ((int, int))) $SafeParameters$_load(slice sc_0) inline;
+
+;; $SafeParameters$_store
+builder $SafeParameters$_store(builder build_0, (int, int) v) inline;
+
+;; $SafeParameters$_to_tuple
+tuple $SafeParameters$_to_tuple(((int, int)) v) inline;
+
+;; $SendParameters$_constructor_value_to_mode_bounce_body
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_value_to_mode_bounce_body(int value, slice to, int mode, int bounce, cell body) inline;
+
+;; $Signer$_contract_init
+(slice, int, int, int, cell, (tuple, tuple), int) $Signer$_contract_init(slice $safe, cell $signers, int $treshold, int $timeout, (tuple, tuple) $operation) impure inline_ref;
+
+;; $Signer$_contract_load
+(slice, int, int, int, cell, (tuple, tuple), int) $Signer$_contract_load() impure inline;
+
+;; $Signer$_contract_store
+() $Signer$_contract_store((slice, int, int, int, cell, (tuple, tuple), int) v) impure inline;
+
+;; $Signer$_fun_operation
+(tuple, tuple) $Signer$_fun_operation((slice, int, int, int, cell, (tuple, tuple), int) $self) impure inline_ref;
+
+;; $Signer$_load
+(slice, ((slice, int, int, int, cell, (tuple, tuple), int))) $Signer$_load(slice sc_0) inline;
+
+;; $Signer$_store
+builder $Signer$_store(builder build_0, (slice, int, int, int, cell, (tuple, tuple), int) v) inline;
+
+;; $Signer$init$_load
+(slice, ((slice, cell, int, int, (tuple, tuple)))) $Signer$init$_load(slice sc_0) inline;

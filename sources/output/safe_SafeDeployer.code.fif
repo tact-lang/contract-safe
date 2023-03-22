@@ -1,92 +1,55 @@
 PROGRAM{
-  DECLPROC __tact_verify_address
-  DECLPROC __tact_load_address
-  DECLPROC __tact_store_address
-  DECLPROC __tact_create_address
+  DECLPROC __tact_address_eq
   DECLPROC __tact_compute_contract_address
-  DECLPROC __tact_not_null
   DECLPROC __tact_context_get
   DECLPROC __tact_context_get_sender
-  DECLPROC __tact_store_bool
-  DECLPROC __tact_address_eq
-  DECLPROC __tact_dict_set_code
+  DECLPROC __tact_create_address
   DECLPROC __tact_dict_get_code
-  DECLPROC __gen_read_Deploy
-  DECLPROC __gen_write_DeployOk
-  DECLPROC __gen_writecell_DeployOk
-  DECLPROC __gen_read_ChangeOwner
-  DECLPROC __gen_write_SafeDeployment
-  DECLPROC __gen_writecell_SafeDeployment
-  DECLPROC __gen_write_SafeDeployer
-  DECLPROC __gen_read_SafeDeployer
-  DECLPROC __gen_write_$init$Safe
-  DECLPROC __gen_read_$init$SafeDeployer
-  DECLPROC $__gen_SafeDeployer_init
-  DECLPROC __gen_load_SafeDeployer
-  DECLPROC __gen_store_SafeDeployer
-  DECLPROC $contractAddress
-  DECLPROC $send
-  DECLPROC __gen_constructor_SendParameters$bounce_to_value_mode_body
-  DECLPROC $reply
-  DECLPROC $__gen_Safe_init_child
-  DECLPROC __gen_constructor_SendParameters$to_value_mode
-  DECLPROC $__gen_SafeDeployer_requireOwner
-  DECLPROC $__gen_SafeDeployer_owner
-  83229 DECLMETHOD $__gen_get_owner
-  DECLPROC __gen_constructor_SendParameters$to_value_body
-  DECLPROC __gen_constructor_SafeDeployment$remaining
-  DECLPROC $__gen_SafeDeployer_receive_comment_2d51e7ccd78be57b2c0bfaab585f0f535337c1219afb5421dd1de4b81f300226
-  DECLPROC $__gen_SafeDeployer_receive_ChangeOwner
-  DECLPROC __gen_constructor_DeployOk$queryId
-  DECLPROC $__gen_SafeDeployer_receive_Deploy
-  DECLPROC __gen_router_SafeDeployer
-  DECLPROC recv_internal
+  DECLPROC __tact_dict_set_code
+  DECLPROC __tact_load_address
+  DECLPROC __tact_not_null
+  DECLPROC __tact_store_address
+  DECLPROC __tact_store_bool
+  DECLPROC __tact_verify_address
+  DECLPROC $ChangeOwner$_load
+  DECLPROC $Deploy$_load
+  DECLPROC $DeployOk$_constructor_queryId
+  DECLPROC $DeployOk$_store
+  DECLPROC $DeployOk$_store_cell
+  DECLPROC $global_contractAddress
+  DECLPROC $global_reply
+  DECLPROC $global_send
+  DECLPROC $Safe$_init_child
+  DECLPROC $Safe$init$_store
+  DECLPROC $SafeDeployer$_contract_init
+  DECLPROC $SafeDeployer$_contract_load
+  DECLPROC $SafeDeployer$_contract_store
+  DECLPROC $SafeDeployer$_fun_owner
+  DECLPROC $SafeDeployer$_fun_requireOwner
+  DECLPROC $SafeDeployer$_load
+  DECLPROC $SafeDeployer$_store
+  DECLPROC $SafeDeployer$init$_load
+  DECLPROC $SafeDeployment$_constructor_remaining
+  DECLPROC $SafeDeployment$_store
+  DECLPROC $SafeDeployment$_store_cell
+  DECLPROC $SendParameters$_constructor_bounce_to_value_mode_body
+  DECLPROC $SendParameters$_constructor_to_value_body
+  DECLPROC $SendParameters$_constructor_to_value_mode
+  DECLPROC $SafeDeployer$_receive_text_2d51e7ccd78be57b2c0bfaab585f0f535337c1219afb5421dd1de4b81f300226
+  DECLPROC $SafeDeployer$_receive_binary_ChangeOwner
+  DECLPROC $SafeDeployer$_receive_binary_Deploy
+  83229 DECLMETHOD %owner
   113617 DECLMETHOD supported_interfaces
   DECLPROC get_abi_ipfs
   DECLPROC lazy_deployment_completed
+  DECLPROC $SafeDeployer$_contract_router
+  DECLPROC recv_internal
   DECLGLOBVAR __tact_context
   DECLGLOBVAR __tact_context_sender
   DECLGLOBVAR __tact_context_sys
-  __tact_verify_address PROCINLINE:<{
-    DUP
-    SBITS
-    267 PUSHINT
-    EQUAL
-    136 THROWIFNOT
-    DUP
-    11 PLDU
-    DUP
-    10 PUSHPOW2
-    EQUAL
-    SWAP
-    1279 PUSHINT
-    EQUAL
-    OR
-    136 THROWIFNOT
-  }>
-  __tact_load_address PROCINLINE:<{
-    LDMSGADDR
-    SWAP
-    __tact_verify_address INLINECALLDICT
-  }>
-  __tact_store_address PROCINLINE:<{
-    __tact_verify_address INLINECALLDICT
-    STSLICER
-  }>
-  __tact_create_address PROCINLINE:<{
-    NEWC
-    2 PUSHINT
-    SWAP
-    2 STU
-    0 PUSHINT
-    SWAP
-    1 STU
-    s1 s2 XCHG
-    8 STI
-    256 STU
-    ENDC
-    CTOS
-    __tact_verify_address INLINECALLDICT
+  DECLGLOBVAR __tact_randomized
+  __tact_address_eq PROCINLINE:<{
+    SDEQ
   }>
   __tact_compute_contract_address PROCINLINE:<{
     NEWC
@@ -106,11 +69,6 @@ PROGRAM{
     HASHCU
     __tact_create_address INLINECALLDICT
   }>
-  __tact_not_null PROCINLINE:<{
-    DUP
-    ISNULL
-    128 THROWIF
-  }>
   __tact_context_get PROCINLINE:<{
     __tact_context GETGLOB
     4 UNTUPLE
@@ -118,17 +76,20 @@ PROGRAM{
   __tact_context_get_sender PROCINLINE:<{
     __tact_context_sender GETGLOB
   }>
-  __tact_store_bool PROCINLINE:<{
+  __tact_create_address PROCINLINE:<{
+    NEWC
+    2 PUSHINT
     SWAP
-    1 STI
-  }>
-  __tact_address_eq PROCINLINE:<{
-    SDEQ
-  }>
-  __tact_dict_set_code PROCINLINE:<{
-    s0 s2 XCHG
-    16 PUSHINT
-    DICTUSETREF
+    2 STU
+    0 PUSHINT
+    SWAP
+    1 STU
+    s1 s2 XCHG
+    8 STI
+    256 STU
+    ENDC
+    CTOS
+    __tact_verify_address INLINECALLDICT
   }>
   __tact_dict_get_code PROCINLINE:<{
     SWAP
@@ -137,7 +98,55 @@ PROGRAM{
     NULLSWAPIFNOT
     135 THROWIFNOT
   }>
-  __gen_read_Deploy PROCINLINE:<{
+  __tact_dict_set_code PROCINLINE:<{
+    s0 s2 XCHG
+    16 PUSHINT
+    DICTUSETREF
+  }>
+  __tact_load_address PROCINLINE:<{
+    LDMSGADDR
+    SWAP
+    __tact_verify_address INLINECALLDICT
+  }>
+  __tact_not_null PROCINLINE:<{
+    DUP
+    ISNULL
+    128 THROWIF
+  }>
+  __tact_store_address PROCINLINE:<{
+    __tact_verify_address INLINECALLDICT
+    STSLICER
+  }>
+  __tact_store_bool PROCINLINE:<{
+    SWAP
+    1 STI
+  }>
+  __tact_verify_address PROCINLINE:<{
+    DUP
+    SBITS
+    267 PUSHINT
+    EQUAL
+    136 THROWIFNOT
+    DUP
+    11 PLDU
+    DUP
+    10 PUSHPOW2
+    EQUAL
+    SWAP
+    1279 PUSHINT
+    EQUAL
+    OR
+    136 THROWIFNOT
+  }>
+  $ChangeOwner$_load PROCINLINE:<{
+    32 LDU
+    SWAP
+    256331011 PUSHINT
+    EQUAL
+    129 THROWIFNOT
+    __tact_load_address INLINECALLDICT
+  }>
+  $Deploy$_load PROCINLINE:<{
     32 LDU
     SWAP
     2490013878 PUSHINT
@@ -146,112 +155,37 @@ PROGRAM{
     64 LDU
     SWAP
   }>
-  __gen_write_DeployOk PROCINLINE:<{
+  $DeployOk$_constructor_queryId PROCINLINE:<{
+  }>
+  $DeployOk$_store PROCINLINE:<{
     2952335191 PUSHINT
     ROT
     32 STU
     64 STU
   }>
-  __gen_writecell_DeployOk PROCINLINE:<{
+  $DeployOk$_store_cell PROCINLINE:<{
     NEWC
     SWAP
-    __gen_write_DeployOk INLINECALLDICT
+    $DeployOk$_store INLINECALLDICT
     ENDC
   }>
-  __gen_read_ChangeOwner PROCINLINE:<{
-    32 LDU
-    SWAP
-    256331011 PUSHINT
-    EQUAL
-    129 THROWIFNOT
-    __tact_load_address INLINECALLDICT
-  }>
-  __gen_write_SafeDeployment PROCINLINE:<{
-    1857061459 PUSHINT
-    ROT
-    32 STU
-    SWAP
-    __tact_store_address INLINECALLDICT
-  }>
-  __gen_writecell_SafeDeployment PROCINLINE:<{
-    NEWC
-    SWAP
-    __gen_write_SafeDeployment INLINECALLDICT
-    ENDC
-  }>
-  __gen_write_SafeDeployer PROCINLINE:<{
-    s4 s3 XCHG2
-    __tact_store_address INLINECALLDICT
-    SWAP
-    STGRAMS
-    ROT
-    STGRAMS
-    64 STU
-  }>
-  __gen_read_SafeDeployer PROCINLINE:<{
-    __tact_load_address INLINECALLDICT
-    SWAP
-    LDGRAMS
-    LDGRAMS
-    64 LDU
-    4 -ROLL
-  }>
-  __gen_write_$init$Safe PROCINLINE:<{
-    -ROT
-    __tact_store_address INLINECALLDICT
-    257 PUSHINT
-    STIX
-  }>
-  __gen_read_$init$SafeDeployer PROCINLINE:<{
-    __tact_load_address INLINECALLDICT
-    SWAP
-    257 PUSHINT
-    LDIX
-    257 PUSHINT
-    LDIX
-    3 -ROLL
-  }>
-  $__gen_SafeDeployer_init PROCREF:<{
-    0 PUSHINT
-  }>
-  __gen_load_SafeDeployer PROCINLINE:<{
-    c4 PUSH
-    CTOS
-    LDREF
-    SWAP
-    __tact_context_sys SETGLOB
-    1 LDI
-    SWAP
-    IF:<{
-      __gen_read_SafeDeployer INLINECALLDICT
-      1 4 BLKDROP2
-    }>ELSE<{
-      __gen_read_$init$SafeDeployer INLINECALLDICT
-      s0 s3 XCHG
-      ENDS
-      ROT
-      $__gen_SafeDeployer_init INLINECALLDICT
-    }>
-  }>
-  __gen_store_SafeDeployer PROCINLINE:<{
-    NEWC
-    __tact_context_sys GETGLOB
-    SWAP
-    STREF
-    TRUE
-    SWAP
-    1 STI
-    4 -ROLL
-    __gen_write_SafeDeployer INLINECALLDICT
-    ENDC
-    c4 POP
-  }>
-  $contractAddress PROCREF:<{
+  $global_contractAddress PROCREF:<{
     0 PUSHINT
     -ROT
     __tact_compute_contract_address INLINECALLDICT
   }>
-  $send PROCREF:<{
+  $global_reply PROCREF:<{
+    TRUE
+    __tact_context_get_sender INLINECALLDICT
+    0 PUSHINT
+    ROT
+    s0 s3 XCHG
+    66 PUSHINT
+    SWAP
+    $SendParameters$_constructor_bounce_to_value_mode_body INLINECALLDICT
+    $global_send INLINECALLDICT
+  }>
+  $global_send PROCREF:<{
     NEWC
     1 PUSHINT
     SWAP
@@ -350,22 +284,7 @@ PROGRAM{
     SWAP
     SENDRAWMSG
   }>
-  __gen_constructor_SendParameters$bounce_to_value_mode_body PROCINLINE:<{
-    PUSHNULL
-    PUSHNULL
-  }>
-  $reply PROCREF:<{
-    TRUE
-    __tact_context_get_sender INLINECALLDICT
-    0 PUSHINT
-    ROT
-    s0 s3 XCHG
-    66 PUSHINT
-    SWAP
-    __gen_constructor_SendParameters$bounce_to_value_mode_body INLINECALLDICT
-    $send INLINECALLDICT
-  }>
-  $__gen_Safe_init_child PROC:<{
+  $Safe$_init_child PROCREF:<{
     s0 s2 XCHG
     CTOS
     LDDICT
@@ -389,30 +308,105 @@ PROGRAM{
     SWAP
     1 STI
     s0 s0 s3 XCHG3
-    __gen_write_$init$Safe INLINECALLDICT
+    $Safe$init$_store INLINECALLDICT
     ENDC
   }>
-  __gen_constructor_SendParameters$to_value_mode PROCINLINE:<{
-    TRUE
-    3 -ROLL
-    PUSHNULL
-    PUSHNULL
-    PUSHNULL
+  $Safe$init$_store PROCINLINE:<{
+    -ROT
+    __tact_store_address INLINECALLDICT
+    257 PUSHINT
+    STIX
   }>
-  $__gen_SafeDeployer_requireOwner PROCREF:<{
+  $SafeDeployer$_contract_init PROCREF:<{
+    0 PUSHINT
+  }>
+  $SafeDeployer$_contract_load PROCINLINE:<{
+    c4 PUSH
+    CTOS
+    LDREF
+    SWAP
+    __tact_context_sys SETGLOB
+    1 LDI
+    SWAP
+    IF:<{
+      $SafeDeployer$_load INLINECALLDICT
+      1 4 BLKDROP2
+    }>ELSE<{
+      $SafeDeployer$init$_load INLINECALLDICT
+      s0 s3 XCHG
+      ENDS
+      ROT
+      $SafeDeployer$_contract_init INLINECALLDICT
+    }>
+  }>
+  $SafeDeployer$_contract_store PROCINLINE:<{
+    NEWC
+    __tact_context_sys GETGLOB
+    SWAP
+    STREF
+    TRUE
+    SWAP
+    1 STI
+    4 -ROLL
+    $SafeDeployer$_store INLINECALLDICT
+    ENDC
+    c4 POP
+  }>
+  $SafeDeployer$_fun_owner PROCREF:<{
+    3 BLKDROP
+  }>
+  $SafeDeployer$_fun_requireOwner PROCREF:<{
     __tact_context_get_sender INLINECALLDICT
     s4 PUSH
     __tact_address_eq INLINECALLDICT
     132 THROWIFNOT
   }>
-  $__gen_SafeDeployer_owner PROCREF:<{
-    3 BLKDROP
+  $SafeDeployer$_load PROCINLINE:<{
+    __tact_load_address INLINECALLDICT
+    SWAP
+    LDGRAMS
+    LDGRAMS
+    64 LDU
+    4 -ROLL
   }>
-  $__gen_get_owner PROC:<{
-    __gen_load_SafeDeployer INLINECALLDICT
-    $__gen_SafeDeployer_owner INLINECALLDICT
+  $SafeDeployer$_store PROCINLINE:<{
+    s4 s3 XCHG2
+    __tact_store_address INLINECALLDICT
+    SWAP
+    STGRAMS
+    ROT
+    STGRAMS
+    64 STU
   }>
-  __gen_constructor_SendParameters$to_value_body PROCINLINE:<{
+  $SafeDeployer$init$_load PROCINLINE:<{
+    __tact_load_address INLINECALLDICT
+    SWAP
+    257 PUSHINT
+    LDIX
+    257 PUSHINT
+    LDIX
+    3 -ROLL
+  }>
+  $SafeDeployment$_constructor_remaining PROCINLINE:<{
+  }>
+  $SafeDeployment$_store PROCINLINE:<{
+    1857061459 PUSHINT
+    ROT
+    32 STU
+    SWAP
+    __tact_store_address INLINECALLDICT
+  }>
+  $SafeDeployment$_store_cell PROCINLINE:<{
+    NEWC
+    SWAP
+    $SafeDeployment$_store INLINECALLDICT
+    ENDC
+  }>
+  $SendParameters$_constructor_bounce_to_value_mode_body PROCINLINE:<{
+    PUSHNULL
+    PUSHNULL
+  }>
+  $SendParameters$_constructor_to_value_body PROCINLINE:<{
     TRUE
     s0 s3 XCHG
     0 PUSHINT
@@ -420,9 +414,14 @@ PROGRAM{
     PUSHNULL
     PUSHNULL
   }>
-  __gen_constructor_SafeDeployment$remaining PROCINLINE:<{
+  $SendParameters$_constructor_to_value_mode PROCINLINE:<{
+    TRUE
+    3 -ROLL
+    PUSHNULL
+    PUSHNULL
+    PUSHNULL
   }>
-  $__gen_SafeDeployer_receive_comment_2d51e7ccd78be57b2c0bfaab585f0f535337c1219afb5421dd1de4b81f300226 PROCINLINE:<{
+  $SafeDeployer$_receive_text_2d51e7ccd78be57b2c0bfaab585f0f535337c1219afb5421dd1de4b81f300226 PROCINLINE:<{
     __tact_context_get INLINECALLDICT
     DROP
     s2 POP
@@ -437,33 +436,52 @@ PROGRAM{
     INC
     __tact_context_sys GETGLOB
     s0 s0 s3 XCHG3
-    $__gen_Safe_init_child CALLDICT
-    $contractAddress INLINECALLDICT
+    $Safe$_init_child INLINECALLDICT
+    $global_contractAddress INLINECALLDICT
     s4 PUSH
-    __gen_constructor_SafeDeployment$remaining INLINECALLDICT
-    __gen_writecell_SafeDeployment INLINECALLDICT
+    $SafeDeployment$_constructor_remaining INLINECALLDICT
+    $SafeDeployment$_store_cell INLINECALLDICT
     s3 s(-1) PUXC
-    __gen_constructor_SendParameters$to_value_body INLINECALLDICT
-    $send INLINECALLDICT
+    $SendParameters$_constructor_to_value_body INLINECALLDICT
+    $global_send INLINECALLDICT
     s3 PUSH
     0 PUSHINT
     66 PUSHINT
-    __gen_constructor_SendParameters$to_value_mode INLINECALLDICT
-    $send INLINECALLDICT
+    $SendParameters$_constructor_to_value_mode INLINECALLDICT
+    $global_send INLINECALLDICT
   }>
-  $__gen_SafeDeployer_receive_ChangeOwner PROCINLINE:<{
+  $SafeDeployer$_receive_binary_ChangeOwner PROCINLINE:<{
     4 -ROLL
-    $__gen_SafeDeployer_requireOwner INLINECALLDICT
+    $SafeDeployer$_fun_requireOwner INLINECALLDICT
     1 3 BLKDROP2
   }>
-  __gen_constructor_DeployOk$queryId PROCINLINE:<{
+  $SafeDeployer$_receive_binary_Deploy PROCINLINE:<{
+    $DeployOk$_constructor_queryId INLINECALLDICT
+    $DeployOk$_store_cell INLINECALLDICT
+    $global_reply INLINECALLDICT
   }>
-  $__gen_SafeDeployer_receive_Deploy PROCINLINE:<{
-    __gen_constructor_DeployOk$queryId INLINECALLDICT
-    __gen_writecell_DeployOk INLINECALLDICT
-    $reply INLINECALLDICT
+  %owner PROC:<{
+    $SafeDeployer$_contract_load INLINECALLDICT
+    $SafeDeployer$_fun_owner INLINECALLDICT
   }>
-  __gen_router_SafeDeployer PROCREF:<{
+  supported_interfaces PROC:<{
+    123515602279859691144772641439386770278 PUSHINT
+    209801025412363888721030803524359905849 PUSHINT
+    42980537499636128163026532310500881091 PUSHINT
+    289074767680806556846472852687671582181 PUSHINT
+    212791963610352222038671851416501365766 PUSHINT
+    86142586315491086060343270784266291122 PUSHINT
+  }>
+  get_abi_ipfs PROC:<{
+    x{697066733a2f2f516d5762484a683478444d5a613368714370464e38745846555162706d645331786a3569546b573472746b416a36} PUSHSLICE
+  }>
+  lazy_deployment_completed PROC:<{
+    c4 PUSH
+    CTOS
+    1 LDI
+    SWAP
+  }>
+  $SafeDeployer$_contract_router PROCREF:<{
     c2 SAVE
     SAMEALTSAVE
     0 PUSHINT
@@ -485,9 +503,9 @@ PROGRAM{
     EQUAL
     IFJMP:<{
       NIP
-      __gen_read_ChangeOwner INLINECALLDICT
+      $ChangeOwner$_load INLINECALLDICT
       NIP
-      $__gen_SafeDeployer_receive_ChangeOwner INLINECALLDICT
+      $SafeDeployer$_receive_binary_ChangeOwner INLINECALLDICT
       TRUE
     }>
     OVER
@@ -495,9 +513,9 @@ PROGRAM{
     EQUAL
     IFJMP:<{
       NIP
-      __gen_read_Deploy INLINECALLDICT
+      $Deploy$_load INLINECALLDICT
       NIP
-      $__gen_SafeDeployer_receive_Deploy INLINECALLDICT
+      $SafeDeployer$_receive_binary_Deploy INLINECALLDICT
       TRUE
     }>
     SWAP
@@ -507,7 +525,7 @@ PROGRAM{
       20498792624428958080543629896125966949113331229865484728903968177412144890406 PUSHINT
       EQUAL
       IFJMP:<{
-        $__gen_SafeDeployer_receive_comment_2d51e7ccd78be57b2c0bfaab585f0f535337c1219afb5421dd1de4b81f300226 INLINECALLDICT
+        $SafeDeployer$_receive_text_2d51e7ccd78be57b2c0bfaab585f0f535337c1219afb5421dd1de4b81f300226 INLINECALLDICT
         TRUE
         RETALT
       }>
@@ -539,27 +557,10 @@ PROGRAM{
     __tact_context SETGLOB
     s0 s2 XCHG
     __tact_context_sender SETGLOB
-    __gen_load_SafeDeployer INLINECALLDICT
+    $SafeDeployer$_contract_load INLINECALLDICT
     2 4 BLKSWAP
-    __gen_router_SafeDeployer INLINECALLDICT
+    $SafeDeployer$_contract_router INLINECALLDICT
     DROP
-    __gen_store_SafeDeployer INLINECALLDICT
-  }>
-  supported_interfaces PROC:<{
-    123515602279859691144772641439386770278 PUSHINT
-    209801025412363888721030803524359905849 PUSHINT
-    42980537499636128163026532310500881091 PUSHINT
-    289074767680806556846472852687671582181 PUSHINT
-    212791963610352222038671851416501365766 PUSHINT
-    86142586315491086060343270784266291122 PUSHINT
-  }>
-  get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d55633735794d67627647506362757664487842506572644839644d336352675a4156414d726d5361594b7354} PUSHSLICE
-  }>
-  lazy_deployment_completed PROC:<{
-    c4 PUSH
-    CTOS
-    1 LDI
-    SWAP
+    $SafeDeployer$_contract_store INLINECALLDICT
   }>
 }END>c

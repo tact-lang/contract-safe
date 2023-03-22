@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: Signer
-BOC Size: 217 bytes
+BOC Size: 1139 bytes
 
 # Types
-Total Types: 12
+Total Types: 13
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -53,8 +53,14 @@ Signature: `SafeOperationTransfer{to:address,value:coins,mode:uint8,body:Maybe ^
 TLB: `_ parameters:SafeParameters{timeout:uint32,requestPrice:coins} = SafeOperationUpdateParameters`
 Signature: `SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}`
 
+## OperationSigned
+TLB: `operation_signed#c2668027 operation:SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}} = OperationSigned`
+Signature: `OperationSigned{operation:SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}}}`
+
 # Get Methods
-Total Get Methods: 0
+Total Get Methods: 1
+
+## operation
 
 # Error Codes
 2: Stack undeflow
@@ -81,7 +87,10 @@ Total Get Methods: 0
 135: Code of a contract was not found
 136: Invalid address
 137: Masterchain support is not enabled for this contract
+4755: Timeout
 5165: Not enough value
 25849: Not enough value to deploy a Safe
+36682: Sender is not safe
+40810: Completed
 44757: Exactly one operation must be specified
 46307: Not a member

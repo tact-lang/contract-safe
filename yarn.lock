@@ -659,10 +659,10 @@
   dependencies:
     "@sinonjs/commons" "^2.0.0"
 
-"@tact-lang/compiler@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@tact-lang/compiler/-/compiler-1.0.0.tgz#e35862e25957619c12b1e86bafcbb805d9853d9e"
-  integrity sha512-ap17jxCFrVTpC7qmlro0maetLjDRa1YmKwYjkoodc5ti2zSgShA/9jdTBFw93rTdY2T6HuPZH7Sm9sLQmcXtlg==
+"@tact-lang/compiler@1.1.0-beta.2":
+  version "1.1.0-beta.2"
+  resolved "https://registry.yarnpkg.com/@tact-lang/compiler/-/compiler-1.1.0-beta.2.tgz#d536214cb21da4d294172a162d4af664d63cea86"
+  integrity sha512-dxDvQTAGZg48W3kxEJ80IY9eBaEerPkQqi0rSGYu+sZZU3ARrbfUAp8RHesi3znpu9/dla1pV1FtheJnNx8Eow==
   dependencies:
     "@ipld/dag-pb" "2.1.18"
     arg "^5.0.2"

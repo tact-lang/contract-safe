@@ -1,140 +1,12 @@
-#pragma version =0.4.2;
-#pragma allow-post-modification;
-#pragma compute-asm-ltr;
+#include "safe_SafeDeployer.headers.fc";
+#include "safe_SafeDeployer.stdlib.fc";
+#include "safe_SafeDeployer.storage.fc";
 
-slice __tact_verify_address(slice address) inline {
-    throw_unless(136, address.slice_bits() == 267);
-    var h = address.preload_uint(11);
-    throw_unless(136, (h == 1024) | (h == 1279));
+;;
+;; Contract SafeDeployer functions
+;;
 
-    return address;
-}
-
-(slice, slice) __tact_load_address(slice cs) inline {
-    slice raw = cs~load_msg_addr();
-    return (cs, __tact_verify_address(raw));
-}
-
-builder __tact_store_address(builder b, slice address) inline {
-    return b.store_slice(__tact_verify_address(address));
-}
-
-slice __tact_create_address(int chain, int hash) inline {
-    var b = begin_cell();
-    b = b.store_uint(2, 2);
-    b = b.store_uint(0, 1);
-    b = b.store_int(chain, 8);
-    b = b.store_uint(hash, 256);
-    var addr = b.end_cell().begin_parse();
-    return __tact_verify_address(addr);
-}
-
-slice __tact_compute_contract_address(int chain, cell code, cell data) inline {
-    var b = begin_cell();
-    b = b.store_uint(0, 2);
-    b = b.store_uint(3, 2);
-    b = b.store_uint(0, 1);
-    b = b.store_ref(code);
-    b = b.store_ref(data);
-    var hash = cell_hash(b.end_cell());
-    return __tact_create_address(chain, hash);
-}
-
-forall X -> X __tact_not_null(X x) inline { throw_if(128, null?(x)); return x; }
-
-global (int, slice, int, slice) __tact_context;
-global slice __tact_context_sender;
-global cell __tact_context_sys;
-
-(int, slice, int, slice) __tact_context_get() inline { return __tact_context; }
-
-slice __tact_context_get_sender() inline { return __tact_context_sender; }
-
-builder __tact_store_bool(builder b, int v) inline {
-    b = b.store_int(v, 1);
-    return b;
-}
-
-int __tact_address_eq(slice a, slice b) inline {
-    return equal_slice_bits(a, b);
-}
-
-cell __tact_dict_set_code(cell dict, int id, cell code) inline {
-    return udict_set_ref(dict, 16, id, code);
-}
-
-cell __tact_dict_get_code(cell dict, int id) inline {
-    var (data, ok) = udict_get_ref?(dict, 16, id);
-    throw_unless(135, ok);
-    return data;
-}
-
-(slice, ((int))) __gen_read_Deploy(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 2490013878);
-    var v'queryId = sc_0~load_uint(64);
-    return (sc_0, (v'queryId));
-}
-
-builder __gen_write_DeployOk(builder build_0, (int) v) inline {
-    var (v'queryId) = v;
-    build_0 = store_uint(build_0, 2952335191, 32);
-    build_0 = build_0.store_uint(v'queryId, 64);
-    return build_0;
-}
-
-cell __gen_writecell_DeployOk((int) v) inline {
-    return __gen_write_DeployOk(begin_cell(), v).end_cell();
-}
-
-(slice, ((slice))) __gen_read_ChangeOwner(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 256331011);
-    var v'newOwner = sc_0~__tact_load_address();
-    return (sc_0, (v'newOwner));
-}
-
-builder __gen_write_SafeDeployment(builder build_0, (slice) v) inline {
-    var (v'remaining) = v;
-    build_0 = store_uint(build_0, 1857061459, 32);
-    build_0 = __tact_store_address(build_0, v'remaining);
-    return build_0;
-}
-
-cell __gen_writecell_SafeDeployment((slice) v) inline {
-    return __gen_write_SafeDeployment(begin_cell(), v).end_cell();
-}
-
-builder __gen_write_SafeDeployer(builder build_0, (slice, int, int, int) v) inline {
-    var (v'owner, v'fee, v'deployValue, v'counter) = v;
-    build_0 = __tact_store_address(build_0, v'owner);
-    build_0 = build_0.store_coins(v'fee);
-    build_0 = build_0.store_coins(v'deployValue);
-    build_0 = build_0.store_uint(v'counter, 64);
-    return build_0;
-}
-
-(slice, ((slice, int, int, int))) __gen_read_SafeDeployer(slice sc_0) inline {
-    var v'owner = sc_0~__tact_load_address();
-    var v'fee = sc_0~load_coins();
-    var v'deployValue = sc_0~load_coins();
-    var v'counter = sc_0~load_uint(64);
-    return (sc_0, (v'owner, v'fee, v'deployValue, v'counter));
-}
-
-builder __gen_write_$init$Safe(builder build_0, (slice, int) v) inline {
-    var (v'owner, v'id) = v;
-    build_0 = __tact_store_address(build_0, v'owner);
-    build_0 = build_0.store_int(v'id, 257);
-    return build_0;
-}
-
-(slice, ((slice, int, int))) __gen_read_$init$SafeDeployer(slice sc_0) inline {
-    var v'owner = sc_0~__tact_load_address();
-    var v'fee = sc_0~load_int(257);
-    var v'deployValue = sc_0~load_int(257);
-    return (sc_0, (v'owner, v'fee, v'deployValue));
-}
-
-(slice, int, int, int) $__gen_SafeDeployer_init(slice $owner, int $fee, int $deployValue) impure inline_ref {
+(slice, int, int, int) $SafeDeployer$_contract_init(slice $owner, int $fee, int $deployValue) impure inline_ref {
     var (($self'owner, $self'fee, $self'deployValue, $self'counter)) = (null(), null(), null(), null());
     $self'owner = $owner;
     $self'fee = $fee;
@@ -143,162 +15,83 @@ builder __gen_write_$init$Safe(builder build_0, (slice, int) v) inline {
     return ($self'owner, $self'fee, $self'deployValue, $self'counter);
 }
 
-(slice, int, int, int) __gen_load_SafeDeployer() impure inline {
-    slice $sc = get_data().begin_parse();
-    __tact_context_sys = $sc~load_ref();
-    int $loaded = $sc~load_int(1);
-    if ($loaded) {
-        return $sc~__gen_read_SafeDeployer();
-    } else {
-        (slice owner, int fee, int deployValue) = $sc~__gen_read_$init$SafeDeployer();
-        $sc.end_parse();
-        return $__gen_SafeDeployer_init(owner, fee, deployValue);
-    }
-}
-
-() __gen_store_SafeDeployer((slice, int, int, int) v) impure inline {
-    builder b = begin_cell();
-    b = b.store_ref(__tact_context_sys);
-    b = b.store_int(true, 1);
-    b = __gen_write_SafeDeployer(b, v);
-    set_data(b.end_cell());
-}
-
-slice $contractAddress((cell, cell) $s) impure inline_ref {
-    var (($s'code, $s'data)) = $s;
-    return __tact_compute_contract_address(0, $s'code, $s'data);
-}
-
-() $send((int, slice, int, int, cell, cell, cell) $params) impure inline_ref {
-    var (($params'bounce, $params'to, $params'value, $params'mode, $params'body, $params'code, $params'data)) = $params;
-    builder $b = begin_cell();
-    $b = store_int($b, 1, 2);
-    $b = __tact_store_bool($b, $params'bounce);
-    $b = store_int($b, 0, 3);
-    $b = __tact_store_address($b, $params'to);
-    $b = store_coins($b, $params'value);
-    $b = store_int($b, 0, ((((1 + 4) + 4) + 64) + 32));
-    if (((~ null?($params'code)) | (~ null?($params'data)))) {
-        $b = __tact_store_bool($b, true);
-        builder $bc = begin_cell();
-        $bc = __tact_store_bool($bc, false);
-        $bc = __tact_store_bool($bc, false);
-        if ((~ null?($params'code))) {
-            $bc = __tact_store_bool($bc, true);
-            $bc = store_ref($bc, __tact_not_null($params'code));
-        } else {
-            $bc = __tact_store_bool($bc, false);
-        }
-        if ((~ null?($params'data))) {
-            $bc = __tact_store_bool($bc, true);
-            $bc = store_ref($bc, __tact_not_null($params'data));
-        } else {
-            $bc = __tact_store_bool($bc, false);
-        }
-        $bc = __tact_store_bool($bc, false);
-        $b = __tact_store_bool($b, true);
-        $b = store_ref($b, end_cell($bc));
-    } else {
-        $b = __tact_store_bool($b, false);
-    }
-    cell $body = $params'body;
-    if ((~ null?($body))) {
-        $b = __tact_store_bool($b, true);
-        $b = store_ref($b, __tact_not_null($body));
-    } else {
-        $b = __tact_store_bool($b, false);
-    }
-    cell $c = end_cell($b);
-    send_raw_message($c, $params'mode);
-}
-
-((int, slice, int, int, cell, cell, cell)) __gen_constructor_SendParameters$bounce_to_value_mode_body(int bounce, slice to, int value, int mode, cell body) inline {
-    return (bounce, to, value, mode, body, null(), null());
-}
-
-() $reply(cell $body) impure inline_ref {
-    $send(__gen_constructor_SendParameters$bounce_to_value_mode_body(true, __tact_context_get_sender(), 0, (64 + 2), $body));
-}
-
-(cell, cell) $__gen_Safe_init_child(cell sys', slice $owner, int $id) {
-    slice sc' = sys'.begin_parse();
-    cell source = sc'~load_dict();
-    cell contracts = new_dict();
-    
-    ;; Contract Code: Safe
-    cell mine = __tact_dict_get_code(source, 57139);
-    contracts = __tact_dict_set_code(contracts, 57139, mine);
-    
-    ;; Build cell
-    builder b = begin_cell();
-    b = b.store_ref(begin_cell().store_dict(contracts).end_cell());
-    b = b.store_int(false, 1);
-    b = __gen_write_$init$Safe(b, ($owner, $id));
-    return (mine, b.end_cell());
-}
-
-((int, slice, int, int, cell, cell, cell)) __gen_constructor_SendParameters$to_value_mode(slice to, int value, int mode) inline {
-    return (true, to, value, mode, null(), null(), null());
-}
-
-((slice, int, int, int), ()) $__gen_SafeDeployer_requireOwner((slice, int, int, int) $self) impure inline_ref {
+((slice, int, int, int), ()) $SafeDeployer$_fun_requireOwner((slice, int, int, int) $self) impure inline_ref {
     var (($self'owner, $self'fee, $self'deployValue, $self'counter)) = $self;
     throw_unless(132, __tact_address_eq(__tact_context_get_sender(), $self'owner));
     return (($self'owner, $self'fee, $self'deployValue, $self'counter), ());
 }
 
-slice $__gen_SafeDeployer_owner((slice, int, int, int) $self) impure inline_ref {
+slice $SafeDeployer$_fun_owner((slice, int, int, int) $self) impure inline_ref {
     var (($self'owner, $self'fee, $self'deployValue, $self'counter)) = $self;
     return $self'owner;
 }
 
-_ $__gen_get_owner() method_id(83229) {
-    var self = __gen_load_SafeDeployer();
-    var res = $__gen_SafeDeployer_owner(self);
-    return res;
-}
+;;
+;; Receivers of a Contract SafeDeployer
+;;
 
-((int, slice, int, int, cell, cell, cell)) __gen_constructor_SendParameters$to_value_body(slice to, int value, cell body) inline {
-    return (true, to, value, 0, body, null(), null());
-}
-
-((slice)) __gen_constructor_SafeDeployment$remaining(slice remaining) inline {
-    return (remaining);
-}
-
-((slice, int, int, int), ()) $__gen_SafeDeployer_receive_comment_2d51e7ccd78be57b2c0bfaab585f0f535337c1219afb5421dd1de4b81f300226((slice, int, int, int) $self) impure inline {
+((slice, int, int, int), ()) $SafeDeployer$_receive_text_2d51e7ccd78be57b2c0bfaab585f0f535337c1219afb5421dd1de4b81f300226((slice, int, int, int) $self) impure inline {
     var ($self'owner, $self'fee, $self'deployValue, $self'counter) = $self;
     var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
     throw_unless(25849, ($ctx'value >= ($self'fee + $self'deployValue)));
     int $counter = $self'counter;
     $self'counter = ($self'counter + 1);
-    var ($init'code, $init'data) = $__gen_Safe_init_child(__tact_context_sys, $ctx'sender, $counter);
-    slice $safeAddress = $contractAddress(($init'code, $init'data));
-    $send(__gen_constructor_SendParameters$to_value_body($safeAddress, $self'deployValue, __gen_writecell_SafeDeployment(__gen_constructor_SafeDeployment$remaining($self'owner))));
-    $send(__gen_constructor_SendParameters$to_value_mode($self'owner, 0, (64 + 2)));
+    var ($init'code, $init'data) = $Safe$_init_child(__tact_context_sys, $ctx'sender, $counter);
+    slice $safeAddress = $global_contractAddress(($init'code, $init'data));
+    $global_send($SendParameters$_constructor_to_value_body($safeAddress, $self'deployValue, $SafeDeployment$_store_cell($SafeDeployment$_constructor_remaining($self'owner))));
+    $global_send($SendParameters$_constructor_to_value_mode($self'owner, 0, (64 + 2)));
     return (($self'owner, $self'fee, $self'deployValue, $self'counter), ());
 }
 
-(((slice, int, int, int)), ()) $__gen_SafeDeployer_receive_ChangeOwner((slice, int, int, int) $self, (slice) $msg) impure inline {
+(((slice, int, int, int)), ()) $SafeDeployer$_receive_binary_ChangeOwner((slice, int, int, int) $self, (slice) $msg) impure inline {
     var ($self'owner, $self'fee, $self'deployValue, $self'counter) = $self;
     var ($msg'newOwner) = $msg;
-    ($self'owner, $self'fee, $self'deployValue, $self'counter)~$__gen_SafeDeployer_requireOwner();
+    ($self'owner, $self'fee, $self'deployValue, $self'counter)~$SafeDeployer$_fun_requireOwner();
     $self'owner = $msg'newOwner;
     return (($self'owner, $self'fee, $self'deployValue, $self'counter), ());
 }
 
-((int)) __gen_constructor_DeployOk$queryId(int queryId) inline {
-    return (queryId);
-}
-
-(((slice, int, int, int)), ()) $__gen_SafeDeployer_receive_Deploy((slice, int, int, int) $self, (int) $deploy) impure inline {
+(((slice, int, int, int)), ()) $SafeDeployer$_receive_binary_Deploy((slice, int, int, int) $self, (int) $deploy) impure inline {
     var ($self'owner, $self'fee, $self'deployValue, $self'counter) = $self;
     var ($deploy'queryId) = $deploy;
-    $reply(__gen_writecell_DeployOk(__gen_constructor_DeployOk$queryId($deploy'queryId)));
+    $global_reply($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId)));
     return (($self'owner, $self'fee, $self'deployValue, $self'counter), ());
 }
 
-((slice, int, int, int), int) __gen_router_SafeDeployer((slice, int, int, int) self, int msg_bounced, slice in_msg) impure inline_ref {
+;;
+;; Get methods of a Contract SafeDeployer
+;;
+
+_ %owner() method_id(83229) {
+    var self = $SafeDeployer$_contract_load();
+    var res = $SafeDeployer$_fun_owner(self);
+    return res;
+}
+
+_ supported_interfaces() method_id {
+    return (
+        "org.ton.introspection.v0"H >> 128,
+        "org.ton.abi.ipfs.v0"H >> 128,
+        "org.ton.deploy.lazy.v0"H >> 128,
+        "org.ton.chain.any.v0"H >> 128,
+        "org.ton.ownable.transferable"H >> 128,
+        "org.ton.ownable"H >> 128
+    );
+}
+
+_ get_abi_ipfs() {
+    return "ipfs://QmWbHJh4xDMZa3hqCpFN8tXFUQbpmdS1xj5iTkW4rtkAj6";
+}
+
+_ lazy_deployment_completed() {
+    return get_data().begin_parse().load_int(1);
+}
+
+;;
+;; Routing of a Contract SafeDeployer
+;;
+
+((slice, int, int, int), int) $SafeDeployer$_contract_router((slice, int, int, int) self, int msg_bounced, slice in_msg) impure inline_ref {
     
     ;; Parse incoming message
     int op = 0;
@@ -313,15 +106,15 @@ _ $__gen_get_owner() method_id(83229) {
     
     ;; Receive ChangeOwner message
     if (op == 256331011) {
-        var msg = in_msg~__gen_read_ChangeOwner();
-        self~$__gen_SafeDeployer_receive_ChangeOwner(msg);
+        var msg = in_msg~$ChangeOwner$_load();
+        self~$SafeDeployer$_receive_binary_ChangeOwner(msg);
         return (self, true);
     }
     
     ;; Receive Deploy message
     if (op == 2490013878) {
-        var msg = in_msg~__gen_read_Deploy();
-        self~$__gen_SafeDeployer_receive_Deploy(msg);
+        var msg = in_msg~$Deploy$_load();
+        self~$SafeDeployer$_receive_binary_Deploy(msg);
         return (self, true);
     }
     
@@ -331,7 +124,7 @@ _ $__gen_get_owner() method_id(83229) {
         
         ;; Receive "Deploy new Safe" message
         if (text_op == 0x2d51e7ccd78be57b2c0bfaab585f0f535337c1219afb5421dd1de4b81f300226) {
-            self~$__gen_SafeDeployer_receive_comment_2d51e7ccd78be57b2c0bfaab585f0f535337c1219afb5421dd1de4b81f300226();
+            self~$SafeDeployer$_receive_text_2d51e7ccd78be57b2c0bfaab585f0f535337c1219afb5421dd1de4b81f300226();
             return (self, true);
         }
     }
@@ -350,33 +143,14 @@ _ $__gen_get_owner() method_id(83229) {
     __tact_context_sender = msg_sender_addr;
     
     ;; Load contract data
-    var self = __gen_load_SafeDeployer();
+    var self = $SafeDeployer$_contract_load();
     
     ;; Handle operation
-    int handled = self~__gen_router_SafeDeployer(msg_bounced, in_msg);
+    int handled = self~$SafeDeployer$_contract_router(msg_bounced, in_msg);
     
     ;; Throw if not handled
     throw_unless(handled, 130);
     
     ;; Persist state
-    __gen_store_SafeDeployer(self);
-}
-
-_ supported_interfaces() method_id {
-    return (
-        "org.ton.introspection.v0"H >> 128,
-        "org.ton.abi.ipfs.v0"H >> 128,
-        "org.ton.deploy.lazy.v0"H >> 128,
-        "org.ton.chain.any.v0"H >> 128,
-        "org.ton.ownable.transferable"H >> 128,
-        "org.ton.ownable"H >> 128
-    );
-}
-
-_ get_abi_ipfs() {
-    return "ipfs://QmUc75yMgbvGPcbuvdHxBPerdH9dM3cRgZAVAMrmSaYKsT";
-}
-
-_ lazy_deployment_completed() {
-    return get_data().begin_parse().load_int(1);
+    $SafeDeployer$_contract_store(self);
 }
