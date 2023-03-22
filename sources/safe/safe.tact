@@ -1,5 +1,5 @@
 import "@stdlib/deploy";
-import "./operations.tact";
+import "./types.tact";
 import "./signer.tact";
 
 const DEFAULT_REQUEST_PRICE: Int = ton("1");

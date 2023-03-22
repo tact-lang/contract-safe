@@ -1,5 +1,5 @@
 import "@stdlib/deploy";
-import "./operations.tact";
+import "./types.tact";
 
 message OperationsSigned {
     args: SignerArgs;
