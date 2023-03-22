@@ -357,32 +357,32 @@ function dictValueParserSafeDeployment(): DictionaryValue<SafeDeployment> {
 
 export type SafeRequestOperation = {
     $$type: 'SafeRequestOperation';
-    operation: SafeOperation;
+    ops: SafeOperations;
 }
 
 export function storeSafeRequestOperation(src: SafeRequestOperation) {
     return (builder: Builder) => {
         let b_0 = builder;
-        b_0.storeUint(2724662621, 32);
-        b_0.store(storeSafeOperation(src.operation));
+        b_0.storeUint(4286439532, 32);
+        b_0.store(storeSafeOperations(src.ops));
     };
 }
 
 export function loadSafeRequestOperation(slice: Slice) {
     let sc_0 = slice;
-    if (sc_0.loadUint(32) !== 2724662621) { throw Error('Invalid prefix'); }
-    let _operation = loadSafeOperation(sc_0);
-    return { $$type: 'SafeRequestOperation' as const, operation: _operation };
+    if (sc_0.loadUint(32) !== 4286439532) { throw Error('Invalid prefix'); }
+    let _ops = loadSafeOperations(sc_0);
+    return { $$type: 'SafeRequestOperation' as const, ops: _ops };
 }
 
 function loadTupleSafeRequestOperation(source: TupleReader) {
-    const _operation = loadTupleSafeOperation(source.readTuple());
-    return { $$type: 'SafeRequestOperation' as const, operation: _operation };
+    const _ops = loadTupleSafeOperations(source.readTuple());
+    return { $$type: 'SafeRequestOperation' as const, ops: _ops };
 }
 
 function storeTupleSafeRequestOperation(source: SafeRequestOperation) {
     let builder = new TupleBuilder();
-    builder.writeTuple(storeTupleSafeOperation(source.operation));
+    builder.writeTuple(storeTupleSafeOperations(source.ops));
     return builder.build();
 }
 
@@ -438,6 +438,51 @@ function dictValueParserSafeParameters(): DictionaryValue<SafeParameters> {
         },
         parse: (src) => {
             return loadSafeParameters(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type SafeOperations = {
+    $$type: 'SafeOperations';
+    ops: Dictionary<bigint, SafeOperation>;
+    count: bigint;
+}
+
+export function storeSafeOperations(src: SafeOperations) {
+    return (builder: Builder) => {
+        let b_0 = builder;
+        b_0.storeDict(src.ops, Dictionary.Keys.BigInt(257), dictValueParserSafeOperation());
+        b_0.storeUint(src.count, 8);
+    };
+}
+
+export function loadSafeOperations(slice: Slice) {
+    let sc_0 = slice;
+    let _ops = Dictionary.load(Dictionary.Keys.BigInt(257), dictValueParserSafeOperation(), sc_0);
+    let _count = sc_0.loadUintBig(8);
+    return { $$type: 'SafeOperations' as const, ops: _ops, count: _count };
+}
+
+function loadTupleSafeOperations(source: TupleReader) {
+    let _ops = Dictionary.loadDirect(Dictionary.Keys.BigInt(257), dictValueParserSafeOperation(), source.readCellOpt());
+    let _count = source.readBigNumber();
+    return { $$type: 'SafeOperations' as const, ops: _ops, count: _count };
+}
+
+function storeTupleSafeOperations(source: SafeOperations) {
+    let builder = new TupleBuilder();
+    builder.writeCell(source.ops.size > 0 ? beginCell().storeDictDirect(source.ops, Dictionary.Keys.BigInt(257), dictValueParserSafeOperation()).endCell() : null);
+    builder.writeNumber(source.count);
+    return builder.build();
+}
+
+function dictValueParserSafeOperations(): DictionaryValue<SafeOperations> {
+    return {
+        serialize: (src, buidler) => {
+            buidler.storeRef(beginCell().store(storeSafeOperations(src)).endCell());
+        },
+        parse: (src) => {
+            return loadSafeOperations(src.loadRef().beginParse());
         }
     }
 }
@@ -502,6 +547,7 @@ export type SafeOperationTransfer = {
     to: Address;
     value: bigint;
     mode: bigint;
+    bounce: boolean;
     body: Cell | null;
 }
 
@@ -511,6 +557,7 @@ export function storeSafeOperationTransfer(src: SafeOperationTransfer) {
         b_0.storeAddress(src.to);
         b_0.storeCoins(src.value);
         b_0.storeUint(src.mode, 8);
+        b_0.storeBit(src.bounce);
         if (src.body !== null && src.body !== undefined) { b_0.storeBit(true).storeRef(src.body); } else { b_0.storeBit(false); }
     };
 }
@@ -520,16 +567,18 @@ export function loadSafeOperationTransfer(slice: Slice) {
     let _to = sc_0.loadAddress();
     let _value = sc_0.loadCoins();
     let _mode = sc_0.loadUintBig(8);
+    let _bounce = sc_0.loadBit();
     let _body = sc_0.loadBit() ? sc_0.loadRef() : null;
-    return { $$type: 'SafeOperationTransfer' as const, to: _to, value: _value, mode: _mode, body: _body };
+    return { $$type: 'SafeOperationTransfer' as const, to: _to, value: _value, mode: _mode, bounce: _bounce, body: _body };
 }
 
 function loadTupleSafeOperationTransfer(source: TupleReader) {
     let _to = source.readAddress();
     let _value = source.readBigNumber();
     let _mode = source.readBigNumber();
+    let _bounce = source.readBoolean();
     let _body = source.readCellOpt();
-    return { $$type: 'SafeOperationTransfer' as const, to: _to, value: _value, mode: _mode, body: _body };
+    return { $$type: 'SafeOperationTransfer' as const, to: _to, value: _value, mode: _mode, bounce: _bounce, body: _body };
 }
 
 function storeTupleSafeOperationTransfer(source: SafeOperationTransfer) {
@@ -537,6 +586,7 @@ function storeTupleSafeOperationTransfer(source: SafeOperationTransfer) {
     builder.writeAddress(source.to);
     builder.writeNumber(source.value);
     builder.writeNumber(source.mode);
+    builder.writeBoolean(source.bounce);
     builder.writeCell(source.body);
     return builder.build();
 }
@@ -592,77 +642,266 @@ function dictValueParserSafeOperationUpdateParameters(): DictionaryValue<SafeOpe
     }
 }
 
-export type OperationSigned = {
-    $$type: 'OperationSigned';
-    operation: SafeOperation;
+export type OperationsSigned = {
+    $$type: 'OperationsSigned';
+    args: SignerArgs;
 }
 
-export function storeOperationSigned(src: OperationSigned) {
+export function storeOperationsSigned(src: OperationsSigned) {
     return (builder: Builder) => {
         let b_0 = builder;
-        b_0.storeUint(3261497383, 32);
-        b_0.store(storeSafeOperation(src.operation));
+        b_0.storeUint(1877523644, 32);
+        b_0.store(storeSignerArgs(src.args));
     };
 }
 
-export function loadOperationSigned(slice: Slice) {
+export function loadOperationsSigned(slice: Slice) {
     let sc_0 = slice;
-    if (sc_0.loadUint(32) !== 3261497383) { throw Error('Invalid prefix'); }
-    let _operation = loadSafeOperation(sc_0);
-    return { $$type: 'OperationSigned' as const, operation: _operation };
+    if (sc_0.loadUint(32) !== 1877523644) { throw Error('Invalid prefix'); }
+    let _args = loadSignerArgs(sc_0);
+    return { $$type: 'OperationsSigned' as const, args: _args };
 }
 
-function loadTupleOperationSigned(source: TupleReader) {
-    const _operation = loadTupleSafeOperation(source.readTuple());
-    return { $$type: 'OperationSigned' as const, operation: _operation };
+function loadTupleOperationsSigned(source: TupleReader) {
+    const _args = loadTupleSignerArgs(source.readTuple());
+    return { $$type: 'OperationsSigned' as const, args: _args };
 }
 
-function storeTupleOperationSigned(source: OperationSigned) {
+function storeTupleOperationsSigned(source: OperationsSigned) {
     let builder = new TupleBuilder();
-    builder.writeTuple(storeTupleSafeOperation(source.operation));
+    builder.writeTuple(storeTupleSignerArgs(source.args));
     return builder.build();
 }
 
-function dictValueParserOperationSigned(): DictionaryValue<OperationSigned> {
+function dictValueParserOperationsSigned(): DictionaryValue<OperationsSigned> {
     return {
         serialize: (src, buidler) => {
-            buidler.storeRef(beginCell().store(storeOperationSigned(src)).endCell());
+            buidler.storeRef(beginCell().store(storeOperationsSigned(src)).endCell());
         },
         parse: (src) => {
-            return loadOperationSigned(src.loadRef().beginParse());
+            return loadOperationsSigned(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type SignerArgs = {
+    $$type: 'SignerArgs';
+    safe: Address;
+    owners: Dictionary<Address, boolean>;
+    ownersCount: bigint;
+    treshold: bigint;
+    timeout: bigint;
+    ops: SafeOperations;
+}
+
+export function storeSignerArgs(src: SignerArgs) {
+    return (builder: Builder) => {
+        let b_0 = builder;
+        b_0.storeAddress(src.safe);
+        b_0.storeDict(src.owners, Dictionary.Keys.Address(), Dictionary.Values.Bool());
+        b_0.storeUint(src.ownersCount, 32);
+        b_0.storeUint(src.treshold, 32);
+        b_0.storeUint(src.timeout, 64);
+        b_0.store(storeSafeOperations(src.ops));
+    };
+}
+
+export function loadSignerArgs(slice: Slice) {
+    let sc_0 = slice;
+    let _safe = sc_0.loadAddress();
+    let _owners = Dictionary.load(Dictionary.Keys.Address(), Dictionary.Values.Bool(), sc_0);
+    let _ownersCount = sc_0.loadUintBig(32);
+    let _treshold = sc_0.loadUintBig(32);
+    let _timeout = sc_0.loadUintBig(64);
+    let _ops = loadSafeOperations(sc_0);
+    return { $$type: 'SignerArgs' as const, safe: _safe, owners: _owners, ownersCount: _ownersCount, treshold: _treshold, timeout: _timeout, ops: _ops };
+}
+
+function loadTupleSignerArgs(source: TupleReader) {
+    let _safe = source.readAddress();
+    let _owners = Dictionary.loadDirect(Dictionary.Keys.Address(), Dictionary.Values.Bool(), source.readCellOpt());
+    let _ownersCount = source.readBigNumber();
+    let _treshold = source.readBigNumber();
+    let _timeout = source.readBigNumber();
+    const _ops = loadTupleSafeOperations(source.readTuple());
+    return { $$type: 'SignerArgs' as const, safe: _safe, owners: _owners, ownersCount: _ownersCount, treshold: _treshold, timeout: _timeout, ops: _ops };
+}
+
+function storeTupleSignerArgs(source: SignerArgs) {
+    let builder = new TupleBuilder();
+    builder.writeAddress(source.safe);
+    builder.writeCell(source.owners.size > 0 ? beginCell().storeDictDirect(source.owners, Dictionary.Keys.Address(), Dictionary.Values.Bool()).endCell() : null);
+    builder.writeNumber(source.ownersCount);
+    builder.writeNumber(source.treshold);
+    builder.writeNumber(source.timeout);
+    builder.writeTuple(storeTupleSafeOperations(source.ops));
+    return builder.build();
+}
+
+function dictValueParserSignerArgs(): DictionaryValue<SignerArgs> {
+    return {
+        serialize: (src, buidler) => {
+            buidler.storeRef(beginCell().store(storeSignerArgs(src)).endCell());
+        },
+        parse: (src) => {
+            return loadSignerArgs(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type SignerDeploy = {
+    $$type: 'SignerDeploy';
+    queryId: bigint;
+}
+
+export function storeSignerDeploy(src: SignerDeploy) {
+    return (builder: Builder) => {
+        let b_0 = builder;
+        b_0.storeUint(3523526908, 32);
+        b_0.storeUint(src.queryId, 64);
+    };
+}
+
+export function loadSignerDeploy(slice: Slice) {
+    let sc_0 = slice;
+    if (sc_0.loadUint(32) !== 3523526908) { throw Error('Invalid prefix'); }
+    let _queryId = sc_0.loadUintBig(64);
+    return { $$type: 'SignerDeploy' as const, queryId: _queryId };
+}
+
+function loadTupleSignerDeploy(source: TupleReader) {
+    let _queryId = source.readBigNumber();
+    return { $$type: 'SignerDeploy' as const, queryId: _queryId };
+}
+
+function storeTupleSignerDeploy(source: SignerDeploy) {
+    let builder = new TupleBuilder();
+    builder.writeNumber(source.queryId);
+    return builder.build();
+}
+
+function dictValueParserSignerDeploy(): DictionaryValue<SignerDeploy> {
+    return {
+        serialize: (src, buidler) => {
+            buidler.storeRef(beginCell().store(storeSignerDeploy(src)).endCell());
+        },
+        parse: (src) => {
+            return loadSignerDeploy(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type SafeDeployedEvent = {
+    $$type: 'SafeDeployedEvent';
+    by: Address;
+    address: Address;
+}
+
+export function storeSafeDeployedEvent(src: SafeDeployedEvent) {
+    return (builder: Builder) => {
+        let b_0 = builder;
+        b_0.storeUint(1758984588, 32);
+        b_0.storeAddress(src.by);
+        b_0.storeAddress(src.address);
+    };
+}
+
+export function loadSafeDeployedEvent(slice: Slice) {
+    let sc_0 = slice;
+    if (sc_0.loadUint(32) !== 1758984588) { throw Error('Invalid prefix'); }
+    let _by = sc_0.loadAddress();
+    let _address = sc_0.loadAddress();
+    return { $$type: 'SafeDeployedEvent' as const, by: _by, address: _address };
+}
+
+function loadTupleSafeDeployedEvent(source: TupleReader) {
+    let _by = source.readAddress();
+    let _address = source.readAddress();
+    return { $$type: 'SafeDeployedEvent' as const, by: _by, address: _address };
+}
+
+function storeTupleSafeDeployedEvent(source: SafeDeployedEvent) {
+    let builder = new TupleBuilder();
+    builder.writeAddress(source.by);
+    builder.writeAddress(source.address);
+    return builder.build();
+}
+
+function dictValueParserSafeDeployedEvent(): DictionaryValue<SafeDeployedEvent> {
+    return {
+        serialize: (src, buidler) => {
+            buidler.storeRef(beginCell().store(storeSafeDeployedEvent(src)).endCell());
+        },
+        parse: (src) => {
+            return loadSafeDeployedEvent(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type SafeDeployParams = {
+    $$type: 'SafeDeployParams';
+    deploy: bigint;
+    devFee: bigint;
+}
+
+export function storeSafeDeployParams(src: SafeDeployParams) {
+    return (builder: Builder) => {
+        let b_0 = builder;
+        b_0.storeCoins(src.deploy);
+        b_0.storeCoins(src.devFee);
+    };
+}
+
+export function loadSafeDeployParams(slice: Slice) {
+    let sc_0 = slice;
+    let _deploy = sc_0.loadCoins();
+    let _devFee = sc_0.loadCoins();
+    return { $$type: 'SafeDeployParams' as const, deploy: _deploy, devFee: _devFee };
+}
+
+function loadTupleSafeDeployParams(source: TupleReader) {
+    let _deploy = source.readBigNumber();
+    let _devFee = source.readBigNumber();
+    return { $$type: 'SafeDeployParams' as const, deploy: _deploy, devFee: _devFee };
+}
+
+function storeTupleSafeDeployParams(source: SafeDeployParams) {
+    let builder = new TupleBuilder();
+    builder.writeNumber(source.deploy);
+    builder.writeNumber(source.devFee);
+    return builder.build();
+}
+
+function dictValueParserSafeDeployParams(): DictionaryValue<SafeDeployParams> {
+    return {
+        serialize: (src, buidler) => {
+            buidler.storeRef(beginCell().store(storeSafeDeployParams(src)).endCell());
+        },
+        parse: (src) => {
+            return loadSafeDeployParams(src.loadRef().beginParse());
         }
     }
 }
 
  type Signer_init_args = {
     $$type: 'Signer_init_args';
-    safe: Address;
-    signers: Dictionary<Address, boolean>;
-    treshold: bigint;
-    timeout: bigint;
-    operation: SafeOperation;
+    args: SignerArgs;
 }
 
 function initSigner_init_args(src: Signer_init_args) {
     return (builder: Builder) => {
         let b_0 = builder;
-        b_0.storeAddress(src.safe);
-        b_0.storeDict(src.signers, Dictionary.Keys.Address(), Dictionary.Values.Bool());
-        b_0.storeInt(src.treshold, 257);
-        b_0.storeInt(src.timeout, 257);
-        let b_1 = new Builder();
-        b_1.store(storeSafeOperation(src.operation));
-        b_0.storeRef(b_1.endCell());
+        b_0.store(storeSignerArgs(src.args));
     };
 }
 
-async function Signer_init(safe: Address, signers: Dictionary<Address, boolean>, treshold: bigint, timeout: bigint, operation: SafeOperation) {
-    const __code = Cell.fromBase64('te6ccgECMwEABGcAART/APSkE/S88sgLAQIBYgIDAgLKBAUCASAvMAIBIAYHAgJxKywCASAICQIBIBARAs/YDoaYGAuNhgAMi/yLhxAP0gAJBrpMCAhd15cEQQa4WFEEGE3QDAgn/dWPlwRCooKYG3gnwwgXwxdqJoagD8MekAAMp4ErYMR0R4E4NoqoJtnnEqi+2eGGR8IYDmP4DlACq4eBNk9qpDEKAgEgDg8BjO2i7ftwIddJwh+VMCDXCx/eApJbf+ABwACOp/kBgvAirubQptwUZXcnfdWNBq4wkKPN09iohWEYQgiuX26wObrjApEw4nALAbiBEpMl+CO88vSCAJ9qIbPy9PhCFIEBCwFtcSFulVtZ9FkwmMgBzwBBM/RB4gWkUwa+jqMzf3CBAIJwU1TIWYIQwmaAJ1ADyx8C8A/JK1UgREBtbds8A94FA3/bMQwB9shxAcoBUAcBygBwAcoCUAXwCc8WUAP6AnABymgjbrMlbrOxjkx/AcoAyHABygBwAcoAJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4iRus51/AcoABCBu8tCAUATMljQDcAHKAOJwAcoAAn8BygACyVjMlzMzAXABygDiIQ0ANG6znH8BygABIG7y0IABzJUxcAHKAOLJAfsAADdkg10mBAQu68uCIINcLCiCDCboBgQT/urHy4IiAFHxC3Wc0/qAHlAAD4CfgKSrgZAWUAcRC3Wcy/gOUAAPgM+A1KOBllAHFAIBIBITAgEgHR4CASAUFQIBIBgZAAVW8EgCASAWFwArPpAAfAJAfoA0wfSAAGR1JJtAeJVMIAAPCBu8tCAbySACASAaGwIBIBwqADcUEPwCc8WAfoCEssHIW6zlX8BygDMlHAyygDigACEIG6SMG2ZIG7y0IBvJPAW4oAAFG8EgAgEgHyACASAlJgIBICEiAgEgIyQABTwHYAAPCBu8tCAbyKAABTwHoAAhCBukjBtmSBu8tCAbyLwHOKACASAnKAIBICkqAAk8B9vAYAALNMf+gBZgAA0AssfAfoCgAAUbwKAAe1+kAB8AkBgQEB1wCBAQHXANQB0IEBAdcA9ATSAAGU8BLwEZFt4gHSAAGU8BjwF5Ft4hIC0gAwEFgQVxBWEoAgEgLS4AlxQh/AJzxYVgQEBzwATgQEBzwAByIEBAc8AEvQAQAQhbrOaf1ADygAB8BPwFJVwMgLKAOIhbrOZfwHKAAHwGfAalHAyygDiygDJAcyAAbT6QAHwCQH0BIEBAdcAgQEB1wDUAdDSAAGU8BLwEZFt4gHSAAGU8BjwF5Ft4hIyECYQJRAkQwCACSb/kn2omhqAPwx6QAAyngStgxHRHgTg2iqgm2ecW2eAPgKgPgNwxMgCVvd6ME4LnYerpZXPY9CdhzrJUKNs0E4TusalpWyPlmRadeW/vixHME4ECrgDcAzscpnLB1XI5LZYcE4bLzjN0Yc3hPWW1CYmtxu8sACCCAI9K+EInxwXy9HAERVVwAAYwbFI=');
-    const __system = Cell.fromBase64('te6cckECNQEABHEAAQHAAQEFoFqXAgEU/wD0pBP0vPLICwMCAWIIBAIBIAYFAJW93owTgudh6ullc9j0J2HOslQo2zQThO6xqWlbI+WZFp15b++LEcwTgQKuANwDOxymcsHVcjktlhwThsvOM3RhzeE9ZbUJia3G7ywCSb/kn2omhqAPwx6QAAyngStgxHRHgTg2iqgm2ecW2eAPgKgPgNw0BwAGMGxSAgLKDgkCAnENCgIBIAwLAG0+kAB8AkB9ASBAQHXAIEBAdcA1AHQ0gABlPAS8BGRbeIB0gABlPAY8BeRbeISMhAmECUQJEMAgAJcUIfwCc8WFYEBAc8AE4EBAc8AAciBAQHPABL0AEAEIW6zmn9QA8oAAfAT8BSVcDICygDiIW6zmX8BygAB8BnwGpRwMsoA4soAyQHMgAHtfpAAfAJAYEBAdcAgQEB1wDUAdCBAQHXAPQE0gABlPAS8BGRbeIB0gABlPAY8BeRbeISAtIAMBBYEFcQVhKAIBICsPAgEgHhACASAXEQIBIBQSAgEgEyEADQCyx8B+gKACASAWFQALNMf+gBZgAAk8B9vAYAIBIBsYAgEgGhkAIQgbpIwbZkgbvLQgG8i8BzigAAU8B6ACASAdHAAPCBu8tCAbyKAABTwHYAIBICYfAgEgIyACASAiIQAFG8CgAAUbwSACASAlJAAhCBukjBtmSBu8tCAbyTwFuKAANxQQ/AJzxYB+gISywchbrOVfwHKAMyUcDLKAOKACASAqJwIBICkoAA8IG7y0IBvJIAArPpAAfAJAfoA0wfSAAGR1JJtAeJVMIAAFVvBIAgEgLywCASAuLQBR8Qt1nNP6gB5QAA+An4Ckq4GQFlAHEQt1nMv4DlAAD4DPgNSjgZZQBxQAN2SDXSYEBC7ry4Igg1wsKIIMJugGBBP+6sfLgiICz9gOhpgYC42GAAyL/IuHEA/SAAkGukwICF3XlwRBBrhYUQQYTdAMCCf91Y+XBEKigpgbeCfDCBfDF2omhqAPwx6QAAyngStgxHRHgTg2iqgm2ecSqL7Z4YZHwhgOY/gOUAKrh4E2T2qkNDABjO2i7ftwIddJwh+VMCDXCx/eApJbf+ABwACOp/kBgvAirubQptwUZXcnfdWNBq4wkKPN09iohWEYQgiuX26wObrjApEw4nAxAbiBEpMl+CO88vSCAJ9qIbPy9PhCFIEBCwFtcSFulVtZ9FkwmMgBzwBBM/RB4gWkUwa+jqMzf3CBAIJwU1TIWYIQwmaAJ1ADyx8C8A/JK1UgREBtbds8A94FA3/bMTIB9shxAcoBUAcBygBwAcoCUAXwCc8WUAP6AnABymgjbrMlbrOxjkx/AcoAyHABygBwAcoAJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4iRus51/AcoABCBu8tCAUATMljQDcAHKAOJwAcoAAn8BygACyVjMlzMzAXABygDiITMANG6znH8BygABIG7y0IABzJUxcAHKAOLJAfsAACCCAI9K+EInxwXy9HAERVVwg0e/BA==');
+async function Signer_init(args: SignerArgs) {
+    const __code = Cell.fromBase64('te6ccgECIQEABTgAART/APSkE/S88sgLAQIBYgIDBN7QAdDTAwFxsMABkX+RcOIB+kABINdJgQELuvLgiCDXCwoggwm6AYEE/7qx8uCIVFBTA28E+GEC+GLtRNDUAfhj0gABjp30BNQB0Ns8B9Mf0gAwEJoQeBBnEFYQRRA0ECNsGo8I2zwH0VUF2zziVRkdHR4EAgEgDxACRts8MMj4QwHMfwHKAFWQUJr0AMhVYds8EssfEsoAyQHMye1UBQoByu2i7ftwIddJwh+VMCDXCx/eApJbf+AhghDSBMD8uo4UMdMfAYIQ0gTA/Lry4IHTPwExMH/gAcAAjqf5AYLwIq7m0KbcFGV3J33VjQauMJCjzdPYqIVhGEIIrl9usDm64wKRMOJwBgPu+EKBEpP4Iye78vSCAJ9qIrPy9IEMFiuBAQsjcUEz9ApvoZQB1wAwkltt4sD/8vQKgQELK21xIW6VW1n0WTCYyAHPAEEz9EHiAqRwgEJwjQRVm90ZSBZRVMgYWNjZXB0ZWSDbPBA0ED5EQG1t2zxTlb7jABl/2zEIDQcEjDB/jQZVm90aW5nIGVuZGVkIHdpdGggc3VjY2Vzc4Ns82zxwgQCCcFR7qVR7qSvIVWCCEG/ovLxQCMsfB9s8ySxVIERAbW0ICQoLAULIcAHLH28AAW+MbW+MAds8byIByZMhbrOWAW8iWczJ6DEMADzIcwHLAXABywFwAcsBcAHLX3ABygB/AcoAzMlw+wAAXlB2INdJgQELuvLgiCDXCwoggwm6AYEE/7qx8uCIzxYU9AASyx/LH8s/WQL0AMsHAQTbPA0AuiDXSiHXSZcgwgAiwgCxjkoDbyKAfyLPMasCoQWrAlFVtgggwgCcIKoCFdcYUDPPFkAU3llvAlNBocIAmcgBbwJQRKGqAo4SMTPCAJnUMNAg10oh10mScCDi4uhfAwHCyHEBygFQBwHKAHABygJQBSDXSYEBC7ry4Igg1wsKIIMJugGBBP+6sfLgiM8WUAP6AnABymgjbrMlbrOxlzMzAXABygDjDSFus5x/AcoAASBu8tCAAcyVMXABygDiyQH7AA4AmH8BygDIcAHKAHABygAkbrOdfwHKAAQgbvLQgFAEzJY0A3ABygDiJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4nABygACfwHKAALJWMwCASAREgIBSBcYBG27bC7UTQ1AH4Y9IAAY6d9ATUAdDbPAfTH9IAMBCaEHgQZxBWEEUQNBAjbBqPCNs8B9FVBds84oHR0eEwRtuFR+1E0NQB+GPSAAGOnfQE1AHQ2zwH0x/SADAQmhB4EGcQVhBFEDQQI2wajwjbPAfRVQXbPOKB0dHhUBCNs8bKEUAAIgAQzbPGynbwIWAA5UeHZUeHYoBG22FJ2omhqAPwx6QAAx076AmoA6G2eA+mP6QAYCE0IPAgziCsIIogaCBG2DUeEbZ4D6KqC7Z5xQHR0eGQIBbhscAQjbPGyhGgACKQCUq9GCcFzsPV0srnsehOw51kqFG2aCcJ3WNS0rZHyzItOvLf3xYjmCcCBVwBuAZ2OUzlg6rkclssOCcNl5xm6MObwnrLahMTW43eUEbKuY7UTQ1AH4Y9IAAY6d9ATUAdDbPAfTH9IAMBCaEHgQZxBWEEUQNBAjbBqPCNs8B9FVBds84h0dHh8AbPpAASDXSYEBC7ry4Igg1wsKIIMJugGBBP+6sfLgiAH0BNMf0x/TP/QE0wdZECcQJhAlECQQIwAkggCPSvhCKMcF8vQlEGdVQHBwAQjbPGyhIAACIQ==');
+    const __system = Cell.fromBase64('te6cckECIwEABUIAAQHAAQEFoFqXAgEU/wD0pBP0vPLICwMCAWIVBAIBIA4FAgFICwYCAW4KBwRsq5jtRNDUAfhj0gABjp30BNQB0Ns8B9Mf0gAwEJoQeBBnEFYQRRA0ECNsGo8I2zwH0VUF2zziIiIhCAEI2zxsoQkAAiEAlKvRgnBc7D1dLK57HoTsOdZKhRtmgnCd1jUtK2R8syLTry398WI5gnAgVcAbgGdjlM5YOq5HJbLDgnDZecZujDm8J6y2oTE1uN3lBG22FJ2omhqAPwx6QAAx076AmoA6G2eA+mP6QAYCE0IPAgziCsIIogaCBG2DUeEbZ4D6KqC7Z5xQIiIhDAEI2zxsoQ0AAikCASASDwRtuFR+1E0NQB+GPSAAGOnfQE1AHQ2zwH0x/SADAQmhB4EGcQVhBFEDQQI2wajwjbPAfRVQXbPOKCIiIRABDNs8bKdvAhEADlR4dlR4digEbbtsLtRNDUAfhj0gABjp30BNQB0Ns8B9Mf0gAwEJoQeBBnEFYQRRA0ECNsGo8I2zwH0VUF2zzigiIiETAQjbPGyhFAACIATe0AHQ0wMBcbDAAZF/kXDiAfpAASDXSYEBC7ry4Igg1wsKIIMJugGBBP+6sfLgiFRQUwNvBPhhAvhi7UTQ1AH4Y9IAAY6d9ATUAdDbPAfTH9IAMBCaEHgQZxBWEEUQNBAjbBqPCNs8B9FVBds84lUZIiIhFgJG2zwwyPhDAcx/AcoAVZBQmvQAyFVh2zwSyx8SygDJAczJ7VQXGwHK7aLt+3Ah10nCH5UwINcLH94Cklt/4CGCENIEwPy6jhQx0x8BghDSBMD8uvLggdM/ATEwf+ABwACOp/kBgvAirubQptwUZXcnfdWNBq4wkKPN09iohWEYQgiuX26wObrjApEw4nAYA+74QoESk/gjJ7vy9IIAn2ois/L0gQwWK4EBCyNxQTP0Cm+hlAHXADCSW23iwP/y9AqBAQsrbXEhbpVbWfRZMJjIAc8AQTP0QeICpHCAQnCNBFWb3RlIFlFUyBhY2NlcHRlZINs8EDQQPkRAbW3bPFOVvuMAGX/bMR8dGQSMMH+NBlWb3RpbmcgZW5kZWQgd2l0aCBzdWNjZXNzg2zzbPHCBAIJwVHupVHupK8hVYIIQb+i8vFAIyx8H2zzJLFUgREBtbR8cGxoBBNs8HQBeUHYg10mBAQu68uCIINcLCiCDCboBgQT/urHy4IjPFhT0ABLLH8sfyz9ZAvQAywcAPMhzAcsBcAHLAXABywFwActfcAHKAH8BygDMyXD7AAHCyHEBygFQBwHKAHABygJQBSDXSYEBC7ry4Igg1wsKIIMJugGBBP+6sfLgiM8WUAP6AnABymgjbrMlbrOxlzMzAXABygDjDSFus5x/AcoAASBu8tCAAcyVMXABygDiyQH7AB4AmH8BygDIcAHKAHABygAkbrOdfwHKAAQgbvLQgFAEzJY0A3ABygDiJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4nABygACfwHKAALJWMwBQshwAcsfbwABb4xtb4wB2zxvIgHJkyFus5YBbyJZzMnoMSAAuiDXSiHXSZcgwgAiwgCxjkoDbyKAfyLPMasCoQWrAlFVtgggwgCcIKoCFdcYUDPPFkAU3llvAlNBocIAmcgBbwJQRKGqAo4SMTPCAJnUMNAg10oh10mScCDi4uhfAwAkggCPSvhCKMcF8vQlEGdVQHBwAGz6QAEg10mBAQu68uCIINcLCiCDCboBgQT/urHy4IgB9ATTH9Mf0z/0BNMHWRAnECYQJRAkECNMbk4I');
     let builder = beginCell();
     builder.storeRef(__system);
     builder.storeUint(0, 1);
-    initSigner_init_args({ $$type: 'Signer_init_args', safe, signers, treshold, timeout, operation })(builder);
+    initSigner_init_args({ $$type: 'Signer_init_args', args })(builder);
     const __data = builder.endCell();
     return { code: __code, data: __data };
 }
@@ -692,23 +931,32 @@ const Signer_errors: { [key: number]: { message: string } } = {
     135: { message: `Code of a contract was not found` },
     136: { message: `Invalid address` },
     137: { message: `Masterchain support is not enabled for this contract` },
+    3094: { message: `Already signed or not an owner` },
     4755: { message: `Timeout` },
     5165: { message: `Not enough value` },
+    7464: { message: `Request price must be less or equals than 10 TON` },
+    8884: { message: `Wrong owners` },
     25849: { message: `Not enough value to deploy a Safe` },
+    31822: { message: `Timeout must be less than a year` },
+    32453: { message: `Wrong safe address` },
     36682: { message: `Sender is not safe` },
+    37479: { message: `Wrong treshold` },
+    38009: { message: `Request price must be more or equals than 1 TON` },
     40810: { message: `Completed` },
     44757: { message: `Exactly one operation must be specified` },
+    45379: { message: `Wrong signer address` },
     46307: { message: `Not a member` },
+    62638: { message: `Wrong owners count` },
 }
 
 export class Signer implements Contract {
     
-    static async init(safe: Address, signers: Dictionary<Address, boolean>, treshold: bigint, timeout: bigint, operation: SafeOperation) {
-        return await Signer_init(safe, signers, treshold, timeout, operation);
+    static async init(args: SignerArgs) {
+        return await Signer_init(args);
     }
     
-    static async fromInit(safe: Address, signers: Dictionary<Address, boolean>, treshold: bigint, timeout: bigint, operation: SafeOperation) {
-        const init = await Signer_init(safe, signers, treshold, timeout, operation);
+    static async fromInit(args: SignerArgs) {
+        const init = await Signer_init(args);
         const address = contractAddress(0, init);
         return new Signer(address, init);
     }
@@ -728,9 +976,12 @@ export class Signer implements Contract {
         this.init = init;
     }
     
-    async send(provider: ContractProvider, via: Sender, args: { value: bigint, bounce?: boolean| null | undefined }, message: 'YES') {
+    async send(provider: ContractProvider, via: Sender, args: { value: bigint, bounce?: boolean| null | undefined }, message: SignerDeploy | 'YES') {
         
         let body: Cell | null = null;
+        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'SignerDeploy') {
+            body = beginCell().store(storeSignerDeploy(message)).endCell();
+        }
         if (message === 'YES') {
             body = beginCell().storeUint(0, 32).storeStringTail(message).endCell();
         }
@@ -740,10 +991,31 @@ export class Signer implements Contract {
         
     }
     
-    async getOperation(provider: ContractProvider) {
+    async getArgs(provider: ContractProvider) {
         let builder = new TupleBuilder();
-        let source = (await provider.get('operation', builder.build())).stack;
-        const result = loadTupleSafeOperation(source);
+        let source = (await provider.get('args', builder.build())).stack;
+        const result = loadTupleSignerArgs(source);
+        return result;
+    }
+    
+    async getCompleted(provider: ContractProvider) {
+        let builder = new TupleBuilder();
+        let source = (await provider.get('completed', builder.build())).stack;
+        let result = source.readBoolean();
+        return result;
+    }
+    
+    async getWeight(provider: ContractProvider) {
+        let builder = new TupleBuilder();
+        let source = (await provider.get('weight', builder.build())).stack;
+        let result = source.readBigNumber();
+        return result;
+    }
+    
+    async getRemaining(provider: ContractProvider) {
+        let builder = new TupleBuilder();
+        let source = (await provider.get('remaining', builder.build())).stack;
+        let result = Dictionary.loadDirect(Dictionary.Keys.Address(), Dictionary.Values.Bool(), source.readCellOpt());
         return result;
     }
     

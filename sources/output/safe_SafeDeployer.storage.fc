@@ -82,6 +82,42 @@ cell $SafeDeployment$_store_cell((slice) v) inline {
 }
 
 ;;
+;; Type: SafeDeployedEvent
+;; Header: 0x68d7f98c
+;; TLB: safe_deployed_event#68d7f98c by:address address:address = SafeDeployedEvent
+;;
+
+builder $SafeDeployedEvent$_store(builder build_0, (slice, slice) v) inline {
+    var (v'by, v'address) = v;
+    build_0 = store_uint(build_0, 1758984588, 32);
+    build_0 = __tact_store_address(build_0, v'by);
+    build_0 = __tact_store_address(build_0, v'address);
+    return build_0;
+}
+
+cell $SafeDeployedEvent$_store_cell((slice, slice) v) inline {
+    return $SafeDeployedEvent$_store(begin_cell(), v).end_cell();
+}
+
+((slice, slice)) $SafeDeployedEvent$_constructor_by_address(slice by, slice address) inline {
+    return (by, address);
+}
+
+;;
+;; Type: SafeDeployParams
+;; TLB: _ deploy:coins devFee:coins = SafeDeployParams
+;;
+
+(int, int) $SafeDeployParams$_to_external(((int, int)) v) inline {
+    var (v'deploy, v'devFee) = v; 
+    return (v'deploy, v'devFee);
+}
+
+((int, int)) $SafeDeployParams$_constructor_deploy_devFee(int deploy, int devFee) inline {
+    return (deploy, devFee);
+}
+
+;;
 ;; Type: Safe
 ;;
 
@@ -101,6 +137,10 @@ builder $Safe$init$_store(builder build_0, (slice, int) v) inline {
     cell mine = __tact_dict_get_code(source, 57139);
     contracts = __tact_dict_set_code(contracts, 57139, mine);
     
+    ;; Contract Code: Signer
+    cell code_11595 = __tact_dict_get_code(source, 11595);
+    contracts = __tact_dict_set_code(contracts, 11595, code_11595);
+    
     ;; Build cell
     builder b = begin_cell();
     b = b.store_ref(begin_cell().store_dict(contracts).end_cell());
@@ -114,9 +154,9 @@ builder $Safe$init$_store(builder build_0, (slice, int) v) inline {
 ;;
 
 builder $SafeDeployer$_store(builder build_0, (slice, int, int, int) v) inline {
-    var (v'owner, v'fee, v'deployValue, v'counter) = v;
+    var (v'owner, v'devFee, v'deployValue, v'counter) = v;
     build_0 = __tact_store_address(build_0, v'owner);
-    build_0 = build_0.store_coins(v'fee);
+    build_0 = build_0.store_coins(v'devFee);
     build_0 = build_0.store_coins(v'deployValue);
     build_0 = build_0.store_uint(v'counter, 64);
     return build_0;
@@ -124,17 +164,17 @@ builder $SafeDeployer$_store(builder build_0, (slice, int, int, int) v) inline {
 
 (slice, ((slice, int, int, int))) $SafeDeployer$_load(slice sc_0) inline {
     var v'owner = sc_0~__tact_load_address();
-    var v'fee = sc_0~load_coins();
+    var v'devFee = sc_0~load_coins();
     var v'deployValue = sc_0~load_coins();
     var v'counter = sc_0~load_uint(64);
-    return (sc_0, (v'owner, v'fee, v'deployValue, v'counter));
+    return (sc_0, (v'owner, v'devFee, v'deployValue, v'counter));
 }
 
 (slice, ((slice, int, int))) $SafeDeployer$init$_load(slice sc_0) inline {
     var v'owner = sc_0~__tact_load_address();
-    var v'fee = sc_0~load_int(257);
+    var v'devFee = sc_0~load_int(257);
     var v'deployValue = sc_0~load_int(257);
-    return (sc_0, (v'owner, v'fee, v'deployValue));
+    return (sc_0, (v'owner, v'devFee, v'deployValue));
 }
 
 (slice, int, int, int) $SafeDeployer$_contract_load() impure inline {
@@ -144,9 +184,9 @@ builder $SafeDeployer$_store(builder build_0, (slice, int, int, int) v) inline {
     if ($loaded) {
         return $sc~$SafeDeployer$_load();
     } else {
-        (slice owner, int fee, int deployValue) = $sc~$SafeDeployer$init$_load();
+        (slice owner, int devFee, int deployValue) = $sc~$SafeDeployer$init$_load();
         $sc.end_parse();
-        return $SafeDeployer$_contract_init(owner, fee, deployValue);
+        return $SafeDeployer$_contract_init(owner, devFee, deployValue);
     }
 }
 

@@ -1,59 +1,97 @@
+import "@stdlib/deploy";
 import "./operations.tact";
 
-message OperationSigned {
-    operation: SafeOperation;
+message OperationsSigned {
+    args: SignerArgs;
+}
+
+struct SignerArgs {
+    safe: Address;
+    owners: map<Address, Bool>;
+    ownersCount: Int as uint32;
+    treshold: Int as uint32;
+    timeout: Int as uint64;
+    ops: SafeOperations;
+}
+
+message SignerDeploy {
+    queryId: Int as uint64;
 }
 
 contract Signer {
-    safe: Address;
-    treshold: Int;
-    weight: Int;
-    timeout: Int;
-    signers: map<Address, Bool>;
-    operation: SafeOperation;
+    owners: map<Address, Bool>;
+    args: SignerArgs;
+    weight: Int as uint32;
     completed: Bool;
     
-    init(safe: Address, signers: map<Address, Bool>, treshold: Int, timeout: Int, operation: SafeOperation) {
+    init(args: SignerArgs) {
 
         // Only safe could deploy this contract
-        require(sender() == safe, "Sender is not safe");
+        require(sender() == args.safe, "Sender is not safe");
 
         // Init struct
-        self.safe = safe;
-        self.treshold = treshold;
+        self.args = args;
+        self.owners = args.owners;
         self.weight = 0;
-        self.signers = signers;
-        self.operation = operation;
-        self.timeout = timeout;
         self.completed = false;
+    }
+
+    receive(src: SignerDeploy) {
+        // Nothing to do
     }
 
     receive("YES") {
 
         // Checks
-        require(self.timeout > now(), "Timeout");
-        require(!self.completed, "Completed");
-
-        // Load weitght
         let sender: Address = sender();
-        let weight: Bool = self.signers.get(sender)!!;
-        self.signers.set(sender, null);
+        require(now() <= self.args.timeout, "Timeout");
+        require(!self.completed, "Completed");
+        require(self.owners.get(sender) == true, "Already signed or not an owner");
 
-        // Update weight
+        // Preform vote
+        self.owners.set(sender, null);
         self.weight = self.weight + 1;
-        if (self.weight >= self.treshold) {
+
+        // Cashback
+        send(SendParameters{
+            value: 0, 
+            to: sender, 
+            mode: SendIgnoreErrors + SendRemainingValue,
+            bounce: false, 
+            body: "Vote YES accepted".asComment()
+        });
+
+        // Complete if treshold reached
+        if (self.weight >= self.args.treshold) {
             self.completed = true;
+
+            // Emit event
+            emit("Voting ended with success".asComment());
+
+            // Send result
             send(SendParameters{
                 value: 0, 
-                to: self.safe, 
+                to: self.args.safe, 
                 mode: SendRemainingBalance + SendIgnoreErrors, 
                 bounce: false, 
-                body: OperationSigned{ operation: self.operation }.toCell()
+                body: OperationsSigned{ args: self.args }.toCell()
             });
         }
     }
 
-    get fun operation(): SafeOperation {
-        return self.operation;
+    get fun args(): SignerArgs {
+        return self.args;
+    }
+
+    get fun completed(): Bool {
+        return self.completed;
+    }
+
+    get fun weight(): Int {
+        return self.weight;
+    }
+
+    get fun remaining(): map<Address, Bool> {
+        return self.owners;
     }
 }

@@ -2,25 +2,39 @@ import "@stdlib/deploy";
 import "@stdlib/ownable";
 import "./safe/safe.tact";
 
+message SafeDeployedEvent {
+    by: Address;
+    address: Address;
+}
+
+struct SafeDeployParams {
+    deploy: Int as coins;
+    devFee: Int as coins;
+}
+
 contract SafeDeployer with OwnableTransferable, Deployable {
 
     owner: Address;
-    fee: Int as coins;
+    devFee: Int as coins;
     deployValue: Int as coins;
     counter: Int as uint64; // Big enought
 
-    init(owner: Address, fee: Int, deployValue: Int) {
+    init(owner: Address, devFee: Int, deployValue: Int) {
         self.owner = owner;
-        self.fee = fee;
+        self.devFee = devFee;
         self.deployValue = deployValue;
         self.counter = 0;
+    }
+
+    get fun params(): SafeDeployParams {
+        return SafeDeployParams{deploy: self.deployValue, devFee: self.devFee};
     }
 
     receive("Deploy new Safe") {
 
         // Check if the value is enough
         let ctx: Context = context();
-        require(ctx.value >= self.fee + self.deployValue, "Not enough value to deploy a Safe");
+        require(ctx.value >= self.devFee + self.deployValue, "Not enough value to deploy a Safe");
 
         // Allocate counter
         let counter: Int = self.counter;
@@ -36,6 +50,12 @@ contract SafeDeployer with OwnableTransferable, Deployable {
                 remaining: self.owner
             }.toCell()
         });
+
+        // Emit event
+        emit(SafeDeployedEvent{
+            by: ctx.sender,
+            address: safeAddress
+        }.toCell());
 
         // Send fee to owner
         send(SendParameters{

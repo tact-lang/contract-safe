@@ -1,0 +1,375 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`contract should create request 1`] = `
+[
+  {
+    "$seq": 0,
+    "events": [
+      {
+        "$type": "deploy",
+      },
+      {
+        "$type": "received",
+        "message": {
+          "body": {
+            "cell": "x{6EB0825380011F6E292AB9FE5825731C5F568DB15E68F69707390F1976DA6A7F173916703B9_}",
+            "type": "cell",
+          },
+          "bounce": true,
+          "from": "@treasure(owner)",
+          "to": "@safe",
+          "type": "internal",
+          "value": 1000000000n,
+        },
+      },
+      {
+        "$type": "processed",
+        "gasUsed": 8097n,
+      },
+      {
+        "$type": "sent",
+        "messages": [
+          {
+            "body": {
+              "type": "empty",
+            },
+            "bounce": true,
+            "from": "@safe",
+            "to": "@treasure(owner)",
+            "type": "internal",
+            "value": 990903000n,
+          },
+        ],
+      },
+    ],
+  },
+]
+`;
+
+exports[`contract should create request 2`] = `
+[
+  {
+    "$seq": 1,
+    "events": [
+      {
+        "$type": "received",
+        "message": {
+          "body": {
+            "cell": "x{FF7DE06C004_}",
+            "type": "cell",
+          },
+          "bounce": true,
+          "from": "@treasure(owner)",
+          "to": "@safe",
+          "type": "internal",
+          "value": 1000000000n,
+        },
+      },
+      {
+        "$type": "processed",
+        "gasUsed": 15871n,
+      },
+      {
+        "$type": "sent",
+        "messages": [
+          {
+            "body": {
+              "cell": "x{D204C0FC0000000000000000}",
+              "type": "cell",
+            },
+            "bounce": true,
+            "from": "@safe",
+            "to": "kQAbM0wXYezRS0g7utBo-6HcLoeEZuMl-ccsLT9MeD4rN0qw",
+            "type": "internal",
+            "value": 968676000n,
+          },
+        ],
+      },
+    ],
+  },
+]
+`;
+
+exports[`contract should create vote: deploy 1`] = `
+[
+  {
+    "$seq": 0,
+    "events": [
+      {
+        "$type": "deploy",
+      },
+      {
+        "$type": "received",
+        "message": {
+          "body": {
+            "cell": "x{D204C0FC0000000000000000}",
+            "type": "cell",
+          },
+          "bounce": true,
+          "from": "@treasure(safe)",
+          "to": "@signer",
+          "type": "internal",
+          "value": 1000000000n,
+        },
+      },
+      {
+        "$type": "processed",
+        "gasUsed": 5960n,
+      },
+    ],
+  },
+]
+`;
+
+exports[`contract should create vote: double vote 1`] = `
+[
+  {
+    "$seq": 2,
+    "events": [
+      {
+        "$type": "received",
+        "message": {
+          "body": {
+            "text": "YES",
+            "type": "text",
+          },
+          "bounce": true,
+          "from": "@treasure(owner1)",
+          "to": "@signer",
+          "type": "internal",
+          "value": 1000000000n,
+        },
+      },
+      {
+        "$type": "failed",
+        "errorCode": 7,
+        "errorMessage": "Type check error",
+      },
+      {
+        "$type": "sent-bounced",
+        "message": {
+          "body": {
+            "cell": "x{FFFFFFFF00000000594553}",
+            "type": "cell",
+          },
+          "bounce": false,
+          "from": "@signer",
+          "to": "@treasure(owner1)",
+          "type": "internal",
+          "value": 993969000n,
+        },
+      },
+    ],
+  },
+]
+`;
+
+exports[`contract should create vote: invalid vote 1`] = `
+[
+  {
+    "$seq": 3,
+    "events": [
+      {
+        "$type": "received",
+        "message": {
+          "body": {
+            "text": "YES",
+            "type": "text",
+          },
+          "bounce": true,
+          "from": "@treasure(unknown)",
+          "to": "@signer",
+          "type": "internal",
+          "value": 1000000000n,
+        },
+      },
+      {
+        "$type": "failed",
+        "errorCode": 7,
+        "errorMessage": "Type check error",
+      },
+      {
+        "$type": "sent-bounced",
+        "message": {
+          "body": {
+            "cell": "x{FFFFFFFF00000000594553}",
+            "type": "cell",
+          },
+          "bounce": false,
+          "from": "@signer",
+          "to": "@treasure(unknown)",
+          "type": "internal",
+          "value": 993969000n,
+        },
+      },
+    ],
+  },
+]
+`;
+
+exports[`contract should create vote: vote 1`] = `
+[
+  {
+    "$seq": 1,
+    "events": [
+      {
+        "$type": "received",
+        "message": {
+          "body": {
+            "text": "YES",
+            "type": "text",
+          },
+          "bounce": true,
+          "from": "@treasure(owner1)",
+          "to": "@signer",
+          "type": "internal",
+          "value": 1000000000n,
+        },
+      },
+      {
+        "$type": "processed",
+        "gasUsed": 13635n,
+      },
+      {
+        "$type": "sent",
+        "messages": [
+          {
+            "body": {
+              "text": "Vote YES accepted",
+              "type": "text",
+            },
+            "bounce": false,
+            "from": "@signer",
+            "to": "@treasure(owner1)",
+            "type": "internal",
+            "value": 985097000n,
+          },
+        ],
+      },
+    ],
+  },
+]
+`;
+
+exports[`contract should create vote: vote 2`] = `
+[
+  {
+    "$seq": 4,
+    "events": [
+      {
+        "$type": "received",
+        "message": {
+          "body": {
+            "text": "YES",
+            "type": "text",
+          },
+          "bounce": true,
+          "from": "@treasure(owner2)",
+          "to": "@signer",
+          "type": "internal",
+          "value": 1000000000n,
+        },
+      },
+      {
+        "$type": "processed",
+        "gasUsed": 21133n,
+      },
+      {
+        "$type": "sent",
+        "messages": [
+          {
+            "body": {
+              "text": "Vote YES accepted",
+              "type": "text",
+            },
+            "bounce": false,
+            "from": "@signer",
+            "to": "@treasure(owner2)",
+            "type": "internal",
+            "value": 977599000n,
+          },
+        ],
+      },
+      {
+        "$type": "sent",
+        "messages": [
+          {
+            "body": {
+              "text": "Voting ended with success",
+              "type": "text",
+            },
+            "to": null,
+            "type": "external-out",
+          },
+        ],
+      },
+      {
+        "$type": "sent",
+        "messages": [
+          {
+            "body": {
+              "cell": "x{6FE8BCBC800AB60B6F3F99430109C97E1BE903020AA7211D122BF269A5ECE534A6217AE119500000002000000020000000000002AF8004_}
+ x{817002_}
+  x{BFC110A946B3DAEFF28A18D2229FEF53B35332178C251D1E2E378B6644A32D58F66_}
+  x{BFD58423483C36A7B8008A14725B5E2995FDA383B56242AEE3ED40A25917C29B27E_}",
+              "type": "cell",
+            },
+            "bounce": false,
+            "from": "@signer",
+            "to": "@treasure(safe)",
+            "type": "internal",
+            "value": 990317000n,
+          },
+        ],
+      },
+    ],
+  },
+]
+`;
+
+exports[`contract should deploy correctly 1`] = `
+[
+  {
+    "$seq": 0,
+    "events": [
+      {
+        "$type": "deploy",
+      },
+      {
+        "$type": "received",
+        "message": {
+          "body": {
+            "cell": "x{946A98B60000000000000000}",
+            "type": "cell",
+          },
+          "bounce": true,
+          "from": "@treasure(owner)",
+          "to": "@deployer",
+          "type": "internal",
+          "value": 1000000000n,
+        },
+      },
+      {
+        "$type": "processed",
+        "gasUsed": 8233n,
+      },
+      {
+        "$type": "sent",
+        "messages": [
+          {
+            "body": {
+              "cell": "x{AFF90F570000000000000000}",
+              "type": "cell",
+            },
+            "bounce": true,
+            "from": "@deployer",
+            "to": "@treasure(owner)",
+            "type": "internal",
+            "value": 990571000n,
+          },
+        ],
+      },
+    ],
+  },
+]
+`;

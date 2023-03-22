@@ -6,24 +6,29 @@
 ;; Contract SafeDeployer functions
 ;;
 
-(slice, int, int, int) $SafeDeployer$_contract_init(slice $owner, int $fee, int $deployValue) impure inline_ref {
-    var (($self'owner, $self'fee, $self'deployValue, $self'counter)) = (null(), null(), null(), null());
+(slice, int, int, int) $SafeDeployer$_contract_init(slice $owner, int $devFee, int $deployValue) impure inline_ref {
+    var (($self'owner, $self'devFee, $self'deployValue, $self'counter)) = (null(), null(), null(), null());
     $self'owner = $owner;
-    $self'fee = $fee;
+    $self'devFee = $devFee;
     $self'deployValue = $deployValue;
     $self'counter = 0;
-    return ($self'owner, $self'fee, $self'deployValue, $self'counter);
+    return ($self'owner, $self'devFee, $self'deployValue, $self'counter);
+}
+
+((slice, int, int, int), (int, int)) $SafeDeployer$_fun_params((slice, int, int, int) $self) impure inline_ref {
+    var (($self'owner, $self'devFee, $self'deployValue, $self'counter)) = $self;
+    return (($self'owner, $self'devFee, $self'deployValue, $self'counter), $SafeDeployParams$_constructor_deploy_devFee($self'deployValue, $self'devFee));
 }
 
 ((slice, int, int, int), ()) $SafeDeployer$_fun_requireOwner((slice, int, int, int) $self) impure inline_ref {
-    var (($self'owner, $self'fee, $self'deployValue, $self'counter)) = $self;
+    var (($self'owner, $self'devFee, $self'deployValue, $self'counter)) = $self;
     throw_unless(132, __tact_address_eq(__tact_context_get_sender(), $self'owner));
-    return (($self'owner, $self'fee, $self'deployValue, $self'counter), ());
+    return (($self'owner, $self'devFee, $self'deployValue, $self'counter), ());
 }
 
-slice $SafeDeployer$_fun_owner((slice, int, int, int) $self) impure inline_ref {
-    var (($self'owner, $self'fee, $self'deployValue, $self'counter)) = $self;
-    return $self'owner;
+((slice, int, int, int), slice) $SafeDeployer$_fun_owner((slice, int, int, int) $self) impure inline_ref {
+    var (($self'owner, $self'devFee, $self'deployValue, $self'counter)) = $self;
+    return (($self'owner, $self'devFee, $self'deployValue, $self'counter), $self'owner);
 }
 
 ;;
@@ -31,40 +36,47 @@ slice $SafeDeployer$_fun_owner((slice, int, int, int) $self) impure inline_ref {
 ;;
 
 ((slice, int, int, int), ()) $SafeDeployer$_receive_text_2d51e7ccd78be57b2c0bfaab585f0f535337c1219afb5421dd1de4b81f300226((slice, int, int, int) $self) impure inline {
-    var ($self'owner, $self'fee, $self'deployValue, $self'counter) = $self;
+    var ($self'owner, $self'devFee, $self'deployValue, $self'counter) = $self;
     var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
-    throw_unless(25849, ($ctx'value >= ($self'fee + $self'deployValue)));
+    throw_unless(25849, ($ctx'value >= ($self'devFee + $self'deployValue)));
     int $counter = $self'counter;
     $self'counter = ($self'counter + 1);
     var ($init'code, $init'data) = $Safe$_init_child(__tact_context_sys, $ctx'sender, $counter);
     slice $safeAddress = $global_contractAddress(($init'code, $init'data));
     $global_send($SendParameters$_constructor_to_value_body($safeAddress, $self'deployValue, $SafeDeployment$_store_cell($SafeDeployment$_constructor_remaining($self'owner))));
+    $global_emit($SafeDeployedEvent$_store_cell($SafeDeployedEvent$_constructor_by_address($ctx'sender, $safeAddress)));
     $global_send($SendParameters$_constructor_to_value_mode($self'owner, 0, (64 + 2)));
-    return (($self'owner, $self'fee, $self'deployValue, $self'counter), ());
+    return (($self'owner, $self'devFee, $self'deployValue, $self'counter), ());
 }
 
 (((slice, int, int, int)), ()) $SafeDeployer$_receive_binary_ChangeOwner((slice, int, int, int) $self, (slice) $msg) impure inline {
-    var ($self'owner, $self'fee, $self'deployValue, $self'counter) = $self;
+    var ($self'owner, $self'devFee, $self'deployValue, $self'counter) = $self;
     var ($msg'newOwner) = $msg;
-    ($self'owner, $self'fee, $self'deployValue, $self'counter)~$SafeDeployer$_fun_requireOwner();
+    ($self'owner, $self'devFee, $self'deployValue, $self'counter)~$SafeDeployer$_fun_requireOwner();
     $self'owner = $msg'newOwner;
-    return (($self'owner, $self'fee, $self'deployValue, $self'counter), ());
+    return (($self'owner, $self'devFee, $self'deployValue, $self'counter), ());
 }
 
 (((slice, int, int, int)), ()) $SafeDeployer$_receive_binary_Deploy((slice, int, int, int) $self, (int) $deploy) impure inline {
-    var ($self'owner, $self'fee, $self'deployValue, $self'counter) = $self;
+    var ($self'owner, $self'devFee, $self'deployValue, $self'counter) = $self;
     var ($deploy'queryId) = $deploy;
     $global_reply($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId)));
-    return (($self'owner, $self'fee, $self'deployValue, $self'counter), ());
+    return (($self'owner, $self'devFee, $self'deployValue, $self'counter), ());
 }
 
 ;;
 ;; Get methods of a Contract SafeDeployer
 ;;
 
+_ %params() method_id(116437) {
+    var self = $SafeDeployer$_contract_load();
+    var res = self~$SafeDeployer$_fun_params();
+    return $SafeDeployParams$_to_external(res);
+}
+
 _ %owner() method_id(83229) {
     var self = $SafeDeployer$_contract_load();
-    var res = $SafeDeployer$_fun_owner(self);
+    var res = self~$SafeDeployer$_fun_owner();
     return res;
 }
 
@@ -80,7 +92,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() {
-    return "ipfs://QmWbHJh4xDMZa3hqCpFN8tXFUQbpmdS1xj5iTkW4rtkAj6";
+    return "ipfs://QmTXgtnLrv2jL4qZRPjHeQk6oXXaCybyeV1ZUF7hpFdesJ";
 }
 
 _ lazy_deployment_completed() {

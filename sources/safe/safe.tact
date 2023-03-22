@@ -10,7 +10,7 @@ message SafeDeployment {
 }
 
 message SafeRequestOperation {
-    operation: SafeOperation;
+    ops: SafeOperations;
 }
 
 contract Safe with Deployable {
@@ -48,17 +48,111 @@ contract Safe with Deployable {
         require(ctx.value >= self.parameters.requestPrice, "Not enough value");
 
         // Check operation
-        let notNullOperations: Int = 0;
-        if (request.operation.transfer != null) {
-            notNullOperations = notNullOperations + 1;
-        }
-        if (request.operation.parameters != null) {
-            notNullOperations = notNullOperations + 1;
-        }
-        require(notNullOperations != 1, "Exactly one operation must be specified");
+        let i: Int = 0;
+        repeat(request.ops.count) {
 
-        // Check timeout
+            // Load operation
+            let op: SafeOperation = request.ops.ops.get(i)!!;
+
+            // Check operation
+            let notNullOperations: Int = 0;
+            if (op.transfer != null) {
+                notNullOperations = notNullOperations + 1;
+            }
+            if (op.parameters != null) {
+                let params: SafeParameters = (op.parameters!!).parameters;
+                require(params.requestPrice <= ton("10"), "Request price must be less or equals than 10 TON");
+                require(params.requestPrice >= ton("1"), "Request price must be more or equals than 1 TON");
+                require(params.timeout < 60 * 60 * 24 * 365, "Timeout must be less than a year");
+                notNullOperations = notNullOperations + 1;
+            }
+            require(notNullOperations != 1, "Exactly one operation must be specified");
+
+            // Next
+            i = i + 1;
+        }
+
+        // Send request
+        let args: SignerArgs = SignerArgs{
+            safe: myAddress(),
+            owners: self.owners,
+            ownersCount: self.ownersCount,
+            treshold: self.treshold,
+            timeout: now() + self.parameters.timeout,
+            ops: request.ops
+        };
+        let init: StateInit = initOf Signer(args);
+        let address: Address = contractAddress(init);
+        send(SendParameters{
+            value: 0, 
+            to: address, 
+            mode: SendRemainingValue + SendIgnoreErrors, 
+            bounce: true,
+            code: init.code,
+            data: init.data,
+            body: SignerDeploy{queryId:0}.toCell()
+        });
     }
+
+    receive(signed: OperationsSigned) {
+
+        // Check the message
+        let args: SignerArgs = signed.args;
+        let ctx: Context = context();
+        require(args.safe == myAddress(), "Wrong safe address");
+        require(args.owners == self.owners, "Wrong owners");
+        require(args.ownersCount == self.ownersCount, "Wrong owners count");
+        require(args.treshold == self.treshold, "Wrong treshold");
+        require(now() <= args.timeout, "Timeout");
+        let init: StateInit = initOf Signer(args);
+        let address: Address = contractAddress(init);
+        require(ctx.sender == address, "Wrong signer address");
+
+        // Execute operations
+        let i: Int = 0;
+        repeat(args.ops.count) {
+
+            // Load operation
+            let op: SafeOperation = args.ops.ops.get(i)!!;
+
+            // Execute operation
+            self.execute(op);
+
+            // Next
+            i = i + 1;
+        }
+    }
+
+    //
+    // Execution
+    //
+
+    fun execute(op: SafeOperation) {
+        if (op.transfer != null) {
+            self.executeTransfer(op.transfer!!);
+        }
+        if (op.parameters != null) {
+            self.executeParameters(op.parameters!!);
+        }
+    }
+
+    fun executeTransfer(op: SafeOperationTransfer) {
+        send(SendParameters{
+            value: op.value, 
+            to: op.to, 
+            mode: op.mode, 
+            bounce: op.bounce,
+            body: op.body
+        });
+    }
+
+    fun executeParameters(op: SafeOperationUpdateParameters) {
+        self.parameters = op.parameters;
+    }
+
+    //
+    // Get Methods
+    //
 
     get fun parameters(): SafeParameters {
         return self.parameters;

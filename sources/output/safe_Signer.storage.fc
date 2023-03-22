@@ -8,206 +8,135 @@
 }
 
 ;;
-;; Type: SafeOperationTransfer
-;; TLB: _ to:address value:coins mode:uint8 body:Maybe ^cell = SafeOperationTransfer
+;; Type: SafeOperations
+;; TLB: _ ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}}> count:uint8 = SafeOperations
 ;;
 
-builder $SafeOperationTransfer$_store(builder build_0, (slice, int, int, cell) v) inline {
-    var (v'to, v'value, v'mode, v'body) = v;
-    build_0 = __tact_store_address(build_0, v'to);
-    build_0 = build_0.store_coins(v'value);
-    build_0 = build_0.store_uint(v'mode, 8);
-    build_0 = ~ null?(v'body) ? build_0.store_int(true, 1).store_ref(v'body) : build_0.store_int(false, 1);
+builder $SafeOperations$_store(builder build_0, (cell, int) v) inline {
+    var (v'ops, v'count) = v;
+    build_0 = build_0.store_dict(v'ops);
+    build_0 = build_0.store_uint(v'count, 8);
     return build_0;
 }
 
-(slice, ((slice, int, int, cell))) $SafeOperationTransfer$_load(slice sc_0) inline {
-    var v'to = sc_0~__tact_load_address();
-    var v'value = sc_0~load_coins();
-    var v'mode = sc_0~load_uint(8);
-    var v'body = sc_0~load_int(1) ? sc_0~load_ref() : null();
-    return (sc_0, (v'to, v'value, v'mode, v'body));
+(slice, ((cell, int))) $SafeOperations$_load(slice sc_0) inline {
+    var v'ops = sc_0~load_dict();
+    var v'count = sc_0~load_uint(8);
+    return (sc_0, (v'ops, v'count));
 }
 
-((slice, int, int, cell)) $SafeOperationTransfer$_not_null(tuple v) inline {
-    throw_if(128, null?(v));
-    var (slice vvv'to, int vvv'value, int vvv'mode, cell vvv'body) = __tact_tuple_destroy_4(v);
-    return (vvv'to, vvv'value, vvv'mode, vvv'body);
-}
-
-tuple $SafeOperationTransfer$_as_optional((slice, int, int, cell) v) inline {
-    var (v'to, v'value, v'mode, v'body) = v;
-    return __tact_tuple_create_4(v'to, v'value, v'mode, v'body);
-}
-
-tuple $SafeOperationTransfer$_to_tuple(((slice, int, int, cell)) v) inline {
-    var (v'to, v'value, v'mode, v'body) = v;
-    return __tact_tuple_create_4(v'to, v'value, v'mode, v'body);
-}
-
-tuple $SafeOperationTransfer$_to_opt_tuple(tuple v) inline {
-    if (null?(v)) { return null(); } 
-    return $SafeOperationTransfer$_to_tuple($SafeOperationTransfer$_not_null(v)); 
+tuple $SafeOperations$_to_tuple(((cell, int)) v) inline {
+    var (v'ops, v'count) = v;
+    return __tact_tuple_create_2(v'ops, v'count);
 }
 
 ;;
-;; Type: SafeParameters
-;; TLB: _ timeout:uint32 requestPrice:coins = SafeParameters
+;; Type: SignerArgs
+;; TLB: _ safe:address owners:dict<address, bool> ownersCount:uint32 treshold:uint32 timeout:uint64 ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}}>,count:uint8} = SignerArgs
 ;;
 
-builder $SafeParameters$_store(builder build_0, (int, int) v) inline {
-    var (v'timeout, v'requestPrice) = v;
-    build_0 = build_0.store_uint(v'timeout, 32);
-    build_0 = build_0.store_coins(v'requestPrice);
+builder $SignerArgs$_store(builder build_0, (slice, cell, int, int, int, (cell, int)) v) inline_ref {
+    var (v'safe, v'owners, v'ownersCount, v'treshold, v'timeout, (v'ops'ops, v'ops'count)) = v;
+    build_0 = __tact_store_address(build_0, v'safe);
+    build_0 = build_0.store_dict(v'owners);
+    build_0 = build_0.store_uint(v'ownersCount, 32);
+    build_0 = build_0.store_uint(v'treshold, 32);
+    build_0 = build_0.store_uint(v'timeout, 64);
+    build_0 = $SafeOperations$_store(build_0, (v'ops'ops, v'ops'count));
     return build_0;
 }
 
-(slice, ((int, int))) $SafeParameters$_load(slice sc_0) inline {
-    var v'timeout = sc_0~load_uint(32);
-    var v'requestPrice = sc_0~load_coins();
-    return (sc_0, (v'timeout, v'requestPrice));
+(slice, ((slice, cell, int, int, int, (cell, int)))) $SignerArgs$_load(slice sc_0) inline_ref {
+    var v'safe = sc_0~__tact_load_address();
+    var v'owners = sc_0~load_dict();
+    var v'ownersCount = sc_0~load_uint(32);
+    var v'treshold = sc_0~load_uint(32);
+    var v'timeout = sc_0~load_uint(64);
+    var v'ops = sc_0~$SafeOperations$_load();
+    return (sc_0, (v'safe, v'owners, v'ownersCount, v'treshold, v'timeout, v'ops));
 }
 
-tuple $SafeParameters$_to_tuple(((int, int)) v) inline {
-    var (v'timeout, v'requestPrice) = v;
-    return __tact_tuple_create_2(v'timeout, v'requestPrice);
+(slice, cell, int, int, int, tuple) $SignerArgs$_to_external(((slice, cell, int, int, int, (cell, int))) v) inline {
+    var (v'safe, v'owners, v'ownersCount, v'treshold, v'timeout, v'ops) = v; 
+    return (v'safe, v'owners, v'ownersCount, v'treshold, v'timeout, $SafeOperations$_to_tuple(v'ops));
 }
 
 ;;
-;; Type: SafeOperationUpdateParameters
-;; TLB: _ parameters:SafeParameters{timeout:uint32,requestPrice:coins} = SafeOperationUpdateParameters
+;; Type: OperationsSigned
+;; Header: 0x6fe8bcbc
+;; TLB: operations_signed#6fe8bcbc args:SignerArgs{safe:address,owners:dict<address, bool>,ownersCount:uint32,treshold:uint32,timeout:uint64,ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}}>,count:uint8}} = OperationsSigned
 ;;
 
-builder $SafeOperationUpdateParameters$_store(builder build_0, ((int, int)) v) inline {
-    var ((v'parameters'timeout, v'parameters'requestPrice)) = v;
-    build_0 = $SafeParameters$_store(build_0, (v'parameters'timeout, v'parameters'requestPrice));
+builder $OperationsSigned$_store(builder build_0, ((slice, cell, int, int, int, (cell, int))) v) inline {
+    var ((v'args'safe, v'args'owners, v'args'ownersCount, v'args'treshold, v'args'timeout, (v'args'ops'ops, v'args'ops'count))) = v;
+    build_0 = store_uint(build_0, 1877523644, 32);
+    build_0 = $SignerArgs$_store(build_0, (v'args'safe, v'args'owners, v'args'ownersCount, v'args'treshold, v'args'timeout, (v'args'ops'ops, v'args'ops'count)));
     return build_0;
 }
 
-(slice, (((int, int)))) $SafeOperationUpdateParameters$_load(slice sc_0) inline {
-    var v'parameters = sc_0~$SafeParameters$_load();
-    return (sc_0, (v'parameters));
+cell $OperationsSigned$_store_cell(((slice, cell, int, int, int, (cell, int))) v) inline {
+    return $OperationsSigned$_store(begin_cell(), v).end_cell();
 }
 
-(((int, int))) $SafeOperationUpdateParameters$_not_null(tuple v) inline {
-    throw_if(128, null?(v));
-    var (int vvv'parameters'timeout, int vvv'parameters'requestPrice) = __tact_tuple_destroy_2(v);
-    return ((vvv'parameters'timeout, vvv'parameters'requestPrice));
-}
-
-tuple $SafeOperationUpdateParameters$_as_optional(((int, int)) v) inline {
-    var ((v'parameters'timeout, v'parameters'requestPrice)) = v;
-    return __tact_tuple_create_2(v'parameters'timeout, v'parameters'requestPrice);
-}
-
-tuple $SafeOperationUpdateParameters$_to_tuple((((int, int))) v) inline {
-    var (v'parameters) = v;
-    return __tact_tuple_create_1($SafeParameters$_to_tuple(v'parameters));
-}
-
-tuple $SafeOperationUpdateParameters$_to_opt_tuple(tuple v) inline {
-    if (null?(v)) { return null(); } 
-    return $SafeOperationUpdateParameters$_to_tuple($SafeOperationUpdateParameters$_not_null(v)); 
+(((slice, cell, int, int, int, (cell, int)))) $OperationsSigned$_constructor_args((slice, cell, int, int, int, (cell, int)) args) inline {
+    return (args);
 }
 
 ;;
-;; Type: SafeOperation
-;; TLB: _ transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,body:Maybe ^cell} parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}} = SafeOperation
+;; Type: SignerDeploy
+;; Header: 0xd204c0fc
+;; TLB: signer_deploy#d204c0fc queryId:uint64 = SignerDeploy
 ;;
 
-builder $SafeOperation$_store(builder build_0, (tuple, tuple) v) inline {
-    var (v'transfer, v'parameters) = v;
-    build_0 = ~ null?(v'transfer) ? build_0.store_int(true, 1).$SafeOperationTransfer$_store($SafeOperationTransfer$_not_null(v'transfer)) : build_0.store_int(false, 1);
-    build_0 = ~ null?(v'parameters) ? build_0.store_int(true, 1).$SafeOperationUpdateParameters$_store($SafeOperationUpdateParameters$_not_null(v'parameters)) : build_0.store_int(false, 1);
-    return build_0;
-}
-
-(slice, ((tuple, tuple))) $SafeOperation$_load(slice sc_0) inline {
-    var v'transfer = sc_0~load_int(1) ? $SafeOperationTransfer$_as_optional(sc_0~$SafeOperationTransfer$_load()) : null();
-    var v'parameters = sc_0~load_int(1) ? $SafeOperationUpdateParameters$_as_optional(sc_0~$SafeOperationUpdateParameters$_load()) : null();
-    return (sc_0, (v'transfer, v'parameters));
-}
-
-(tuple, tuple) $SafeOperation$_to_external(((tuple, tuple)) v) inline {
-    var (v'transfer, v'parameters) = v; 
-    return ($SafeOperationTransfer$_to_opt_tuple(v'transfer), $SafeOperationUpdateParameters$_to_opt_tuple(v'parameters));
-}
-
-;;
-;; Type: OperationSigned
-;; Header: 0xc2668027
-;; TLB: operation_signed#c2668027 operation:SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}} = OperationSigned
-;;
-
-builder $OperationSigned$_store(builder build_0, ((tuple, tuple)) v) inline {
-    var ((v'operation'transfer, v'operation'parameters)) = v;
-    build_0 = store_uint(build_0, 3261497383, 32);
-    build_0 = $SafeOperation$_store(build_0, (v'operation'transfer, v'operation'parameters));
-    return build_0;
-}
-
-cell $OperationSigned$_store_cell(((tuple, tuple)) v) inline {
-    return $OperationSigned$_store(begin_cell(), v).end_cell();
-}
-
-(((tuple, tuple))) $OperationSigned$_constructor_operation((tuple, tuple) operation) inline {
-    return (operation);
+(slice, ((int))) $SignerDeploy$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 3523526908);
+    var v'queryId = sc_0~load_uint(64);
+    return (sc_0, (v'queryId));
 }
 
 ;;
 ;; Type: Signer
 ;;
 
-builder $Signer$_store(builder build_0, (slice, int, int, int, cell, (tuple, tuple), int) v) inline {
-    var (v'safe, v'treshold, v'weight, v'timeout, v'signers, (v'operation'transfer, v'operation'parameters), v'completed) = v;
-    build_0 = __tact_store_address(build_0, v'safe);
-    build_0 = build_0.store_int(v'treshold, 257);
-    build_0 = build_0.store_int(v'weight, 257);
+builder $Signer$_store(builder build_0, (cell, (slice, cell, int, int, int, (cell, int)), int, int) v) inline {
+    var (v'owners, (v'args'safe, v'args'owners, v'args'ownersCount, v'args'treshold, v'args'timeout, (v'args'ops'ops, v'args'ops'count)), v'weight, v'completed) = v;
+    build_0 = build_0.store_dict(v'owners);
     var build_1 = begin_cell();
-    build_1 = build_1.store_int(v'timeout, 257);
-    build_1 = build_1.store_dict(v'signers);
-    build_1 = $SafeOperation$_store(build_1, (v'operation'transfer, v'operation'parameters));
+    build_1 = $SignerArgs$_store(build_1, (v'args'safe, v'args'owners, v'args'ownersCount, v'args'treshold, v'args'timeout, (v'args'ops'ops, v'args'ops'count)));
+    build_1 = build_1.store_uint(v'weight, 32);
     build_1 = build_1.store_int(v'completed, 1);
     build_0 = store_ref(build_0, build_1.end_cell());
     return build_0;
 }
 
-(slice, ((slice, int, int, int, cell, (tuple, tuple), int))) $Signer$_load(slice sc_0) inline {
-    var v'safe = sc_0~__tact_load_address();
-    var v'treshold = sc_0~load_int(257);
-    var v'weight = sc_0~load_int(257);
+(slice, ((cell, (slice, cell, int, int, int, (cell, int)), int, int))) $Signer$_load(slice sc_0) inline {
+    var v'owners = sc_0~load_dict();
     slice sc_1 = sc_0~load_ref().begin_parse();
-    var v'timeout = sc_1~load_int(257);
-    var v'signers = sc_1~load_dict();
-    var v'operation = sc_1~$SafeOperation$_load();
+    var v'args = sc_1~$SignerArgs$_load();
+    var v'weight = sc_1~load_uint(32);
     var v'completed = sc_1~load_int(1);
-    return (sc_0, (v'safe, v'treshold, v'weight, v'timeout, v'signers, v'operation, v'completed));
+    return (sc_0, (v'owners, v'args, v'weight, v'completed));
 }
 
-(slice, ((slice, cell, int, int, (tuple, tuple)))) $Signer$init$_load(slice sc_0) inline {
-    var v'safe = sc_0~__tact_load_address();
-    var v'signers = sc_0~load_dict();
-    var v'treshold = sc_0~load_int(257);
-    var v'timeout = sc_0~load_int(257);
-    slice sc_1 = sc_0~load_ref().begin_parse();
-    var v'operation = sc_1~$SafeOperation$_load();
-    return (sc_0, (v'safe, v'signers, v'treshold, v'timeout, v'operation));
+(slice, (((slice, cell, int, int, int, (cell, int))))) $Signer$init$_load(slice sc_0) inline {
+    var v'args = sc_0~$SignerArgs$_load();
+    return (sc_0, (v'args));
 }
 
-(slice, int, int, int, cell, (tuple, tuple), int) $Signer$_contract_load() impure inline {
+(cell, (slice, cell, int, int, int, (cell, int)), int, int) $Signer$_contract_load() impure inline {
     slice $sc = get_data().begin_parse();
     __tact_context_sys = $sc~load_ref();
     int $loaded = $sc~load_int(1);
     if ($loaded) {
         return $sc~$Signer$_load();
     } else {
-        (slice safe, cell signers, int treshold, int timeout, (tuple, tuple) operation) = $sc~$Signer$init$_load();
+        ((slice, cell, int, int, int, (cell, int)) args) = $sc~$Signer$init$_load();
         $sc.end_parse();
-        return $Signer$_contract_init(safe, signers, treshold, timeout, operation);
+        return $Signer$_contract_init(args);
     }
 }
 
-() $Signer$_contract_store((slice, int, int, int, cell, (tuple, tuple), int) v) impure inline {
+() $Signer$_contract_store((cell, (slice, cell, int, int, int, (cell, int)), int, int) v) impure inline {
     builder b = begin_cell();
     b = b.store_ref(__tact_context_sys);
     b = b.store_int(true, 1);

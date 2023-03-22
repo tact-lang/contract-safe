@@ -1,45 +1,47 @@
 PROGRAM{
-  DECLPROC __tact_address_eq
-  DECLPROC __tact_context_get_sender
-  DECLPROC __tact_dict_get_slice_int
-  DECLPROC __tact_dict_set_slice_int
-  DECLPROC __tact_load_address
-  DECLPROC __tact_not_null
-  DECLPROC __tact_store_address
-  DECLPROC __tact_store_bool
   DECLPROC __tact_verify_address
-  DECLPROC $global_send
-  DECLPROC $OperationSigned$_constructor_operation
-  DECLPROC $OperationSigned$_store
-  DECLPROC $OperationSigned$_store_cell
-  DECLPROC $SafeOperation$_load
-  DECLPROC $SafeOperation$_store
-  DECLPROC $SafeOperation$_to_external
-  DECLPROC $SafeOperationTransfer$_as_optional
-  DECLPROC $SafeOperationTransfer$_load
-  DECLPROC $SafeOperationTransfer$_not_null
-  DECLPROC $SafeOperationTransfer$_store
-  DECLPROC $SafeOperationTransfer$_to_opt_tuple
-  DECLPROC $SafeOperationTransfer$_to_tuple
-  DECLPROC $SafeOperationUpdateParameters$_as_optional
-  DECLPROC $SafeOperationUpdateParameters$_load
-  DECLPROC $SafeOperationUpdateParameters$_not_null
-  DECLPROC $SafeOperationUpdateParameters$_store
-  DECLPROC $SafeOperationUpdateParameters$_to_opt_tuple
-  DECLPROC $SafeOperationUpdateParameters$_to_tuple
-  DECLPROC $SafeParameters$_load
-  DECLPROC $SafeParameters$_store
-  DECLPROC $SafeParameters$_to_tuple
-  DECLPROC $SendParameters$_constructor_value_to_mode_bounce_body
+  DECLPROC __tact_load_address
+  DECLPROC __tact_store_address
+  DECLPROC __tact_not_null
+  DECLPROC __tact_context_get_sender
+  DECLPROC __tact_store_bool
+  DECLPROC __tact_dict_set_slice_int
+  DECLPROC __tact_dict_get_slice_int
+  DECLPROC __tact_address_eq
+  DECLPROC __tact_string_builder_start
+  DECLPROC __tact_string_builder_start_comment
+  DECLPROC __tact_string_builder_end
+  DECLPROC __tact_string_builder_append
+  DECLPROC $SafeOperations$_store
+  DECLPROC $SafeOperations$_load
+  DECLPROC $SignerArgs$_store
+  DECLPROC $SignerArgs$_load
+  DECLPROC $OperationsSigned$_store
+  DECLPROC $OperationsSigned$_store_cell
+  DECLPROC $SignerDeploy$_load
+  DECLPROC $Signer$_store
+  DECLPROC $Signer$_load
+  DECLPROC $SafeOperations$_to_tuple
+  DECLPROC $SignerArgs$_to_external
+  DECLPROC $Signer$init$_load
   DECLPROC $Signer$_contract_init
   DECLPROC $Signer$_contract_load
   DECLPROC $Signer$_contract_store
-  DECLPROC $Signer$_fun_operation
-  DECLPROC $Signer$_load
-  DECLPROC $Signer$_store
-  DECLPROC $Signer$init$_load
+  DECLPROC $global_send
+  DECLPROC $global_emit
+  DECLPROC $String$_fun_asComment
+  DECLPROC $SendParameters$_constructor_value_to_mode_bounce_body
+  DECLPROC $Signer$_fun_args
+  DECLPROC $Signer$_fun_completed
+  DECLPROC $Signer$_fun_weight
+  DECLPROC $Signer$_fun_remaining
+  DECLPROC $OperationsSigned$_constructor_args
+  DECLPROC $Signer$_receive_binary_SignerDeploy
   DECLPROC $Signer$_receive_text_22aee6d0a6dc146577277dd58d06ae3090a3cdd3d8a88561184208ae5f6eb039
-  97427 DECLMETHOD %operation
+  83271 DECLMETHOD %args
+  79554 DECLMETHOD %completed
+  114584 DECLMETHOD %weight
+  102564 DECLMETHOD %remaining
   113617 DECLMETHOD supported_interfaces
   DECLPROC get_abi_ipfs
   DECLPROC lazy_deployment_completed
@@ -49,24 +51,43 @@ PROGRAM{
   DECLGLOBVAR __tact_context_sender
   DECLGLOBVAR __tact_context_sys
   DECLGLOBVAR __tact_randomized
-  __tact_address_eq PROCINLINE:<{
-    SDEQ
+  __tact_verify_address PROCINLINE:<{
+    DUP
+    SBITS
+    267 PUSHINT
+    EQUAL
+    136 THROWIFNOT
+    DUP
+    11 PLDU
+    DUP
+    10 PUSHPOW2
+    EQUAL
+    SWAP
+    1279 PUSHINT
+    EQUAL
+    OR
+    136 THROWIFNOT
+  }>
+  __tact_load_address PROCINLINE:<{
+    LDMSGADDR
+    SWAP
+    __tact_verify_address INLINECALLDICT
+  }>
+  __tact_store_address PROCINLINE:<{
+    __tact_verify_address INLINECALLDICT
+    STSLICER
+  }>
+  __tact_not_null PROCINLINE:<{
+    DUP
+    ISNULL
+    128 THROWIF
   }>
   __tact_context_get_sender PROCINLINE:<{
     __tact_context_sender GETGLOB
   }>
-  __tact_dict_get_slice_int PROCINLINE:<{
-    s1 s3 s3 XCHG3
-    DICTGET
-    NULLSWAPIFNOT
-    IF:<{
-      SWAP
-      LDIX
-      DROP
-    }>ELSE<{
-      2DROP
-      PUSHNULL
-    }>
+  __tact_store_bool PROCINLINE:<{
+    SWAP
+    1 STI
   }>
   __tact_dict_set_slice_int PROCINLINE:<{
     OVER
@@ -84,40 +105,261 @@ PROGRAM{
       DICTSETB
     }>
   }>
-  __tact_load_address PROCINLINE:<{
-    LDMSGADDR
+  __tact_dict_get_slice_int PROCINLINE:<{
+    s1 s3 s3 XCHG3
+    DICTGET
+    NULLSWAPIFNOT
+    IF:<{
+      SWAP
+      LDIX
+      DROP
+    }>ELSE<{
+      2DROP
+      PUSHNULL
+    }>
+  }>
+  __tact_address_eq PROCINLINE:<{
+    SDEQ
+  }>
+  __tact_string_builder_start PROCINLINE:<{
+    NIL
     SWAP
-    __tact_verify_address INLINECALLDICT
+    TPUSH
+    PUSHNULL
+    TPUSH
   }>
-  __tact_not_null PROCINLINE:<{
+  __tact_string_builder_start_comment PROCINLINE:<{
+    NEWC
+    0 PUSHINT
+    SWAP
+    32 STU
+    __tact_string_builder_start INLINECALLDICT
+  }>
+  __tact_string_builder_end PROCINLINE:<{
+    UNCONS
+    SWAP
+    ENDC
+    WHILE:<{
+      OVER
+      ISNULL
+      NOT
+    }>DO<{
+      SWAP
+      UNCONS
+      -ROT
+      STREF
+      ENDC
+    }>
+    NIP
+  }>
+  __tact_string_builder_append PROCREF:<{
     DUP
-    ISNULL
-    128 THROWIF
+    SREFS
+    OVER
+    SBITS
+    WHILE:<{
+      DUP
+      0 GTINT
+      s2 PUSH
+      0 GTINT
+      OR
+    }>DO<{
+      s0 s3 XCHG
+      UNCONS
+      127 PUSHINT
+      s2 PUSH
+      BBITS
+      3 RSHIFT#
+      SUB
+      s0 s5 XCHG
+      3 RSHIFT#
+      s5 s5 XCPU
+      MIN
+      DUP
+      0 GTINT
+      IF:<{
+        DUP
+        3 LSHIFT#
+        s1 s5 XCHG
+        LDSLICEX
+        s3 s3 XCHG2
+        STSLICER
+        s0 s1 s4 XCHG3
+      }>
+      -ROT
+      CONS
+      s4 s1 PUSH2
+      SUB
+      0 GTINT
+      IF:<{
+        NEWC
+        SWAP
+        CONS
+        s4 s4 XCHG2
+        SUB
+        3 LSHIFT#
+      }>ELSE<{
+        NIP
+        s3 POP
+        0 GTINT
+        IF:<{
+          LDREF
+          DROP
+          CTOS
+          DUP
+          SREFS
+          OVER
+          SBITS
+        }>ELSE<{
+          0 PUSHINT
+          DUP
+        }>
+      }>
+    }>
+    3 BLKDROP
   }>
-  __tact_store_address PROCINLINE:<{
-    __tact_verify_address INLINECALLDICT
-    STSLICER
+  $SafeOperations$_store PROCINLINE:<{
+    s0 s2 XCHG
+    STDICT
+    8 STU
   }>
-  __tact_store_bool PROCINLINE:<{
+  $SafeOperations$_load PROCINLINE:<{
+    LDDICT
+    8 LDU
+    -ROT
+  }>
+  $SignerArgs$_store PROCREF:<{
+    s7 s6 XCHG2
+    __tact_store_address INLINECALLDICT
+    s1 s4 XCHG
+    STDICT
+    s1 s2 XCHG
+    32 STU
+    32 STU
+    64 STU
+    -ROT
+    $SafeOperations$_store INLINECALLDICT
+  }>
+  $SignerArgs$_load PROCREF:<{
+    __tact_load_address INLINECALLDICT
+    SWAP
+    LDDICT
+    32 LDU
+    32 LDU
+    64 LDU
+    $SafeOperations$_load INLINECALLDICT
+    s2 s7 XCHG
+    s2 s6 XCHG
+    s2 s5 XCHG
+    s2 s4 XCHG
+    s2 s3 XCHG
+  }>
+  $OperationsSigned$_store PROCINLINE:<{
+    1877523644 PUSHINT
+    s0 s8 XCHG2
+    32 STU
+    s0 s7 XCHG
+    $SignerArgs$_store INLINECALLDICT
+  }>
+  $OperationsSigned$_store_cell PROCINLINE:<{
+    NEWC
+    7 -ROLL
+    $OperationsSigned$_store INLINECALLDICT
+    ENDC
+  }>
+  $SignerDeploy$_load PROCINLINE:<{
+    32 LDU
+    SWAP
+    3523526908 PUSHINT
+    EQUAL
+    129 THROWIFNOT
+    64 LDU
+    SWAP
+  }>
+  $Signer$_store PROCINLINE:<{
+    s9 s10 XCHG2
+    STDICT
+    NEWC
+    7 2 BLKSWAP
+    $SignerArgs$_store INLINECALLDICT
+    s1 s2 XCHG
+    32 STU
+    s1 s2 XCHG
+    1 STI
+    ENDC
+    SWAP
+    STREF
+  }>
+  $Signer$_load PROCINLINE:<{
+    LDDICT
+    LDREF
+    SWAP
+    CTOS
+    $SignerArgs$_load INLINECALLDICT
+    s0 s7 XCHG
+    32 LDU
+    1 LDI
+    DROP
+    s9 s10 XCHG
+    s7 s8 XCHG
+    s6 s7 XCHG
+    s5 s6 XCHG
+    s4 s5 XCHG
+    s3 s4 XCHG
+    s2 s3 XCHG
+  }>
+  $SafeOperations$_to_tuple PROCINLINE:<{
+    2 TUPLE
+  }>
+  $SignerArgs$_to_external PROCINLINE:<{
+    $SafeOperations$_to_tuple INLINECALLDICT
+  }>
+  $Signer$init$_load PROCINLINE:<{
+    $SignerArgs$_load INLINECALLDICT
+  }>
+  $Signer$_contract_init PROCREF:<{
+    36682 PUSHINT
+    __tact_context_get_sender INLINECALLDICT
+    s8 PUSH
+    __tact_address_eq INLINECALLDICT
+    THROWANYIFNOT
+    s5 PUSH
+    s6 s7 XCHG
+    5 -ROLL
+    0 PUSHINT
+    FALSE
+  }>
+  $Signer$_contract_load PROCINLINE:<{
+    c4 PUSH
+    CTOS
+    LDREF
+    SWAP
+    __tact_context_sys SETGLOB
+    1 LDI
+    SWAP
+    IF:<{
+      $Signer$_load INLINECALLDICT
+      1 10 BLKDROP2
+    }>ELSE<{
+      $Signer$init$_load INLINECALLDICT
+      s0 s7 XCHG
+      ENDS
+      6 ROLL
+      $Signer$_contract_init INLINECALLDICT
+    }>
+  }>
+  $Signer$_contract_store PROCINLINE:<{
+    NEWC
+    __tact_context_sys GETGLOB
+    SWAP
+    STREF
+    TRUE
     SWAP
     1 STI
-  }>
-  __tact_verify_address PROCINLINE:<{
-    DUP
-    SBITS
-    267 PUSHINT
-    EQUAL
-    136 THROWIFNOT
-    DUP
-    11 PLDU
-    DUP
-    10 PUSHPOW2
-    EQUAL
-    SWAP
-    1279 PUSHINT
-    EQUAL
-    OR
-    136 THROWIFNOT
+    10 -ROLL
+    $Signer$_store INLINECALLDICT
+    ENDC
+    c4 POP
   }>
   $global_send PROCREF:<{
     NEWC
@@ -218,340 +460,138 @@ PROGRAM{
     SWAP
     SENDRAWMSG
   }>
-  $OperationSigned$_constructor_operation PROCINLINE:<{
-  }>
-  $OperationSigned$_store PROCINLINE:<{
-    3261497383 PUSHINT
-    s0 s3 XCHG2
-    32 STU
-    s0 s2 XCHG
-    $SafeOperation$_store INLINECALLDICT
-  }>
-  $OperationSigned$_store_cell PROCINLINE:<{
+  $global_emit PROCREF:<{
     NEWC
-    -ROT
-    $OperationSigned$_store INLINECALLDICT
+    3 PUSHINT
+    SWAP
+    2 STU
+    0 PUSHINT
+    SWAP
+    2 STU
+    0 PUSHINT
+    SWAP
+    2 STU
+    0 PUSHINT
+    SWAP
+    96 STU
+    FALSE
+    __tact_store_bool INLINECALLDICT
+    TRUE
+    __tact_store_bool INLINECALLDICT
+    STREF
     ENDC
+    0 PUSHINT
+    SENDRAWMSG
   }>
-  $SafeOperation$_load PROCINLINE:<{
-    1 LDI
+  $String$_fun_asComment PROCREF:<{
+    __tact_string_builder_start_comment INLINECALLDICT
     SWAP
-    IF:<{
-      $SafeOperationTransfer$_load INLINECALLDICT
-      $SafeOperationTransfer$_as_optional INLINECALLDICT
-    }>ELSE<{
-      PUSHNULL
-    }>
-    SWAP
-    1 LDI
-    SWAP
-    IF:<{
-      $SafeOperationUpdateParameters$_load INLINECALLDICT
-      $SafeOperationUpdateParameters$_as_optional INLINECALLDICT
-    }>ELSE<{
-      PUSHNULL
-    }>
-    s1 s2 XCHG
-  }>
-  $SafeOperation$_store PROCINLINE:<{
-    OVER
-    ISNULL
-    NOT
-    IF:<{
-      TRUE
-      s0 s3 XCHG2
-      1 STI
-      SWAP
-      $SafeOperationTransfer$_not_null INLINECALLDICT
-      $SafeOperationTransfer$_store INLINECALLDICT
-    }>ELSE<{
-      FALSE
-      s2 POP
-      s0 s2 XCHG
-      1 STI
-    }>
-    OVER
-    ISNULL
-    NOT
-    IF:<{
-      TRUE
-      SWAP
-      1 STI
-      SWAP
-      $SafeOperationUpdateParameters$_not_null INLINECALLDICT
-      $SafeOperationUpdateParameters$_store INLINECALLDICT
-    }>ELSE<{
-      FALSE
-      s2 POP
-      1 STI
-    }>
-  }>
-  $SafeOperation$_to_external PROCINLINE:<{
-    SWAP
-    $SafeOperationTransfer$_to_opt_tuple INLINECALLDICT
-    SWAP
-    $SafeOperationUpdateParameters$_to_opt_tuple INLINECALLDICT
-  }>
-  $SafeOperationTransfer$_as_optional PROCINLINE:<{
-    4 TUPLE
-  }>
-  $SafeOperationTransfer$_load PROCINLINE:<{
-    __tact_load_address INLINECALLDICT
-    SWAP
-    LDGRAMS
-    8 LDU
-    1 LDI
-    SWAP
-    IF:<{
-      LDREF
-    }>ELSE<{
-      PUSHNULL
-      SWAP
-    }>
-    4 -ROLL
-  }>
-  $SafeOperationTransfer$_not_null PROCINLINE:<{
-    DUP
-    ISNULL
-    128 THROWIF
-    4 UNTUPLE
-  }>
-  $SafeOperationTransfer$_store PROCINLINE:<{
-    s4 s3 XCHG2
-    __tact_store_address INLINECALLDICT
-    SWAP
-    STGRAMS
-    s1 s2 XCHG
-    8 STU
-    OVER
-    ISNULL
-    NOT
-    IF:<{
-      TRUE
-      SWAP
-      1 STI
-      STREF
-    }>ELSE<{
-      FALSE
-      s2 POP
-      1 STI
-    }>
-  }>
-  $SafeOperationTransfer$_to_opt_tuple PROCINLINE:<{
-    DUP
-    ISNULL
-    IF:<{
-      DROP
-      PUSHNULL
-    }>ELSE<{
-      $SafeOperationTransfer$_not_null INLINECALLDICT
-      $SafeOperationTransfer$_to_tuple INLINECALLDICT
-    }>
-  }>
-  $SafeOperationTransfer$_to_tuple PROCINLINE:<{
-    4 TUPLE
-  }>
-  $SafeOperationUpdateParameters$_as_optional PROCINLINE:<{
-    2 TUPLE
-  }>
-  $SafeOperationUpdateParameters$_load PROCINLINE:<{
-    $SafeParameters$_load INLINECALLDICT
-  }>
-  $SafeOperationUpdateParameters$_not_null PROCINLINE:<{
-    DUP
-    ISNULL
-    128 THROWIF
-    2 UNTUPLE
-  }>
-  $SafeOperationUpdateParameters$_store PROCINLINE:<{
-    $SafeParameters$_store INLINECALLDICT
-  }>
-  $SafeOperationUpdateParameters$_to_opt_tuple PROCINLINE:<{
-    DUP
-    ISNULL
-    IF:<{
-      DROP
-      PUSHNULL
-    }>ELSE<{
-      $SafeOperationUpdateParameters$_not_null INLINECALLDICT
-      $SafeOperationUpdateParameters$_to_tuple INLINECALLDICT
-    }>
-  }>
-  $SafeOperationUpdateParameters$_to_tuple PROCINLINE:<{
-    $SafeParameters$_to_tuple INLINECALLDICT
-    1 TUPLE
-  }>
-  $SafeParameters$_load PROCINLINE:<{
-    32 LDU
-    LDGRAMS
-    -ROT
-  }>
-  $SafeParameters$_store PROCINLINE:<{
-    s0 s2 XCHG
-    32 STU
-    SWAP
-    STGRAMS
-  }>
-  $SafeParameters$_to_tuple PROCINLINE:<{
-    2 TUPLE
+    __tact_string_builder_append INLINECALLDICT
+    __tact_string_builder_end INLINECALLDICT
   }>
   $SendParameters$_constructor_value_to_mode_bounce_body PROCINLINE:<{
     s4 s4 s0 XCHG3
     PUSHNULL
     PUSHNULL
   }>
-  $Signer$_contract_init PROCREF:<{
-    36682 PUSHINT
-    __tact_context_get_sender INLINECALLDICT
-    s7 PUSH
-    __tact_address_eq INLINECALLDICT
-    THROWANYIFNOT
-    0 PUSHINT
-    s0 s4 XCHG
-    s5 s5 s5 XCHG3
-    FALSE
+  $Signer$_fun_args PROCREF:<{
+    s8 s7 s6 PUSH3
+    s8 s7 s6 PUSH3
+    s8 PUSH
   }>
-  $Signer$_contract_load PROCINLINE:<{
-    c4 PUSH
-    CTOS
-    LDREF
-    SWAP
-    __tact_context_sys SETGLOB
-    1 LDI
-    SWAP
-    IF:<{
-      $Signer$_load INLINECALLDICT
-      1 8 BLKDROP2
-    }>ELSE<{
-      $Signer$init$_load INLINECALLDICT
-      s0 s6 XCHG
-      ENDS
-      5 ROLL
-      $Signer$_contract_init INLINECALLDICT
-    }>
+  $Signer$_fun_completed PROCREF:<{
+    DUP
   }>
-  $Signer$_contract_store PROCINLINE:<{
-    NEWC
-    __tact_context_sys GETGLOB
-    SWAP
-    STREF
-    TRUE
-    SWAP
-    1 STI
-    8 -ROLL
-    $Signer$_store INLINECALLDICT
-    ENDC
-    c4 POP
+  $Signer$_fun_weight PROCREF:<{
+    OVER
   }>
-  $Signer$_fun_operation PROCREF:<{
+  $Signer$_fun_remaining PROCREF:<{
+    s9 PUSH
+  }>
+  $OperationsSigned$_constructor_args PROCINLINE:<{
+  }>
+  $Signer$_receive_binary_SignerDeploy PROCINLINE:<{
     DROP
-    5 2 BLKDROP2
-  }>
-  $Signer$_load PROCINLINE:<{
-    __tact_load_address INLINECALLDICT
-    SWAP
-    257 PUSHINT
-    LDIX
-    257 PUSHINT
-    LDIX
-    LDREF
-    SWAP
-    CTOS
-    257 PUSHINT
-    LDIX
-    LDDICT
-    $SafeOperation$_load INLINECALLDICT
-    s0 s2 XCHG
-    1 LDI
-    DROP
-    s5 s8 XCHG
-    s5 s7 XCHG
-    s5 s6 XCHG
-    s1 s2 XCHG
-  }>
-  $Signer$_store PROCINLINE:<{
-    s8 s7 XCHG2
-    __tact_store_address INLINECALLDICT
-    s1 s5 XCHG
-    257 PUSHINT
-    STIX
-    s1 s3 XCHG
-    257 PUSHINT
-    STIX
-    SWAP
-    NEWC
-    257 PUSHINT
-    STIX
-    s1 s2 XCHG
-    STDICT
-    s0 s0 s4 XCHG3
-    $SafeOperation$_store INLINECALLDICT
-    1 STI
-    ENDC
-    SWAP
-    STREF
-  }>
-  $Signer$init$_load PROCINLINE:<{
-    __tact_load_address INLINECALLDICT
-    SWAP
-    LDDICT
-    257 PUSHINT
-    LDIX
-    257 PUSHINT
-    LDIX
-    LDREF
-    SWAP
-    CTOS
-    $SafeOperation$_load INLINECALLDICT
-    s2 POP
-    s2 s6 XCHG
-    s2 s5 XCHG
-    s2 s4 XCHG
-    s3 s0 s0 XCHG3
   }>
   $Signer$_receive_text_22aee6d0a6dc146577277dd58d06ae3090a3cdd3d8a88561184208ae5f6eb039 PROCINLINE:<{
+    __tact_context_get_sender INLINECALLDICT
     4755 PUSHINT
-    s5 PUSH
     NOW
-    GREATER
+    s7 PUSH
+    LEQ
     THROWANYIFNOT
     40810 PUSHINT
-    OVER
+    s2 PUSH
     NOT
     THROWANYIFNOT
-    __tact_context_get_sender INLINECALLDICT
-    s1 s4 XCHG
+    3094 PUSHINT
+    s11 PUSH
     267 PUSHINT
-    SWAP
+    s3 PUSH
+    1 PUSHINT
+    __tact_dict_get_slice_int INLINECALLDICT
+    -1 EQINT
+    THROWANYIFNOT
+    s0 s10 XCHG
+    267 PUSHINT
+    s11 PUSH
     PUSHNULL
     1 PUSHINT
     __tact_dict_set_slice_int INLINECALLDICT
-    s0 s5 XCHG
+    s0 s2 XCHG
     INC
-    s0 s6 PUSH2
+    0 PUSHINT
+    66 PUSHINT
+    FALSE
+    B{b5ee9c72410101010013000022566f74652059455320616363657074656480e644f2} B>boc <s PUSHSLICE
+    $String$_fun_asComment INLINECALLDICT
+    s3 s4 XCHG
+    s3 s14 XCHG
+    $SendParameters$_constructor_value_to_mode_bounce_body INLINECALLDICT
+    $global_send INLINECALLDICT
+    s9 s5 PUSH2
     GEQ
     IF:<{
-      s3 POP
+      DROP
       TRUE
+      B{b5ee9c7241010101001b000032566f74696e6720656e646564207769746820737563636573739171991c} B>boc <s PUSHSLICE
+      $String$_fun_asComment INLINECALLDICT
+      $global_emit INLINECALLDICT
       0 PUSHINT
       130 PUSHINT
       FALSE
-      s5 s4 PUSH2
-      $OperationSigned$_constructor_operation INLINECALLDICT
-      $OperationSigned$_store_cell INLINECALLDICT
+      s11 s10 s9 PUSH3
+      s11 s10 s9 PUSH3
       s11 PUSH
+      $OperationsSigned$_constructor_args INLINECALLDICT
+      $OperationsSigned$_store_cell INLINECALLDICT
+      s12 PUSH
       3 -ROLL
       $SendParameters$_constructor_value_to_mode_bounce_body INLINECALLDICT
       $global_send INLINECALLDICT
-      s0 s3 XCHG
     }>
-    s0 s5 XCHG
-    s0 s3 XCHG
+    s1 s9 XCHG
   }>
-  %operation PROC:<{
+  %args PROC:<{
     $Signer$_contract_load INLINECALLDICT
-    $Signer$_fun_operation INLINECALLDICT
-    $SafeOperation$_to_external INLINECALLDICT
+    $Signer$_fun_args INLINECALLDICT
+    10 7 BLKDROP2
+    $SignerArgs$_to_external INLINECALLDICT
+  }>
+  %completed PROC:<{
+    $Signer$_contract_load INLINECALLDICT
+    $Signer$_fun_completed INLINECALLDICT
+    10 1 BLKDROP2
+  }>
+  %weight PROC:<{
+    $Signer$_contract_load INLINECALLDICT
+    $Signer$_fun_weight INLINECALLDICT
+    10 1 BLKDROP2
+  }>
+  %remaining PROC:<{
+    $Signer$_contract_load INLINECALLDICT
+    $Signer$_fun_remaining INLINECALLDICT
+    10 1 BLKDROP2
   }>
   supported_interfaces PROC:<{
     123515602279859691144772641439386770278 PUSHINT
@@ -560,7 +600,7 @@ PROGRAM{
     289074767680806556846472852687671582181 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d5545346a5441767446654a7456394d7368384872314768707463414167504c616e6833446834446153597873} PUSHSLICE
+    x{697066733a2f2f516d524447426f743958386379485067327763624a6f635068506b33354564626245427346526736367251513732} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -583,6 +623,16 @@ PROGRAM{
     s0 s2 XCHG
     IFJMP:<{
       2DROP
+      TRUE
+    }>
+    OVER
+    3523526908 PUSHINT
+    EQUAL
+    IFJMP:<{
+      NIP
+      $SignerDeploy$_load INLINECALLDICT
+      NIP
+      $Signer$_receive_binary_SignerDeploy INLINECALLDICT
       TRUE
     }>
     SWAP
@@ -625,7 +675,7 @@ PROGRAM{
     s0 s2 XCHG
     __tact_context_sender SETGLOB
     $Signer$_contract_load INLINECALLDICT
-    2 8 BLKSWAP
+    2 10 BLKSWAP
     $Signer$_contract_router INLINECALLDICT
     DROP
     $Signer$_contract_store INLINECALLDICT

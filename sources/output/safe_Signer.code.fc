@@ -1,57 +1,96 @@
 #include "safe_Signer.headers.fc";
 #include "safe_Signer.stdlib.fc";
+#include "safe_Signer.constants.fc";
 #include "safe_Signer.storage.fc";
 
 ;;
 ;; Contract Signer functions
 ;;
 
-(slice, int, int, int, cell, (tuple, tuple), int) $Signer$_contract_init(slice $safe, cell $signers, int $treshold, int $timeout, (tuple, tuple) $operation) impure inline_ref {
-    var (($operation'transfer, $operation'parameters)) = $operation;
-    var (($self'safe, $self'treshold, $self'weight, $self'timeout, $self'signers, ($self'operation'transfer, $self'operation'parameters), $self'completed)) = (null(), null(), null(), null(), null(), null(), null());
-    throw_unless(36682, __tact_address_eq(__tact_context_get_sender(), $safe));
-    $self'safe = $safe;
-    $self'treshold = $treshold;
+(cell, (slice, cell, int, int, int, (cell, int)), int, int) $Signer$_contract_init((slice, cell, int, int, int, (cell, int)) $args) impure inline_ref {
+    var (($args'safe, $args'owners, $args'ownersCount, $args'treshold, $args'timeout, ($args'ops'ops, $args'ops'count))) = $args;
+    var (($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'weight, $self'completed)) = (null(), null(), null(), null());
+    throw_unless(36682, __tact_address_eq(__tact_context_get_sender(), $args'safe));
+    ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)) = ($args'safe, $args'owners, $args'ownersCount, $args'treshold, $args'timeout, ($args'ops'ops, $args'ops'count));
+    $self'owners = $args'owners;
     $self'weight = 0;
-    $self'signers = $signers;
-    ($self'operation'transfer, $self'operation'parameters) = ($operation'transfer, $operation'parameters);
-    $self'timeout = $timeout;
     $self'completed = false;
-    return ($self'safe, $self'treshold, $self'weight, $self'timeout, $self'signers, ($self'operation'transfer, $self'operation'parameters), $self'completed);
+    return ($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'weight, $self'completed);
 }
 
-(tuple, tuple) $Signer$_fun_operation((slice, int, int, int, cell, (tuple, tuple), int) $self) impure inline_ref {
-    var (($self'safe, $self'treshold, $self'weight, $self'timeout, $self'signers, ($self'operation'transfer, $self'operation'parameters), $self'completed)) = $self;
-    return ($self'operation'transfer, $self'operation'parameters);
+((cell, (slice, cell, int, int, int, (cell, int)), int, int), (slice, cell, int, int, int, (cell, int))) $Signer$_fun_args((cell, (slice, cell, int, int, int, (cell, int)), int, int) $self) impure inline_ref {
+    var (($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'weight, $self'completed)) = $self;
+    return (($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'weight, $self'completed), ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)));
+}
+
+((cell, (slice, cell, int, int, int, (cell, int)), int, int), int) $Signer$_fun_completed((cell, (slice, cell, int, int, int, (cell, int)), int, int) $self) impure inline_ref {
+    var (($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'weight, $self'completed)) = $self;
+    return (($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'weight, $self'completed), $self'completed);
+}
+
+((cell, (slice, cell, int, int, int, (cell, int)), int, int), int) $Signer$_fun_weight((cell, (slice, cell, int, int, int, (cell, int)), int, int) $self) impure inline_ref {
+    var (($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'weight, $self'completed)) = $self;
+    return (($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'weight, $self'completed), $self'weight);
+}
+
+((cell, (slice, cell, int, int, int, (cell, int)), int, int), cell) $Signer$_fun_remaining((cell, (slice, cell, int, int, int, (cell, int)), int, int) $self) impure inline_ref {
+    var (($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'weight, $self'completed)) = $self;
+    return (($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'weight, $self'completed), $self'owners);
 }
 
 ;;
 ;; Receivers of a Contract Signer
 ;;
 
-((slice, int, int, int, cell, (tuple, tuple), int), ()) $Signer$_receive_text_22aee6d0a6dc146577277dd58d06ae3090a3cdd3d8a88561184208ae5f6eb039((slice, int, int, int, cell, (tuple, tuple), int) $self) impure inline {
-    var ($self'safe, $self'treshold, $self'weight, $self'timeout, $self'signers, ($self'operation'transfer, $self'operation'parameters), $self'completed) = $self;
-    throw_unless(4755, ($self'timeout > now()));
-    throw_unless(40810, (~ $self'completed));
+(((cell, (slice, cell, int, int, int, (cell, int)), int, int)), ()) $Signer$_receive_binary_SignerDeploy((cell, (slice, cell, int, int, int, (cell, int)), int, int) $self, (int) $src) impure inline {
+    var ($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'weight, $self'completed) = $self;
+    var ($src'queryId) = $src;
+    return (($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'weight, $self'completed), ());
+}
+
+((cell, (slice, cell, int, int, int, (cell, int)), int, int), ()) $Signer$_receive_text_22aee6d0a6dc146577277dd58d06ae3090a3cdd3d8a88561184208ae5f6eb039((cell, (slice, cell, int, int, int, (cell, int)), int, int) $self) impure inline {
+    var ($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'weight, $self'completed) = $self;
     slice $sender = __tact_context_get_sender();
-    int $weight = __tact_not_null(__tact_dict_get_slice_int($self'signers, 267, $sender, 1));
-    $self'signers~__tact_dict_set_slice_int(267, $sender, null(), 1);
+    throw_unless(4755, (now() <= $self'args'timeout));
+    throw_unless(40810, (~ $self'completed));
+    throw_unless(3094, (__tact_dict_get_slice_int($self'owners, 267, $sender, 1) == true));
+    $self'owners~__tact_dict_set_slice_int(267, $sender, null(), 1);
     $self'weight = ($self'weight + 1);
-    if (($self'weight >= $self'treshold)) {
+    $global_send($SendParameters$_constructor_value_to_mode_bounce_body(0, $sender, (2 + 64), false, $String$_fun_asComment(__gen_str_299697675())));
+    if (($self'weight >= $self'args'treshold)) {
         $self'completed = true;
-        $global_send($SendParameters$_constructor_value_to_mode_bounce_body(0, $self'safe, (128 + 2), false, $OperationSigned$_store_cell($OperationSigned$_constructor_operation(($self'operation'transfer, $self'operation'parameters)))));
+        $global_emit($String$_fun_asComment(__gen_str_1886535923()));
+        $global_send($SendParameters$_constructor_value_to_mode_bounce_body(0, $self'args'safe, (128 + 2), false, $OperationsSigned$_store_cell($OperationsSigned$_constructor_args(($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count))))));
     }
-    return (($self'safe, $self'treshold, $self'weight, $self'timeout, $self'signers, ($self'operation'transfer, $self'operation'parameters), $self'completed), ());
+    return (($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'weight, $self'completed), ());
 }
 
 ;;
 ;; Get methods of a Contract Signer
 ;;
 
-_ %operation() method_id(97427) {
+_ %args() method_id(83271) {
     var self = $Signer$_contract_load();
-    var res = $Signer$_fun_operation(self);
-    return $SafeOperation$_to_external(res);
+    var res = self~$Signer$_fun_args();
+    return $SignerArgs$_to_external(res);
+}
+
+_ %completed() method_id(79554) {
+    var self = $Signer$_contract_load();
+    var res = self~$Signer$_fun_completed();
+    return res;
+}
+
+_ %weight() method_id(114584) {
+    var self = $Signer$_contract_load();
+    var res = self~$Signer$_fun_weight();
+    return res;
+}
+
+_ %remaining() method_id(102564) {
+    var self = $Signer$_contract_load();
+    var res = self~$Signer$_fun_remaining();
+    return res;
 }
 
 _ supported_interfaces() method_id {
@@ -64,7 +103,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() {
-    return "ipfs://QmUE4jTAvtFeJtV9Msh8Hr1GhptcAAgPLanh3Dh4DaSYxs";
+    return "ipfs://QmRDGBot9X8cyHPg2wcbJocPhPk35EdbbEBsFRg66rQQ72";
 }
 
 _ lazy_deployment_completed() {
@@ -75,7 +114,7 @@ _ lazy_deployment_completed() {
 ;; Routing of a Contract Signer
 ;;
 
-((slice, int, int, int, cell, (tuple, tuple), int), int) $Signer$_contract_router((slice, int, int, int, cell, (tuple, tuple), int) self, int msg_bounced, slice in_msg) impure inline_ref {
+((cell, (slice, cell, int, int, int, (cell, int)), int, int), int) $Signer$_contract_router((cell, (slice, cell, int, int, int, (cell, int)), int, int) self, int msg_bounced, slice in_msg) impure inline_ref {
     
     ;; Parse incoming message
     int op = 0;
@@ -85,6 +124,13 @@ _ lazy_deployment_completed() {
     
     ;; Handle bounced messages
     if (msg_bounced) {
+        return (self, true);
+    }
+    
+    ;; Receive SignerDeploy message
+    if (op == 3523526908) {
+        var msg = in_msg~$SignerDeploy$_load();
+        self~$Signer$_receive_binary_SignerDeploy(msg);
         return (self, true);
     }
     
