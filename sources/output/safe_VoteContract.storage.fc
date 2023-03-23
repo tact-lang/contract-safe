@@ -1,0 +1,211 @@
+;;
+;; Type: SendParameters
+;; TLB: _ bounce:bool to:address value:int257 mode:int257 body:Maybe ^cell code:Maybe ^cell data:Maybe ^cell = SendParameters
+;;
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_value_to_mode_bounce_body(int value, slice to, int mode, int bounce, cell body) inline {
+    return (bounce, to, value, mode, body, null(), null());
+}
+
+;;
+;; Type: SafeOperations
+;; TLB: _ ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}}> count:uint8 = SafeOperations
+;;
+
+builder $SafeOperations$_store(builder build_0, (cell, int) v) inline {
+    var (v'ops, v'count) = v;
+    build_0 = build_0.store_dict(v'ops);
+    build_0 = build_0.store_uint(v'count, 8);
+    return build_0;
+}
+
+(slice, ((cell, int))) $SafeOperations$_load(slice sc_0) inline {
+    var v'ops = sc_0~load_dict();
+    var v'count = sc_0~load_uint(8);
+    return (sc_0, (v'ops, v'count));
+}
+
+tuple $SafeOperations$_to_tuple(((cell, int)) v) inline {
+    var (v'ops, v'count) = v;
+    return __tact_tuple_create_2(v'ops, v'count);
+}
+
+;;
+;; Type: EventVote
+;; Header: 0x9dc5d639
+;; TLB: event_vote#9dc5d639 yes:bool address:address = EventVote
+;;
+
+builder $EventVote$_store(builder build_0, (int, slice) v) inline {
+    var (v'yes, v'address) = v;
+    build_0 = store_uint(build_0, 2646988345, 32);
+    build_0 = build_0.store_int(v'yes, 1);
+    build_0 = __tact_store_address(build_0, v'address);
+    return build_0;
+}
+
+cell $EventVote$_store_cell((int, slice) v) inline {
+    return $EventVote$_store(begin_cell(), v).end_cell();
+}
+
+((int, slice)) $EventVote$_constructor_yes_address(int yes, slice address) inline {
+    return (yes, address);
+}
+
+;;
+;; Type: EventVoteCompleted
+;; Header: 0xe7e1407c
+;; TLB: event_vote_completed#e7e1407c success:bool = EventVoteCompleted
+;;
+
+builder $EventVoteCompleted$_store(builder build_0, (int) v) inline {
+    var (v'success) = v;
+    build_0 = store_uint(build_0, 3890299004, 32);
+    build_0 = build_0.store_int(v'success, 1);
+    return build_0;
+}
+
+cell $EventVoteCompleted$_store_cell((int) v) inline {
+    return $EventVoteCompleted$_store(begin_cell(), v).end_cell();
+}
+
+((int)) $EventVoteCompleted$_constructor_success(int success) inline {
+    return (success);
+}
+
+;;
+;; Type: VoteArgs
+;; TLB: _ safe:address owners:dict<address, bool> ownersCount:uint32 treshold:uint32 timeout:uint64 ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}}>,count:uint8} = VoteArgs
+;;
+
+builder $VoteArgs$_store(builder build_0, (slice, cell, int, int, int, (cell, int)) v) inline_ref {
+    var (v'safe, v'owners, v'ownersCount, v'treshold, v'timeout, (v'ops'ops, v'ops'count)) = v;
+    build_0 = __tact_store_address(build_0, v'safe);
+    build_0 = build_0.store_dict(v'owners);
+    build_0 = build_0.store_uint(v'ownersCount, 32);
+    build_0 = build_0.store_uint(v'treshold, 32);
+    build_0 = build_0.store_uint(v'timeout, 64);
+    build_0 = $SafeOperations$_store(build_0, (v'ops'ops, v'ops'count));
+    return build_0;
+}
+
+(slice, ((slice, cell, int, int, int, (cell, int)))) $VoteArgs$_load(slice sc_0) inline_ref {
+    var v'safe = sc_0~__tact_load_address();
+    var v'owners = sc_0~load_dict();
+    var v'ownersCount = sc_0~load_uint(32);
+    var v'treshold = sc_0~load_uint(32);
+    var v'timeout = sc_0~load_uint(64);
+    var v'ops = sc_0~$SafeOperations$_load();
+    return (sc_0, (v'safe, v'owners, v'ownersCount, v'treshold, v'timeout, v'ops));
+}
+
+(slice, cell, int, int, int, tuple) $VoteArgs$_to_external(((slice, cell, int, int, int, (cell, int))) v) inline {
+    var (v'safe, v'owners, v'ownersCount, v'treshold, v'timeout, v'ops) = v; 
+    return (v'safe, v'owners, v'ownersCount, v'treshold, v'timeout, $SafeOperations$_to_tuple(v'ops));
+}
+
+;;
+;; Type: VoteSuccess
+;; Header: 0xcdf42430
+;; TLB: vote_success#cdf42430 args:VoteArgs{safe:address,owners:dict<address, bool>,ownersCount:uint32,treshold:uint32,timeout:uint64,ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}}>,count:uint8}} = VoteSuccess
+;;
+
+builder $VoteSuccess$_store(builder build_0, ((slice, cell, int, int, int, (cell, int))) v) inline {
+    var ((v'args'safe, v'args'owners, v'args'ownersCount, v'args'treshold, v'args'timeout, (v'args'ops'ops, v'args'ops'count))) = v;
+    build_0 = store_uint(build_0, 3455329328, 32);
+    build_0 = $VoteArgs$_store(build_0, (v'args'safe, v'args'owners, v'args'ownersCount, v'args'treshold, v'args'timeout, (v'args'ops'ops, v'args'ops'count)));
+    return build_0;
+}
+
+cell $VoteSuccess$_store_cell(((slice, cell, int, int, int, (cell, int))) v) inline {
+    return $VoteSuccess$_store(begin_cell(), v).end_cell();
+}
+
+(((slice, cell, int, int, int, (cell, int)))) $VoteSuccess$_constructor_args((slice, cell, int, int, int, (cell, int)) args) inline {
+    return (args);
+}
+
+;;
+;; Type: VoteFailure
+;; Header: 0x9895f337
+;; TLB: vote_failure#9895f337 args:VoteArgs{safe:address,owners:dict<address, bool>,ownersCount:uint32,treshold:uint32,timeout:uint64,ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}}>,count:uint8}} = VoteFailure
+;;
+
+builder $VoteFailure$_store(builder build_0, ((slice, cell, int, int, int, (cell, int))) v) inline {
+    var ((v'args'safe, v'args'owners, v'args'ownersCount, v'args'treshold, v'args'timeout, (v'args'ops'ops, v'args'ops'count))) = v;
+    build_0 = store_uint(build_0, 2559963959, 32);
+    build_0 = $VoteArgs$_store(build_0, (v'args'safe, v'args'owners, v'args'ownersCount, v'args'treshold, v'args'timeout, (v'args'ops'ops, v'args'ops'count)));
+    return build_0;
+}
+
+cell $VoteFailure$_store_cell(((slice, cell, int, int, int, (cell, int))) v) inline {
+    return $VoteFailure$_store(begin_cell(), v).end_cell();
+}
+
+(((slice, cell, int, int, int, (cell, int)))) $VoteFailure$_constructor_args((slice, cell, int, int, int, (cell, int)) args) inline {
+    return (args);
+}
+
+;;
+;; Type: VoteDeploy
+;; Header: 0x56137615
+;; TLB: vote_deploy#56137615 queryId:uint64 = VoteDeploy
+;;
+
+(slice, ((int))) $VoteDeploy$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1444115989);
+    var v'queryId = sc_0~load_uint(64);
+    return (sc_0, (v'queryId));
+}
+
+;;
+;; Type: VoteContract
+;;
+
+builder $VoteContract$_store(builder build_0, (cell, (slice, cell, int, int, int, (cell, int)), int, int, int) v) inline {
+    var (v'owners, (v'args'safe, v'args'owners, v'args'ownersCount, v'args'treshold, v'args'timeout, (v'args'ops'ops, v'args'ops'count)), v'votedYes, v'votedNo, v'completed) = v;
+    build_0 = build_0.store_dict(v'owners);
+    var build_1 = begin_cell();
+    build_1 = $VoteArgs$_store(build_1, (v'args'safe, v'args'owners, v'args'ownersCount, v'args'treshold, v'args'timeout, (v'args'ops'ops, v'args'ops'count)));
+    build_1 = build_1.store_uint(v'votedYes, 32);
+    build_1 = build_1.store_uint(v'votedNo, 32);
+    build_1 = build_1.store_int(v'completed, 1);
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+(slice, ((cell, (slice, cell, int, int, int, (cell, int)), int, int, int))) $VoteContract$_load(slice sc_0) inline {
+    var v'owners = sc_0~load_dict();
+    slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'args = sc_1~$VoteArgs$_load();
+    var v'votedYes = sc_1~load_uint(32);
+    var v'votedNo = sc_1~load_uint(32);
+    var v'completed = sc_1~load_int(1);
+    return (sc_0, (v'owners, v'args, v'votedYes, v'votedNo, v'completed));
+}
+
+(slice, (((slice, cell, int, int, int, (cell, int))))) $VoteContract$init$_load(slice sc_0) inline {
+    var v'args = sc_0~$VoteArgs$_load();
+    return (sc_0, (v'args));
+}
+
+(cell, (slice, cell, int, int, int, (cell, int)), int, int, int) $VoteContract$_contract_load() impure inline {
+    slice $sc = get_data().begin_parse();
+    __tact_context_sys = $sc~load_ref();
+    int $loaded = $sc~load_int(1);
+    if ($loaded) {
+        return $sc~$VoteContract$_load();
+    } else {
+        ((slice, cell, int, int, int, (cell, int)) args) = $sc~$VoteContract$init$_load();
+        $sc.end_parse();
+        return $VoteContract$_contract_init(args);
+    }
+}
+
+() $VoteContract$_contract_store((cell, (slice, cell, int, int, int, (cell, int)), int, int, int) v) impure inline {
+    builder b = begin_cell();
+    b = b.store_ref(__tact_context_sys);
+    b = b.store_int(true, 1);
+    b = $VoteContract$_store(b, v);
+    set_data(b.end_cell());
+}

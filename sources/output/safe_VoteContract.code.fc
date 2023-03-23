@@ -1,0 +1,231 @@
+#include "safe_VoteContract.headers.fc";
+#include "safe_VoteContract.stdlib.fc";
+#include "safe_VoteContract.constants.fc";
+#include "safe_VoteContract.storage.fc";
+
+;;
+;; Contract VoteContract functions
+;;
+
+(cell, (slice, cell, int, int, int, (cell, int)), int, int, int) $VoteContract$_contract_init((slice, cell, int, int, int, (cell, int)) $args) impure inline_ref {
+    var (($args'safe, $args'owners, $args'ownersCount, $args'treshold, $args'timeout, ($args'ops'ops, $args'ops'count))) = $args;
+    var (($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'votedYes, $self'votedNo, $self'completed)) = (null(), null(), null(), null(), null());
+    throw_unless(36682, ( __tact_slice_eq_bits($args'safe, __tact_context_get_sender()) ));
+    ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)) = ($args'safe, $args'owners, $args'ownersCount, $args'treshold, $args'timeout, ($args'ops'ops, $args'ops'count));
+    $self'owners = $args'owners;
+    $self'votedYes = 0;
+    $self'votedNo = 0;
+    $self'completed = false;
+    return ($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'votedYes, $self'votedNo, $self'completed);
+}
+
+((cell, (slice, cell, int, int, int, (cell, int)), int, int, int), ()) $VoteContract$_fun_doVote((cell, (slice, cell, int, int, int, (cell, int)), int, int, int) $self, slice $address, int $yes) impure inline_ref {
+    var (($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'votedYes, $self'votedNo, $self'completed)) = $self;
+    throw_unless(4755, (now() <= $self'args'timeout));
+    throw_unless(40810, (~ $self'completed));
+    throw_unless(3094, __tact_int_eq_nullable_one(__tact_dict_get_slice_int($self'owners, 267, $address, 1), true));
+    $self'owners~__tact_dict_set_slice_int(267, $address, null(), 1);
+    if ($yes) {
+        $self'votedYes = ($self'votedYes + 1);
+    } else {
+        $self'votedNo = ($self'votedNo + 1);
+    }
+    $global_emit($EventVote$_store_cell($EventVote$_constructor_yes_address($yes, $address)));
+    $global_send($SendParameters$_constructor_value_to_mode_bounce_body(0, $address, (2 + 64), false, $String$_fun_asComment(__gen_str_361217448())));
+    if (($self'votedYes >= $self'args'treshold)) {
+        $self'completed = true;
+        $global_emit($EventVoteCompleted$_store_cell($EventVoteCompleted$_constructor_success(true)));
+        $global_send($SendParameters$_constructor_value_to_mode_bounce_body(0, $self'args'safe, (128 + 2), false, $VoteSuccess$_store_cell($VoteSuccess$_constructor_args(($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count))))));
+    }
+    if (($self'votedNo > ($self'args'ownersCount - $self'args'treshold))) {
+        $self'completed = true;
+        $global_emit($EventVoteCompleted$_store_cell($EventVoteCompleted$_constructor_success(false)));
+        $global_send($SendParameters$_constructor_value_to_mode_bounce_body(0, $self'args'safe, (128 + 2), false, $VoteFailure$_store_cell($VoteFailure$_constructor_args(($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count))))));
+    }
+    return (($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'votedYes, $self'votedNo, $self'completed), ());
+}
+
+((cell, (slice, cell, int, int, int, (cell, int)), int, int, int), (slice, cell, int, int, int, (cell, int))) $VoteContract$_fun_args((cell, (slice, cell, int, int, int, (cell, int)), int, int, int) $self) impure inline_ref {
+    var (($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'votedYes, $self'votedNo, $self'completed)) = $self;
+    return (($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'votedYes, $self'votedNo, $self'completed), ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)));
+}
+
+((cell, (slice, cell, int, int, int, (cell, int)), int, int, int), int) $VoteContract$_fun_completed((cell, (slice, cell, int, int, int, (cell, int)), int, int, int) $self) impure inline_ref {
+    var (($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'votedYes, $self'votedNo, $self'completed)) = $self;
+    return (($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'votedYes, $self'votedNo, $self'completed), $self'completed);
+}
+
+((cell, (slice, cell, int, int, int, (cell, int)), int, int, int), int) $VoteContract$_fun_votedYes((cell, (slice, cell, int, int, int, (cell, int)), int, int, int) $self) impure inline_ref {
+    var (($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'votedYes, $self'votedNo, $self'completed)) = $self;
+    return (($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'votedYes, $self'votedNo, $self'completed), $self'votedYes);
+}
+
+((cell, (slice, cell, int, int, int, (cell, int)), int, int, int), int) $VoteContract$_fun_votedNo((cell, (slice, cell, int, int, int, (cell, int)), int, int, int) $self) impure inline_ref {
+    var (($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'votedYes, $self'votedNo, $self'completed)) = $self;
+    return (($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'votedYes, $self'votedNo, $self'completed), $self'votedNo);
+}
+
+((cell, (slice, cell, int, int, int, (cell, int)), int, int, int), cell) $VoteContract$_fun_remaining((cell, (slice, cell, int, int, int, (cell, int)), int, int, int) $self) impure inline_ref {
+    var (($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'votedYes, $self'votedNo, $self'completed)) = $self;
+    return (($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'votedYes, $self'votedNo, $self'completed), $self'owners);
+}
+
+;;
+;; Receivers of a Contract VoteContract
+;;
+
+(((cell, (slice, cell, int, int, int, (cell, int)), int, int, int)), ()) $VoteContract$_receive_binary_VoteDeploy((cell, (slice, cell, int, int, int, (cell, int)), int, int, int) $self, (int) $src) impure inline {
+    var ($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'votedYes, $self'votedNo, $self'completed) = $self;
+    var ($src'queryId) = $src;
+    return (($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'votedYes, $self'votedNo, $self'completed), ());
+}
+
+((cell, (slice, cell, int, int, int, (cell, int)), int, int, int), ()) $VoteContract$_receive_text_22aee6d0a6dc146577277dd58d06ae3090a3cdd3d8a88561184208ae5f6eb039((cell, (slice, cell, int, int, int, (cell, int)), int, int, int) $self) impure inline {
+    var ($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'votedYes, $self'votedNo, $self'completed) = $self;
+    slice $sender = __tact_context_get_sender();
+    ($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'votedYes, $self'votedNo, $self'completed)~$VoteContract$_fun_doVote($sender, true);
+    return (($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'votedYes, $self'votedNo, $self'completed), ());
+}
+
+((cell, (slice, cell, int, int, int, (cell, int)), int, int, int), ()) $VoteContract$_receive_text_d2b49fc8a4b6f1b29ab560efb4cd746561d04ee83824fc2d9a475349b1a3aefd((cell, (slice, cell, int, int, int, (cell, int)), int, int, int) $self) impure inline {
+    var ($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'votedYes, $self'votedNo, $self'completed) = $self;
+    slice $sender = __tact_context_get_sender();
+    ($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'votedYes, $self'votedNo, $self'completed)~$VoteContract$_fun_doVote($sender, false);
+    return (($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'votedYes, $self'votedNo, $self'completed), ());
+}
+
+((cell, (slice, cell, int, int, int, (cell, int)), int, int, int), ()) $VoteContract$_receive_text_43156e03a0f86c1864e9a07c66091e6b90ee194be48b1606262f7eb1bb7e912b((cell, (slice, cell, int, int, int, (cell, int)), int, int, int) $self) impure inline {
+    var ($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'votedYes, $self'votedNo, $self'completed) = $self;
+    slice $sender = __tact_context_get_sender();
+    throw_unless(17702, ($self'args'timeout < now()));
+    throw_unless(40810, (~ $self'completed));
+    $self'completed = true;
+    $global_send($SendParameters$_constructor_value_to_mode_bounce_body(0, $sender, (2 + 64), false, $String$_fun_asComment(__gen_str_1142673434())));
+    $global_emit($EventVoteCompleted$_store_cell($EventVoteCompleted$_constructor_success(false)));
+    $global_send($SendParameters$_constructor_value_to_mode_bounce_body(0, $self'args'safe, (128 + 2), false, $VoteFailure$_store_cell($VoteFailure$_constructor_args(($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count))))));
+    return (($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'votedYes, $self'votedNo, $self'completed), ());
+}
+
+;;
+;; Get methods of a Contract VoteContract
+;;
+
+_ %args() method_id(83271) {
+    var self = $VoteContract$_contract_load();
+    var res = self~$VoteContract$_fun_args();
+    return $VoteArgs$_to_external(res);
+}
+
+_ %completed() method_id(79554) {
+    var self = $VoteContract$_contract_load();
+    var res = self~$VoteContract$_fun_completed();
+    return res;
+}
+
+_ %votedYes() method_id(104917) {
+    var self = $VoteContract$_contract_load();
+    var res = self~$VoteContract$_fun_votedYes();
+    return res;
+}
+
+_ %votedNo() method_id(80489) {
+    var self = $VoteContract$_contract_load();
+    var res = self~$VoteContract$_fun_votedNo();
+    return res;
+}
+
+_ %remaining() method_id(102564) {
+    var self = $VoteContract$_contract_load();
+    var res = self~$VoteContract$_fun_remaining();
+    return res;
+}
+
+_ supported_interfaces() method_id {
+    return (
+        "org.ton.introspection.v0"H >> 128,
+        "org.ton.abi.ipfs.v0"H >> 128,
+        "org.ton.deploy.lazy.v0"H >> 128,
+        "org.ton.chain.any.v0"H >> 128
+    );
+}
+
+_ get_abi_ipfs() {
+    return "ipfs://QmXDGpJ3BjMU49DUqjVKyF3rs3BDVGVG8UDoFw16rwNbJ8";
+}
+
+_ lazy_deployment_completed() {
+    return get_data().begin_parse().load_int(1);
+}
+
+;;
+;; Routing of a Contract VoteContract
+;;
+
+((cell, (slice, cell, int, int, int, (cell, int)), int, int, int), int) $VoteContract$_contract_router((cell, (slice, cell, int, int, int, (cell, int)), int, int, int) self, int msg_bounced, slice in_msg) impure inline_ref {
+    
+    ;; Parse incoming message
+    int op = 0;
+    if (slice_bits(in_msg) >= 32) {
+        op = in_msg.preload_uint(32);
+    }
+    
+    ;; Handle bounced messages
+    if (msg_bounced) {
+        return (self, true);
+    }
+    
+    ;; Receive VoteDeploy message
+    if (op == 1444115989) {
+        var msg = in_msg~$VoteDeploy$_load();
+        self~$VoteContract$_receive_binary_VoteDeploy(msg);
+        return (self, true);
+    }
+    
+    ;; Text Receivers
+    if (op == 0) {
+        var text_op = slice_hash(in_msg);
+        
+        ;; Receive "YES" message
+        if (text_op == 0x22aee6d0a6dc146577277dd58d06ae3090a3cdd3d8a88561184208ae5f6eb039) {
+            self~$VoteContract$_receive_text_22aee6d0a6dc146577277dd58d06ae3090a3cdd3d8a88561184208ae5f6eb039();
+            return (self, true);
+        }
+        
+        ;; Receive "NO" message
+        if (text_op == 0xd2b49fc8a4b6f1b29ab560efb4cd746561d04ee83824fc2d9a475349b1a3aefd) {
+            self~$VoteContract$_receive_text_d2b49fc8a4b6f1b29ab560efb4cd746561d04ee83824fc2d9a475349b1a3aefd();
+            return (self, true);
+        }
+        
+        ;; Receive "Recover" message
+        if (text_op == 0x43156e03a0f86c1864e9a07c66091e6b90ee194be48b1606262f7eb1bb7e912b) {
+            self~$VoteContract$_receive_text_43156e03a0f86c1864e9a07c66091e6b90ee194be48b1606262f7eb1bb7e912b();
+            return (self, true);
+        }
+    }
+    
+    return (self, false);
+}
+
+() recv_internal(int msg_value, cell in_msg_cell, slice in_msg) impure {
+    
+    ;; Context
+    var cs = in_msg_cell.begin_parse();
+    var msg_flags = cs~load_uint(4);
+    var msg_bounced = ((msg_flags & 1) == 1 ? true : false);
+    slice msg_sender_addr = __tact_verify_address(cs~load_msg_addr());
+    __tact_context = (msg_bounced, msg_sender_addr, msg_value, cs);
+    __tact_context_sender = msg_sender_addr;
+    
+    ;; Load contract data
+    var self = $VoteContract$_contract_load();
+    
+    ;; Handle operation
+    int handled = self~$VoteContract$_contract_router(msg_bounced, in_msg);
+    
+    ;; Throw if not handled
+    throw_unless(handled, 130);
+    
+    ;; Persist state
+    $VoteContract$_contract_store(self);
+}

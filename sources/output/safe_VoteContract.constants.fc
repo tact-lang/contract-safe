@@ -1,0 +1,5 @@
+;; String "Recovery completed"
+slice __gen_str_1142673434() asm "B{b5ee9c724101010100140000245265636f7665727920636f6d706c657465640d8f6661} B>boc <s PUSHSLICE";
+
+;; String "Vote accepted"
+slice __gen_str_361217448() asm "B{b5ee9c7241010101000f00001a566f74652061636365707465642c13dfde} B>boc <s PUSHSLICE";

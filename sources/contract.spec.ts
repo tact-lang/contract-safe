@@ -1,14 +1,14 @@
 import { Address, Dictionary, toNano } from "ton";
 import { ContractSystem } from "@tact-lang/emulator";
-import { SafeDeployer } from "./output/safe_SafeDeployer";
-import { Safe, SafeOperation } from "./output/safe_Safe";
-import { Signer, SignerArgs } from "./output/safe_Signer";
+import { SafeDeployerContract } from "./output/safe_SafeDeployerContract";
+import { SafeContract, SafeOperation } from "./output/safe_SafeContract";
+import { VoteContract, VoteArgs } from "./output/safe_VoteContract";
 
 describe("contract", () => {
   it("should deploy correctly", async () => {
     let system = await ContractSystem.create();
     let owner = system.treasure("owner");
-    let contract = system.open(await SafeDeployer.fromInit(owner.address, toNano('1'), toNano('1')));
+    let contract = system.open(await SafeDeployerContract.fromInit(owner.address, toNano('1'), toNano('1')));
     let tracker = system.track(contract);
     system.name(contract, "deployer");
 
@@ -20,7 +20,7 @@ describe("contract", () => {
   it('should create request', async () => {
     let system = await ContractSystem.create();
     let owner = system.treasure("owner");
-    let contract = system.open(await Safe.fromInit(owner.address, 0n));
+    let contract = system.open(await SafeContract.fromInit(owner.address, 0n));
     system.name(contract, 'safe');
     let tracker = system.track(contract);
 
@@ -54,8 +54,8 @@ describe("contract", () => {
     let unknown = system.treasure("unknown");
 
     // Deploy signer
-    let args: SignerArgs = {
-      $$type: 'SignerArgs',
+    let args: VoteArgs = {
+      $$type: 'VoteArgs',
       safe: safe.address,
       owners: Dictionary.empty<Address, boolean>()
         .set(owner1.address, true)
@@ -69,10 +69,10 @@ describe("contract", () => {
         count: 0n
       }
     };
-    let contract = system.open(await Signer.fromInit(args));
+    let contract = system.open(await VoteContract.fromInit(args));
     let tracker = system.track(contract);
     system.name(contract, 'signer');
-    await contract.send(safe, { value: toNano(1) }, { $$type: 'SignerDeploy', queryId: 0n });
+    await contract.send(safe, { value: toNano(1) }, { $$type: 'VoteDeploy', queryId: 0n });
     await system.run();
     expect(tracker.collect()).toMatchSnapshot('deploy');
 

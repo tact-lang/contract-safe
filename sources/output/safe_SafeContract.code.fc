@@ -1,0 +1,275 @@
+#include "safe_SafeContract.headers.fc";
+#include "safe_SafeContract.stdlib.fc";
+#include "safe_SafeContract.storage.fc";
+
+;;
+;; Contract SafeContract functions
+;;
+
+(int, cell, int, int, (int, int)) $SafeContract$_contract_init(slice $owner, int $id) impure inline_ref {
+    var (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice))) = (null(), null(), null(), null(), null());
+    $self'seqno = 0;
+    $self'owners = null();
+    $self'owners~__tact_dict_set_slice_int(267, $owner, true, 1);
+    $self'ownersCount = 1;
+    $self'treshold = 1;
+    ($self'parameters'timeout, $self'parameters'requestPrice) = $SafeParameters$_constructor_timeout_requestPrice(86400, 1000000000);
+    return ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice));
+}
+
+((int, cell, int, int, (int, int)), ()) $SafeContract$_fun_executeTransfer((int, cell, int, int, (int, int)) $self, (slice, int, int, int, cell) $op) impure inline_ref {
+    var (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice))) = $self;
+    var (($op'to, $op'value, $op'mode, $op'bounce, $op'body)) = $op;
+    $global_send($SendParameters$_constructor_value_to_mode_bounce_body($op'value, $op'to, $op'mode, $op'bounce, $op'body));
+    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)), ());
+}
+
+((int, cell, int, int, (int, int)), ()) $SafeContract$_fun_executeParameters((int, cell, int, int, (int, int)) $self, ((int, int)) $op) impure inline_ref {
+    var (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice))) = $self;
+    var ((($op'parameters'timeout, $op'parameters'requestPrice))) = $op;
+    ($self'parameters'timeout, $self'parameters'requestPrice) = ($op'parameters'timeout, $op'parameters'requestPrice);
+    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)), ());
+}
+
+((int, cell, int, int, (int, int)), ()) $SafeContract$_fun_execute((int, cell, int, int, (int, int)) $self, (tuple, tuple) $op) impure inline_ref {
+    var (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice))) = $self;
+    var (($op'transfer, $op'parameters)) = $op;
+    if ((~ null?($op'transfer))) {
+        ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice))~$SafeContract$_fun_executeTransfer($SafeOperationTransfer$_tensor_cast($SafeOperationTransfer$_not_null($op'transfer)));
+    }
+    if ((~ null?($op'parameters))) {
+        ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice))~$SafeContract$_fun_executeParameters($SafeOperationUpdateParameters$_tensor_cast($SafeOperationUpdateParameters$_not_null($op'parameters)));
+    }
+    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)), ());
+}
+
+((int, cell, int, int, (int, int)), (int, int)) $SafeContract$_fun_parameters((int, cell, int, int, (int, int)) $self) impure inline_ref {
+    var (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice))) = $self;
+    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)), ($self'parameters'timeout, $self'parameters'requestPrice));
+}
+
+((int, cell, int, int, (int, int)), int) $SafeContract$_fun_treshold((int, cell, int, int, (int, int)) $self) impure inline_ref {
+    var (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice))) = $self;
+    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)), $self'treshold);
+}
+
+((int, cell, int, int, (int, int)), int) $SafeContract$_fun_seqno((int, cell, int, int, (int, int)) $self) impure inline_ref {
+    var (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice))) = $self;
+    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)), $self'seqno);
+}
+
+((int, cell, int, int, (int, int)), int) $SafeContract$_fun_isOwner((int, cell, int, int, (int, int)) $self, slice $address) impure inline_ref {
+    var (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice))) = $self;
+    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)), __tact_int_eq_nullable_one(__tact_dict_get_slice_int($self'owners, 267, $address, 1), true));
+}
+
+((int, cell, int, int, (int, int)), cell) $SafeContract$_fun_owners((int, cell, int, int, (int, int)) $self) impure inline_ref {
+    var (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice))) = $self;
+    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)), $self'owners);
+}
+
+;;
+;; Receivers of a Contract SafeContract
+;;
+
+(((int, cell, int, int, (int, int))), ()) $SafeContract$_receive_binary_SafeDeployment((int, cell, int, int, (int, int)) $self, (slice) $deploy) impure inline {
+    var ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)) = $self;
+    var ($deploy'remaining) = $deploy;
+    $global_send($SendParameters$_constructor_to_value_mode($deploy'remaining, 0, 64));
+    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)), ());
+}
+
+(((int, cell, int, int, (int, int))), ()) $SafeContract$_receive_binary_SafeRequestOperation((int, cell, int, int, (int, int)) $self, ((cell, int)) $request) impure inline {
+    var ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)) = $self;
+    var (($request'ops'ops, $request'ops'count)) = $request;
+    var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
+    throw_unless(46307, __tact_int_eq_nullable_one(__tact_dict_get_slice_int($self'owners, 267, $ctx'sender, 1), true));
+    throw_unless(5165, ($ctx'value >= $self'parameters'requestPrice));
+    int $i = 0;
+    repeat ($request'ops'count) {
+        var ($op'transfer, $op'parameters) = $SafeOperation$_not_null($SafeOperation$_load_opt(__tact_dict_get_int_cell($request'ops'ops, 257, $i)));
+        int $notNullOperations = 0;
+        if ((~ null?($op'transfer))) {
+            $notNullOperations = ($notNullOperations + 1);
+        }
+        if ((~ null?($op'parameters))) {
+            var ($params'timeout, $params'requestPrice) = $SafeOperationUpdateParameters$_get_parameters($SafeOperationUpdateParameters$_not_null($op'parameters));
+            throw_unless(7464, ($params'requestPrice <= 10000000000));
+            throw_unless(38009, ($params'requestPrice >= 1000000000));
+            throw_unless(31822, ($params'timeout < (((60 * 60) * 24) * 365)));
+            $notNullOperations = ($notNullOperations + 1);
+        }
+        throw_unless(44757, ($notNullOperations != 1));
+        $i = ($i + 1);
+    }
+    var ($args'safe, $args'owners, $args'ownersCount, $args'treshold, $args'timeout, ($args'ops'ops, $args'ops'count)) = $VoteArgs$_constructor_safe_owners_ownersCount_treshold_timeout_ops(my_address(), $self'owners, $self'ownersCount, $self'treshold, (now() + $self'parameters'timeout), ($request'ops'ops, $request'ops'count));
+    var ($init'code, $init'data) = $VoteContract$_init_child(__tact_context_sys, ($args'safe, $args'owners, $args'ownersCount, $args'treshold, $args'timeout, ($args'ops'ops, $args'ops'count)));
+    slice $address = $global_contractAddress(($init'code, $init'data));
+    $global_send($SendParameters$_constructor_value_to_mode_bounce_code_data_body(0, $address, (64 + 2), true, $init'code, $init'data, $VoteDeploy$_store_cell($VoteDeploy$_constructor_queryId(0))));
+    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)), ());
+}
+
+(((int, cell, int, int, (int, int))), ()) $SafeContract$_receive_binary_VoteFailure((int, cell, int, int, (int, int)) $self, ((slice, cell, int, int, int, (cell, int))) $aborted) impure inline {
+    var ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)) = $self;
+    var (($aborted'args'safe, $aborted'args'owners, $aborted'args'ownersCount, $aborted'args'treshold, $aborted'args'timeout, ($aborted'args'ops'ops, $aborted'args'ops'count))) = $aborted;
+    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)), ());
+}
+
+(((int, cell, int, int, (int, int))), ()) $SafeContract$_receive_binary_VoteSuccess((int, cell, int, int, (int, int)) $self, ((slice, cell, int, int, int, (cell, int))) $signed) impure inline {
+    var ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)) = $self;
+    var (($signed'args'safe, $signed'args'owners, $signed'args'ownersCount, $signed'args'treshold, $signed'args'timeout, ($signed'args'ops'ops, $signed'args'ops'count))) = $signed;
+    var ($args'safe, $args'owners, $args'ownersCount, $args'treshold, $args'timeout, ($args'ops'ops, $args'ops'count)) = ($signed'args'safe, $signed'args'owners, $signed'args'ownersCount, $signed'args'treshold, $signed'args'timeout, ($signed'args'ops'ops, $signed'args'ops'count));
+    var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
+    throw_unless(32453, ( __tact_slice_eq_bits(my_address(), $args'safe) ));
+    throw_unless(8884, __tact_cell_eq_nullable($args'owners, $self'owners));
+    throw_unless(62638, ($args'ownersCount == $self'ownersCount));
+    throw_unless(37479, ($args'treshold == $self'treshold));
+    throw_unless(4755, (now() <= $args'timeout));
+    var ($init'code, $init'data) = $VoteContract$_init_child(__tact_context_sys, ($args'safe, $args'owners, $args'ownersCount, $args'treshold, $args'timeout, ($args'ops'ops, $args'ops'count)));
+    slice $address = $global_contractAddress(($init'code, $init'data));
+    throw_unless(45379, ( __tact_slice_eq_bits($address, $ctx'sender) ));
+    int $i = 0;
+    repeat ($args'ops'count) {
+        var ($op'transfer, $op'parameters) = $SafeOperation$_not_null($SafeOperation$_load_opt(__tact_dict_get_int_cell($args'ops'ops, 257, $i)));
+        ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice))~$SafeContract$_fun_execute($SafeOperation$_tensor_cast(($op'transfer, $op'parameters)));
+        $i = ($i + 1);
+    }
+    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)), ());
+}
+
+(((int, cell, int, int, (int, int))), ()) $SafeContract$_receive_binary_Deploy((int, cell, int, int, (int, int)) $self, (int) $deploy) impure inline {
+    var ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)) = $self;
+    var ($deploy'queryId) = $deploy;
+    $global_reply($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId)));
+    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)), ());
+}
+
+;;
+;; Get methods of a Contract SafeContract
+;;
+
+_ %parameters() method_id(68438) {
+    var self = $SafeContract$_contract_load();
+    var res = self~$SafeContract$_fun_parameters();
+    return $SafeParameters$_to_external(res);
+}
+
+_ %treshold() method_id(114048) {
+    var self = $SafeContract$_contract_load();
+    var res = self~$SafeContract$_fun_treshold();
+    return res;
+}
+
+_ %seqno() method_id(85143) {
+    var self = $SafeContract$_contract_load();
+    var res = self~$SafeContract$_fun_seqno();
+    return res;
+}
+
+_ %isOwner(slice $$address) method_id(89603) {
+    slice $address = __tact_verify_address($$address);
+    var self = $SafeContract$_contract_load();
+    var res = self~$SafeContract$_fun_isOwner($address);
+    return res;
+}
+
+_ %owners() method_id(84885) {
+    var self = $SafeContract$_contract_load();
+    var res = self~$SafeContract$_fun_owners();
+    return res;
+}
+
+_ supported_interfaces() method_id {
+    return (
+        "org.ton.introspection.v0"H >> 128,
+        "org.ton.abi.ipfs.v0"H >> 128,
+        "org.ton.deploy.lazy.v0"H >> 128,
+        "org.ton.chain.any.v0"H >> 128
+    );
+}
+
+_ get_abi_ipfs() {
+    return "ipfs://QmaLM94vv6GugPC6gBbLo9MUZ4odzQjzEtJzAgvbdLvMjg";
+}
+
+_ lazy_deployment_completed() {
+    return get_data().begin_parse().load_int(1);
+}
+
+;;
+;; Routing of a Contract SafeContract
+;;
+
+((int, cell, int, int, (int, int)), int) $SafeContract$_contract_router((int, cell, int, int, (int, int)) self, int msg_bounced, slice in_msg) impure inline_ref {
+    
+    ;; Parse incoming message
+    int op = 0;
+    if (slice_bits(in_msg) >= 32) {
+        op = in_msg.preload_uint(32);
+    }
+    
+    ;; Handle bounced messages
+    if (msg_bounced) {
+        return (self, true);
+    }
+    
+    ;; Receive SafeDeployment message
+    if (op == 1857061459) {
+        var msg = in_msg~$SafeDeployment$_load();
+        self~$SafeContract$_receive_binary_SafeDeployment(msg);
+        return (self, true);
+    }
+    
+    ;; Receive SafeRequestOperation message
+    if (op == 4286439532) {
+        var msg = in_msg~$SafeRequestOperation$_load();
+        self~$SafeContract$_receive_binary_SafeRequestOperation(msg);
+        return (self, true);
+    }
+    
+    ;; Receive VoteFailure message
+    if (op == 2559963959) {
+        var msg = in_msg~$VoteFailure$_load();
+        self~$SafeContract$_receive_binary_VoteFailure(msg);
+        return (self, true);
+    }
+    
+    ;; Receive VoteSuccess message
+    if (op == 3455329328) {
+        var msg = in_msg~$VoteSuccess$_load();
+        self~$SafeContract$_receive_binary_VoteSuccess(msg);
+        return (self, true);
+    }
+    
+    ;; Receive Deploy message
+    if (op == 2490013878) {
+        var msg = in_msg~$Deploy$_load();
+        self~$SafeContract$_receive_binary_Deploy(msg);
+        return (self, true);
+    }
+    
+    return (self, false);
+}
+
+() recv_internal(int msg_value, cell in_msg_cell, slice in_msg) impure {
+    
+    ;; Context
+    var cs = in_msg_cell.begin_parse();
+    var msg_flags = cs~load_uint(4);
+    var msg_bounced = ((msg_flags & 1) == 1 ? true : false);
+    slice msg_sender_addr = __tact_verify_address(cs~load_msg_addr());
+    __tact_context = (msg_bounced, msg_sender_addr, msg_value, cs);
+    __tact_context_sender = msg_sender_addr;
+    
+    ;; Load contract data
+    var self = $SafeContract$_contract_load();
+    
+    ;; Handle operation
+    int handled = self~$SafeContract$_contract_router(msg_bounced, in_msg);
+    
+    ;; Throw if not handled
+    throw_unless(handled, 130);
+    
+    ;; Persist state
+    $SafeContract$_contract_store(self);
+}

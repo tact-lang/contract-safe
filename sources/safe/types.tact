@@ -24,3 +24,21 @@ struct SafeOperationTransfer {
 struct SafeOperationUpdateParameters {
     parameters: SafeParameters;
 }
+
+//
+// Events
+//
+
+message EventSafeDeployed {
+    by: Address;
+    address: Address;
+}
+
+message EventVote {
+    yes: Bool;
+    address: Address;
+}
+
+message EventVoteCompleted {
+    success: Bool;
+}

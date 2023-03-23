@@ -1,6 +1,6 @@
 import "@stdlib/deploy";
 import "./types.tact";
-import "./signer.tact";
+import "./vote.tact";
 
 const DEFAULT_REQUEST_PRICE: Int = ton("1");
 const DEFAULT_TIMEOUT: Int = 60 * 60 * 24; // 24 hours
@@ -13,7 +13,7 @@ message SafeRequestOperation {
     ops: SafeOperations;
 }
 
-contract Safe with Deployable {
+contract SafeContract with Deployable {
     seqno: Int as uint64; // Impossible to overflow
     owners: map<Address, Bool>;
     ownersCount: Int;
@@ -39,6 +39,10 @@ contract Safe with Deployable {
             mode: SendRemainingValue
         });
     }
+
+    //
+    // Request
+    //
 
     receive(request: SafeRequestOperation) {
         
@@ -73,7 +77,7 @@ contract Safe with Deployable {
         }
 
         // Send request
-        let args: SignerArgs = SignerArgs{
+        let args: VoteArgs = VoteArgs{
             safe: myAddress(),
             owners: self.owners,
             ownersCount: self.ownersCount,
@@ -81,7 +85,7 @@ contract Safe with Deployable {
             timeout: now() + self.parameters.timeout,
             ops: request.ops
         };
-        let init: StateInit = initOf Signer(args);
+        let init: StateInit = initOf VoteContract(args);
         let address: Address = contractAddress(init);
         send(SendParameters{
             value: 0, 
@@ -90,21 +94,29 @@ contract Safe with Deployable {
             bounce: true,
             code: init.code,
             data: init.data,
-            body: SignerDeploy{queryId:0}.toCell()
+            body: VoteDeploy{queryId:0}.toCell()
         });
     }
 
-    receive(signed: OperationsSigned) {
+    //
+    // Response
+    //
+
+    receive(aborted: VoteFailure) {
+        // Do nothing
+    }
+
+    receive(signed: VoteSuccess) {
 
         // Check the message
-        let args: SignerArgs = signed.args;
+        let args: VoteArgs = signed.args;
         let ctx: Context = context();
         require(args.safe == myAddress(), "Wrong safe address");
         require(args.owners == self.owners, "Wrong owners");
         require(args.ownersCount == self.ownersCount, "Wrong owners count");
         require(args.treshold == self.treshold, "Wrong treshold");
         require(now() <= args.timeout, "Timeout");
-        let init: StateInit = initOf Signer(args);
+        let init: StateInit = initOf VoteContract(args);
         let address: Address = contractAddress(init);
         require(ctx.sender == address, "Wrong signer address");
 

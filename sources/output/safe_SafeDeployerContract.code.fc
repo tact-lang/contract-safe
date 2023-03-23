@@ -1,0 +1,168 @@
+#include "safe_SafeDeployerContract.headers.fc";
+#include "safe_SafeDeployerContract.stdlib.fc";
+#include "safe_SafeDeployerContract.storage.fc";
+
+;;
+;; Contract SafeDeployerContract functions
+;;
+
+(slice, int, int, int) $SafeDeployerContract$_contract_init(slice $owner, int $devFee, int $deployValue) impure inline_ref {
+    var (($self'owner, $self'devFee, $self'deployValue, $self'counter)) = (null(), null(), null(), null());
+    $self'owner = $owner;
+    $self'devFee = $devFee;
+    $self'deployValue = $deployValue;
+    $self'counter = 0;
+    return ($self'owner, $self'devFee, $self'deployValue, $self'counter);
+}
+
+((slice, int, int, int), (int, int)) $SafeDeployerContract$_fun_params((slice, int, int, int) $self) impure inline_ref {
+    var (($self'owner, $self'devFee, $self'deployValue, $self'counter)) = $self;
+    return (($self'owner, $self'devFee, $self'deployValue, $self'counter), $SafeDeployParams$_constructor_deploy_devFee($self'deployValue, $self'devFee));
+}
+
+((slice, int, int, int), ()) $SafeDeployerContract$_fun_requireOwner((slice, int, int, int) $self) impure inline_ref {
+    var (($self'owner, $self'devFee, $self'deployValue, $self'counter)) = $self;
+    throw_unless(132, ( __tact_slice_eq_bits($self'owner, __tact_context_get_sender()) ));
+    return (($self'owner, $self'devFee, $self'deployValue, $self'counter), ());
+}
+
+((slice, int, int, int), slice) $SafeDeployerContract$_fun_owner((slice, int, int, int) $self) impure inline_ref {
+    var (($self'owner, $self'devFee, $self'deployValue, $self'counter)) = $self;
+    return (($self'owner, $self'devFee, $self'deployValue, $self'counter), $self'owner);
+}
+
+;;
+;; Receivers of a Contract SafeDeployerContract
+;;
+
+((slice, int, int, int), ()) $SafeDeployerContract$_receive_text_2d51e7ccd78be57b2c0bfaab585f0f535337c1219afb5421dd1de4b81f300226((slice, int, int, int) $self) impure inline {
+    var ($self'owner, $self'devFee, $self'deployValue, $self'counter) = $self;
+    var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
+    throw_unless(25849, ($ctx'value >= ($self'devFee + $self'deployValue)));
+    int $counter = $self'counter;
+    $self'counter = ($self'counter + 1);
+    var ($init'code, $init'data) = $SafeContract$_init_child(__tact_context_sys, $ctx'sender, $counter);
+    slice $safeAddress = $global_contractAddress(($init'code, $init'data));
+    $global_send($SendParameters$_constructor_to_value_body($safeAddress, $self'deployValue, $SafeDeployment$_store_cell($SafeDeployment$_constructor_remaining($self'owner))));
+    $global_emit($EventSafeDeployed$_store_cell($EventSafeDeployed$_constructor_by_address($ctx'sender, $safeAddress)));
+    $global_send($SendParameters$_constructor_to_value_mode($self'owner, 0, (64 + 2)));
+    return (($self'owner, $self'devFee, $self'deployValue, $self'counter), ());
+}
+
+(((slice, int, int, int)), ()) $SafeDeployerContract$_receive_binary_ChangeOwner((slice, int, int, int) $self, (slice) $msg) impure inline {
+    var ($self'owner, $self'devFee, $self'deployValue, $self'counter) = $self;
+    var ($msg'newOwner) = $msg;
+    ($self'owner, $self'devFee, $self'deployValue, $self'counter)~$SafeDeployerContract$_fun_requireOwner();
+    $self'owner = $msg'newOwner;
+    return (($self'owner, $self'devFee, $self'deployValue, $self'counter), ());
+}
+
+(((slice, int, int, int)), ()) $SafeDeployerContract$_receive_binary_Deploy((slice, int, int, int) $self, (int) $deploy) impure inline {
+    var ($self'owner, $self'devFee, $self'deployValue, $self'counter) = $self;
+    var ($deploy'queryId) = $deploy;
+    $global_reply($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId)));
+    return (($self'owner, $self'devFee, $self'deployValue, $self'counter), ());
+}
+
+;;
+;; Get methods of a Contract SafeDeployerContract
+;;
+
+_ %params() method_id(116437) {
+    var self = $SafeDeployerContract$_contract_load();
+    var res = self~$SafeDeployerContract$_fun_params();
+    return $SafeDeployParams$_to_external(res);
+}
+
+_ %owner() method_id(83229) {
+    var self = $SafeDeployerContract$_contract_load();
+    var res = self~$SafeDeployerContract$_fun_owner();
+    return res;
+}
+
+_ supported_interfaces() method_id {
+    return (
+        "org.ton.introspection.v0"H >> 128,
+        "org.ton.abi.ipfs.v0"H >> 128,
+        "org.ton.deploy.lazy.v0"H >> 128,
+        "org.ton.chain.any.v0"H >> 128,
+        "org.ton.ownable.transferable"H >> 128,
+        "org.ton.ownable"H >> 128
+    );
+}
+
+_ get_abi_ipfs() {
+    return "ipfs://QmY6hZtoEAUqU3iw6QgkWUguTv3hvAWXgP3JW54t66W4q3";
+}
+
+_ lazy_deployment_completed() {
+    return get_data().begin_parse().load_int(1);
+}
+
+;;
+;; Routing of a Contract SafeDeployerContract
+;;
+
+((slice, int, int, int), int) $SafeDeployerContract$_contract_router((slice, int, int, int) self, int msg_bounced, slice in_msg) impure inline_ref {
+    
+    ;; Parse incoming message
+    int op = 0;
+    if (slice_bits(in_msg) >= 32) {
+        op = in_msg.preload_uint(32);
+    }
+    
+    ;; Handle bounced messages
+    if (msg_bounced) {
+        return (self, true);
+    }
+    
+    ;; Receive ChangeOwner message
+    if (op == 256331011) {
+        var msg = in_msg~$ChangeOwner$_load();
+        self~$SafeDeployerContract$_receive_binary_ChangeOwner(msg);
+        return (self, true);
+    }
+    
+    ;; Receive Deploy message
+    if (op == 2490013878) {
+        var msg = in_msg~$Deploy$_load();
+        self~$SafeDeployerContract$_receive_binary_Deploy(msg);
+        return (self, true);
+    }
+    
+    ;; Text Receivers
+    if (op == 0) {
+        var text_op = slice_hash(in_msg);
+        
+        ;; Receive "Deploy new Safe" message
+        if (text_op == 0x2d51e7ccd78be57b2c0bfaab585f0f535337c1219afb5421dd1de4b81f300226) {
+            self~$SafeDeployerContract$_receive_text_2d51e7ccd78be57b2c0bfaab585f0f535337c1219afb5421dd1de4b81f300226();
+            return (self, true);
+        }
+    }
+    
+    return (self, false);
+}
+
+() recv_internal(int msg_value, cell in_msg_cell, slice in_msg) impure {
+    
+    ;; Context
+    var cs = in_msg_cell.begin_parse();
+    var msg_flags = cs~load_uint(4);
+    var msg_bounced = ((msg_flags & 1) == 1 ? true : false);
+    slice msg_sender_addr = __tact_verify_address(cs~load_msg_addr());
+    __tact_context = (msg_bounced, msg_sender_addr, msg_value, cs);
+    __tact_context_sender = msg_sender_addr;
+    
+    ;; Load contract data
+    var self = $SafeDeployerContract$_contract_load();
+    
+    ;; Handle operation
+    int handled = self~$SafeDeployerContract$_contract_router(msg_bounced, in_msg);
+    
+    ;; Throw if not handled
+    throw_unless(handled, 130);
+    
+    ;; Persist state
+    $SafeDeployerContract$_contract_store(self);
+}
