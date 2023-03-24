@@ -680,14 +680,29 @@
     tvm-disassembler "^2.0.0"
     zod "^3.20.2"
 
-"@tact-lang/emulator@^3.3.1":
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/@tact-lang/emulator/-/emulator-3.3.1.tgz#bf9ad2d1c2e4135b9ca331c08192b3b3d859ab75"
-  integrity sha512-Mct5JksjBUZik6UVepcxT0IEtyXs7Ob68+oulfNtBw2JadcK6I7jTLDSqq9tDB+xFiEo/Tr7WpWpm3DCyuoxng==
+"@tact-lang/coverage@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@tact-lang/coverage/-/coverage-0.0.2.tgz#f7879e895320c43b6b3951070d8516bd4a86b214"
+  integrity sha512-MwrrQNxPJj0rRQeRg+p47H++KvI049/bwgFYknLb4QlDNYpcwev+uE3EADF11W3lBd2MWLcuuP5qUTt+JOOBUQ==
+  dependencies:
+    "@tact-lang/opcode" "^0.0.9"
+    prando "^6.0.1"
+    teslabot "^1.5.0"
+    zod "^3.20.2"
+
+"@tact-lang/emulator@^3.4.1":
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/@tact-lang/emulator/-/emulator-3.4.1.tgz#974fef4859ef8977dcbaa665c05f296410791ef6"
+  integrity sha512-+elgvFUCmjqBPWTFcxiyWQM+CxP+r8nqcd59HxJ2YkboiarC3IkjTcXkXAKIP9gMFfNRrbYjF1w/iC+5Mylgew==
   dependencies:
     prando "^6.0.1"
     teslabot "^1.5.0"
     zod "^3.20.2"
+
+"@tact-lang/opcode@^0.0.9":
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/@tact-lang/opcode/-/opcode-0.0.9.tgz#1b2f51ca2b362f6c78eb611ca8b2758e0d706b0c"
+  integrity sha512-/MN8s1CE1V6QAqDVBfsABsNzyzAFruUbJkP06cLy1b1zvWznPvLfu/r85ZCphpiBYYVRLgLrwE5wS2XkaXuR/Q==
 
 "@tsconfig/node10@^1.0.7":
   version "1.0.9"

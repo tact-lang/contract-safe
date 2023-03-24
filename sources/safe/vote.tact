@@ -78,7 +78,7 @@ contract VoteContract {
         // Emit event
         emit(EventVoteCompleted{ success: false }.toCell());
 
-        // Send cashback
+        // Send result
         send(SendParameters{
             value: 0, 
             to: self.args.safe, 
@@ -137,7 +137,7 @@ contract VoteContract {
             // Emit event
             emit(EventVoteCompleted{ success: false }.toCell());
 
-            // Send cashback
+            // Send result
             send(SendParameters{
                 value: 0, 
                 to: self.args.safe, 

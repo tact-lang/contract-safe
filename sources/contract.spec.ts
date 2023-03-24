@@ -1,20 +1,34 @@
 import { Address, Dictionary, toNano } from "ton";
-import { ContractSystem } from "@tact-lang/emulator";
+import { ContractSystem, Verbosity } from "@tact-lang/emulator";
 import { SafeDeployerContract } from "./output/safe_SafeDeployerContract";
 import { SafeContract, SafeOperation } from "./output/safe_SafeContract";
 import { VoteContract, VoteArgs } from "./output/safe_VoteContract";
+import { beginCoverage, completeCoverage } from "@tact-lang/coverage";
 
 describe("contract", () => {
+
+  beforeAll(() => {
+    beginCoverage();
+  });
+
+  afterAll(() => {
+    completeCoverage(__dirname + '/output');
+  });
+
   it("should deploy correctly", async () => {
     let system = await ContractSystem.create();
     let owner = system.treasure("owner");
     let contract = system.open(await SafeDeployerContract.fromInit(owner.address, toNano('1'), toNano('1')));
     let tracker = system.track(contract);
+    let logs = system.log(contract);
+    system.verbosity(contract, Verbosity.DEBUG);
     system.name(contract, "deployer");
 
     await contract.send(owner, { value: toNano(1) }, { $$type: "Deploy", queryId: 0n });
     await system.run();
     expect(tracker.collect()).toMatchSnapshot();
+
+    // console.warn(logs.collect());
   });
 
   it('should create request', async () => {
