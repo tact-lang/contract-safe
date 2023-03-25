@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: VoteContract
-BOC Size: 1804 bytes
+BOC Size: 1678 bytes
 
 # Types
 Total Types: 21

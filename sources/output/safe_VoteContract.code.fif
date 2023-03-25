@@ -9,10 +9,6 @@ PROGRAM{
   DECLPROC __tact_dict_get_slice_int
   DECLPROC __tact_slice_eq_bits
   DECLPROC __tact_int_eq_nullable_one
-  DECLPROC __tact_string_builder_start
-  DECLPROC __tact_string_builder_start_comment
-  DECLPROC __tact_string_builder_end
-  DECLPROC __tact_string_builder_append
   DECLPROC $SafeOperations$_store
   DECLPROC $SafeOperations$_load
   DECLPROC $EventVote$_store
@@ -36,7 +32,6 @@ PROGRAM{
   DECLPROC $VoteContract$_contract_store
   DECLPROC $global_send
   DECLPROC $global_emit
-  DECLPROC $String$_fun_asComment
   DECLPROC $SendParameters$_constructor_value_to_mode_bounce_body
   DECLPROC $EventVote$_constructor_yes_address
   DECLPROC $EventVoteCompleted$_constructor_success
@@ -145,103 +140,6 @@ PROGRAM{
     }>ELSE<{
       EQUAL
     }>
-  }>
-  __tact_string_builder_start PROCINLINE:<{
-    NIL
-    SWAP
-    TPUSH
-    PUSHNULL
-    TPUSH
-  }>
-  __tact_string_builder_start_comment PROCINLINE:<{
-    NEWC
-    0 PUSHINT
-    SWAP
-    32 STU
-    __tact_string_builder_start INLINECALLDICT
-  }>
-  __tact_string_builder_end PROCINLINE:<{
-    UNCONS
-    SWAP
-    ENDC
-    WHILE:<{
-      OVER
-      ISNULL
-      NOT
-    }>DO<{
-      SWAP
-      UNCONS
-      -ROT
-      STREF
-      ENDC
-    }>
-    NIP
-  }>
-  __tact_string_builder_append PROCREF:<{
-    DUP
-    SREFS
-    OVER
-    SBITS
-    WHILE:<{
-      DUP
-      0 GTINT
-      s2 PUSH
-      0 GTINT
-      OR
-    }>DO<{
-      s0 s3 XCHG
-      UNCONS
-      127 PUSHINT
-      s2 PUSH
-      BBITS
-      3 RSHIFT#
-      SUB
-      s0 s5 XCHG
-      3 RSHIFT#
-      s5 s5 XCPU
-      MIN
-      DUP
-      0 GTINT
-      IF:<{
-        DUP
-        3 LSHIFT#
-        s1 s5 XCHG
-        LDSLICEX
-        s3 s3 XCHG2
-        STSLICER
-        s0 s1 s4 XCHG3
-      }>
-      -ROT
-      CONS
-      s4 s1 PUSH2
-      SUB
-      0 GTINT
-      IF:<{
-        NEWC
-        SWAP
-        CONS
-        s4 s4 XCHG2
-        SUB
-        3 LSHIFT#
-      }>ELSE<{
-        NIP
-        s3 POP
-        0 GTINT
-        IF:<{
-          LDREF
-          DROP
-          CTOS
-          DUP
-          SREFS
-          OVER
-          SBITS
-        }>ELSE<{
-          0 PUSHINT
-          DUP
-        }>
-      }>
-    }>
-    3 BLKDROP
   }>
   $SafeOperations$_store PROCINLINE:<{
     s0 s2 XCHG
@@ -562,12 +460,6 @@ PROGRAM{
     0 PUSHINT
     SENDRAWMSG
   }>
-  $String$_fun_asComment PROCREF:<{
-    __tact_string_builder_start_comment INLINECALLDICT
-    SWAP
-    __tact_string_builder_append INLINECALLDICT
-    __tact_string_builder_end INLINECALLDICT
-  }>
   $SendParameters$_constructor_value_to_mode_bounce_body PROCINLINE:<{
     s4 s4 s0 XCHG3
     PUSHNULL
@@ -623,8 +515,7 @@ PROGRAM{
     0 PUSHINT
     66 PUSHINT
     FALSE
-    B{b5ee9c7241010101000f00001a566f74652061636365707465642c13dfde} B>boc <s PUSHSLICE
-    $String$_fun_asComment INLINECALLDICT
+    B{b5ee9c7241010101001300002200000000566f74652061636365707465647bd31171} B>boc PUSHREF
     s3 s4 XCHG
     $SendParameters$_constructor_value_to_mode_bounce_body INLINECALLDICT
     $global_send INLINECALLDICT
@@ -722,8 +613,7 @@ PROGRAM{
     0 PUSHINT
     66 PUSHINT
     FALSE
-    B{b5ee9c724101010100140000245265636f7665727920636f6d706c657465640d8f6661} B>boc <s PUSHSLICE
-    $String$_fun_asComment INLINECALLDICT
+    B{b5ee9c7241010101001800002c000000005265636f7665727920636f6d706c65746564e3e19884} B>boc PUSHREF
     s3 s4 XCHG
     s3 s5 XCHG
     $SendParameters$_constructor_value_to_mode_bounce_body INLINECALLDICT

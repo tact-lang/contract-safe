@@ -659,12 +659,13 @@
   dependencies:
     "@sinonjs/commons" "^2.0.0"
 
-"@tact-lang/compiler@1.1.0-beta.4":
-  version "1.1.0-beta.4"
-  resolved "https://registry.yarnpkg.com/@tact-lang/compiler/-/compiler-1.1.0-beta.4.tgz#e3ec0f29c9327b7755c554d97c1dd8c1bcf6e1a2"
-  integrity sha512-WM9g2n4TGBIYeBF3M2ruHkr37FJS928CVwcmm/9W9v0xNpoSIwVMP6kf7KmFySrqvrf2uHRCldQv+hm2GV+1Yw==
+"@tact-lang/compiler@1.1.0-beta.5":
+  version "1.1.0-beta.5"
+  resolved "https://registry.yarnpkg.com/@tact-lang/compiler/-/compiler-1.1.0-beta.5.tgz#4d79ebc1550975ce0c1839806bd306994272af95"
+  integrity sha512-jtyvoxFY3KZc6cQKtlv5DgayIHYJHYWFdPADdLnmgg0DXXfkBbsV0WlaSLggmaf65eLsoUetTV/dwoPG2oRnYw==
   dependencies:
     "@ipld/dag-pb" "2.1.18"
+    "@tact-lang/opcode" "^0.0.3"
     arg "^5.0.2"
     blockstore-core "1.0.5"
     change-case "^4.1.2"
@@ -677,7 +678,6 @@
     qs "^6.11.0"
     ton-core ">=0.48.0"
     ton-crypto "^3.2.0"
-    tvm-disassembler "^2.0.0"
     zod "^3.20.2"
 
 "@tact-lang/coverage@^0.0.2":
@@ -698,6 +698,11 @@
     prando "^6.0.1"
     teslabot "^1.5.0"
     zod "^3.20.2"
+
+"@tact-lang/opcode@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@tact-lang/opcode/-/opcode-0.0.3.tgz#8f526f25751ee8f69985bd188d8b157b72a0c743"
+  integrity sha512-W58WXIO9bDnf/t+z7FQyIL67Fyq2UWSZGI/fX3dvDKsJ3zTW8+ZAYHvK6j98FVKFgNVttwWkdcFA+a3O0t+Alw==
 
 "@tact-lang/opcode@^0.0.9":
   version "0.0.9"
@@ -2837,11 +2842,6 @@ tslib@^2.0.3:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.5.0.tgz#42bfed86f5787aeb41d031866c8f402429e0fddf"
   integrity sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg==
-
-tvm-disassembler@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/tvm-disassembler/-/tvm-disassembler-2.0.0.tgz#fd4f290764422035aa551f90ad56301c406fd3c0"
-  integrity sha512-59WejM7BhGl0Z6H6ZFaUwrc0WixAzX9O9VX6qhUBoD+O2RcYA7zs1cYFTSDW5eOs40Fv4LuG4P6sdlF9YR11zw==
 
 tweetnacl@1.0.3:
   version "1.0.3"

@@ -79,9 +79,9 @@ exports[`contract should create request 2`] = `
             },
             "bounce": true,
             "from": "@safe",
-            "to": "kQCL-9S6PJaZlxx1cZFig_82C0qn-5z96XAEE9xMnbJQdR57",
+            "to": "kQCQX1XVtXgDF3BTzwaWn8E8xCneU4h6JloA_swDRj6iqvTk",
             "type": "internal",
-            "value": 964358000n,
+            "value": 965358000n,
           },
         ],
       },
@@ -228,7 +228,7 @@ exports[`contract should create vote: vote 1`] = `
       },
       {
         "$type": "processed",
-        "gasUsed": 17357n,
+        "gasUsed": 14931n,
       },
       {
         "$type": "sent",
@@ -255,7 +255,7 @@ exports[`contract should create vote: vote 1`] = `
             "from": "@signer",
             "to": "@treasure(owner1)",
             "type": "internal",
-            "value": 981407000n,
+            "value": 983833000n,
           },
         ],
       },
@@ -285,7 +285,7 @@ exports[`contract should create vote: vote 2`] = `
       },
       {
         "$type": "processed",
-        "gasUsed": 22976n,
+        "gasUsed": 20550n,
       },
       {
         "$type": "sent",
@@ -312,7 +312,7 @@ exports[`contract should create vote: vote 2`] = `
             "from": "@signer",
             "to": "@treasure(owner2)",
             "type": "internal",
-            "value": 975788000n,
+            "value": 978214000n,
           },
         ],
       },

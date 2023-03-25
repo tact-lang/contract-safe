@@ -31,7 +31,7 @@
         $self'votedNo = ($self'votedNo + 1);
     }
     $global_emit($EventVote$_store_cell($EventVote$_constructor_yes_address($yes, $address)));
-    $global_send($SendParameters$_constructor_value_to_mode_bounce_body(0, $address, (2 + 64), false, $String$_fun_asComment(__gen_str_361217448())));
+    $global_send($SendParameters$_constructor_value_to_mode_bounce_body(0, $address, (2 + 64), false, __gen_cell_comment_ff8035b771c540658dac8757a9719dcaa08952bcf7de1fe45fc24aa8c6de9ce2()));
     if (($self'votedYes >= $self'args'treshold)) {
         $self'completed = true;
         $global_emit($EventVoteCompleted$_store_cell($EventVoteCompleted$_constructor_success(true)));
@@ -100,7 +100,7 @@
     throw_unless(17702, ($self'args'timeout < now()));
     throw_unless(40810, (~ $self'completed));
     $self'completed = true;
-    $global_send($SendParameters$_constructor_value_to_mode_bounce_body(0, $sender, (2 + 64), false, $String$_fun_asComment(__gen_str_1142673434())));
+    $global_send($SendParameters$_constructor_value_to_mode_bounce_body(0, $sender, (2 + 64), false, __gen_cell_comment_829f136388d1bc65183236ac98393606da252115941786dc1ce3bb011fa0e29d()));
     $global_emit($EventVoteCompleted$_store_cell($EventVoteCompleted$_constructor_success(false)));
     $global_send($SendParameters$_constructor_value_to_mode_bounce_body(0, $self'args'safe, (128 + 2), false, $VoteFailure$_store_cell($VoteFailure$_constructor_args(($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count))))));
     return (($self'owners, ($self'args'safe, $self'args'owners, $self'args'ownersCount, $self'args'treshold, $self'args'timeout, ($self'args'ops'ops, $self'args'ops'count)), $self'votedYes, $self'votedNo, $self'completed), ());
