@@ -12,7 +12,7 @@ describe("contract", () => {
   });
 
   afterAll(() => {
-    completeCoverage(__dirname + '/output');
+    completeCoverage(__dirname + '/output/*.boc');
   });
 
   it("should deploy correctly", async () => {

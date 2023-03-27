@@ -79,7 +79,7 @@ exports[`contract should create request 2`] = `
             },
             "bounce": true,
             "from": "@safe",
-            "to": "kQCQX1XVtXgDF3BTzwaWn8E8xCneU4h6JloA_swDRj6iqvTk",
+            "to": "kQCLtUOa7dKdFxfPneQCjpfz4ikFTOiaV6h4Rmj5Z_ve3J_8",
             "type": "internal",
             "value": 965358000n,
           },
