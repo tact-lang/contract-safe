@@ -11,7 +11,6 @@ slice __tact_verify_address(slice address) inline {
     throw_unless(136, address.slice_bits() == 267);
     var h = address.preload_uint(11);
     throw_unless(136, (h == 1024) | (h == 1279));
-    
     return address;
 }
 
@@ -75,7 +74,7 @@ cell __tact_dict_get_code(cell dict, int id) inline {
     return data;
 }
 
-slice $global_contractAddress((cell, cell) $s) impure inline_ref {
+slice $global_contractAddress((cell, cell) $s) impure inline {
     var (($s'code, $s'data)) = $s;
     return __tact_compute_contract_address(0, $s'code, $s'data);
 }
@@ -123,19 +122,11 @@ slice $global_contractAddress((cell, cell) $s) impure inline_ref {
     send_raw_message($c, $params'mode);
 }
 
-() $global_reply(cell $body) impure inline_ref {
+() $global_reply(cell $body) impure inline {
     $global_send($SendParameters$_constructor_bounce_to_value_mode_body(true, __tact_context_get_sender(), 0, (64 + 2), $body));
 }
 
-() $global_emit(cell $body) impure inline_ref {
-    builder $b = begin_cell();
-    $b = store_uint($b, 3, 2);
-    $b = store_uint($b, 0, 2);
-    $b = store_uint($b, 0, 2);
-    $b = store_uint($b, 0, 96);
-    $b = __tact_store_bool($b, false);
-    $b = __tact_store_bool($b, true);
-    $b = store_ref($b, $body);
-    cell $c = end_cell($b);
+() $global_emit(cell $body) impure inline {
+    cell $c = end_cell(store_ref(store_uint(begin_cell(), 15211807202738752817960438464513, 104), $body));
     send_raw_message($c, 0);
 }

@@ -154,13 +154,13 @@ builder $VoteContract$init$_store(builder build_0, ((slice, cell, int, int, int,
 (int, cell, int, int, (int, int)) $SafeContract$_contract_init(slice $owner, int $id) impure inline_ref;
 
 ;; $SafeContract$_contract_load
-(int, cell, int, int, (int, int)) $SafeContract$_contract_load() impure inline;
+(int, cell, int, int, (int, int)) $SafeContract$_contract_load() impure inline_ref;
 
 ;; $SafeContract$_contract_store
 () $SafeContract$_contract_store((int, cell, int, int, (int, int)) v) impure inline;
 
 ;; $global_contractAddress
-slice $global_contractAddress((cell, cell) $s) impure inline_ref;
+slice $global_contractAddress((cell, cell) $s) impure inline;
 
 ;; $global_send
 () $global_send((int, slice, int, int, cell, cell, cell) $params) impure inline_ref;
@@ -169,7 +169,7 @@ slice $global_contractAddress((cell, cell) $s) impure inline_ref;
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body(int bounce, slice to, int value, int mode, cell body) inline;
 
 ;; $global_reply
-() $global_reply(cell $body) impure inline_ref;
+() $global_reply(cell $body) impure inline;
 
 ;; $SendParameters$_constructor_value_to_mode_bounce_body
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_value_to_mode_bounce_body(int value, slice to, int mode, int bounce, cell body) inline;

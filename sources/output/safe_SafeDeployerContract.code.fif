@@ -48,8 +48,8 @@ PROGRAM{
   116437 DECLMETHOD %params
   83229 DECLMETHOD %owner
   113617 DECLMETHOD supported_interfaces
-  DECLPROC get_abi_ipfs
-  DECLPROC lazy_deployment_completed
+  121275 DECLMETHOD get_abi_ipfs
+  115390 DECLMETHOD lazy_deployment_completed
   DECLPROC $SafeDeployerContract$_contract_router
   DECLPROC recv_internal
   DECLGLOBVAR __tact_context
@@ -240,7 +240,7 @@ PROGRAM{
   $SafeDeployerContract$_contract_init PROCREF:<{
     0 PUSHINT
   }>
-  $SafeDeployerContract$_contract_load PROCINLINE:<{
+  $SafeDeployerContract$_contract_load PROCREF:<{
     c4 PUSH
     CTOS
     LDREF
@@ -248,16 +248,15 @@ PROGRAM{
     __tact_context_sys SETGLOB
     1 LDI
     SWAP
-    IF:<{
+    IFJMP:<{
       $SafeDeployerContract$_load INLINECALLDICT
       1 4 BLKDROP2
-    }>ELSE<{
-      $SafeDeployerContract$init$_load INLINECALLDICT
-      s0 s3 XCHG
-      ENDS
-      ROT
-      $SafeDeployerContract$_contract_init INLINECALLDICT
     }>
+    $SafeDeployerContract$init$_load INLINECALLDICT
+    s0 s3 XCHG
+    ENDS
+    ROT
+    $SafeDeployerContract$_contract_init INLINECALLDICT
   }>
   $SafeDeployerContract$_contract_store PROCINLINE:<{
     NEWC
@@ -272,7 +271,7 @@ PROGRAM{
     ENDC
     c4 POP
   }>
-  $global_contractAddress PROCREF:<{
+  $global_contractAddress PROCINLINE:<{
     0 PUSHINT
     -ROT
     __tact_compute_contract_address INLINECALLDICT
@@ -383,7 +382,7 @@ PROGRAM{
     PUSHNULL
     PUSHNULL
   }>
-  $global_reply PROCREF:<{
+  $global_reply PROCINLINE:<{
     TRUE
     __tact_context_get_sender INLINECALLDICT
     0 PUSHINT
@@ -394,24 +393,11 @@ PROGRAM{
     $SendParameters$_constructor_bounce_to_value_mode_body INLINECALLDICT
     $global_send INLINECALLDICT
   }>
-  $global_emit PROCREF:<{
+  $global_emit PROCINLINE:<{
     NEWC
-    3 PUSHINT
+    15211807202738752817960438464513 PUSHINT
     SWAP
-    2 STU
-    0 PUSHINT
-    SWAP
-    2 STU
-    0 PUSHINT
-    SWAP
-    2 STU
-    0 PUSHINT
-    SWAP
-    96 STU
-    FALSE
-    __tact_store_bool INLINECALLDICT
-    TRUE
-    __tact_store_bool INLINECALLDICT
+    104 STU
     STREF
     ENDC
     0 PUSHINT
@@ -617,12 +603,7 @@ PROGRAM{
     SWAP
     1 PUSHINT
     AND
-    1 EQINT
-    IF:<{
-      TRUE
-    }>ELSE<{
-      FALSE
-    }>
+    NEGATE
     SWAP
     LDMSGADDR
     SWAP

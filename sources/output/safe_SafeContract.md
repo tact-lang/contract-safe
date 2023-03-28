@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: SafeContract
-BOC Size: 2218 bytes
+BOC Size: 1926 bytes
 
 # Types
 Total Types: 21

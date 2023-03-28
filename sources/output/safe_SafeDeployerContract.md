@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: SafeDeployerContract
-BOC Size: 1408 bytes
+BOC Size: 1257 bytes
 
 # Types
 Total Types: 21

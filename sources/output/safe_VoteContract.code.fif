@@ -53,8 +53,8 @@ PROGRAM{
   80489 DECLMETHOD %votedNo
   102564 DECLMETHOD %remaining
   113617 DECLMETHOD supported_interfaces
-  DECLPROC get_abi_ipfs
-  DECLPROC lazy_deployment_completed
+  121275 DECLMETHOD get_abi_ipfs
+  115390 DECLMETHOD lazy_deployment_completed
   DECLPROC $VoteContract$_contract_router
   DECLPROC recv_internal
   DECLGLOBVAR __tact_context
@@ -303,7 +303,7 @@ PROGRAM{
     s2 s3 XCHG
     FALSE
   }>
-  $VoteContract$_contract_load PROCINLINE:<{
+  $VoteContract$_contract_load PROCREF:<{
     c4 PUSH
     CTOS
     LDREF
@@ -311,16 +311,15 @@ PROGRAM{
     __tact_context_sys SETGLOB
     1 LDI
     SWAP
-    IF:<{
+    IFJMP:<{
       $VoteContract$_load INLINECALLDICT
       1 11 BLKDROP2
-    }>ELSE<{
-      $VoteContract$init$_load INLINECALLDICT
-      s0 s7 XCHG
-      ENDS
-      6 ROLL
-      $VoteContract$_contract_init INLINECALLDICT
     }>
+    $VoteContract$init$_load INLINECALLDICT
+    s0 s7 XCHG
+    ENDS
+    6 ROLL
+    $VoteContract$_contract_init INLINECALLDICT
   }>
   $VoteContract$_contract_store PROCINLINE:<{
     NEWC
@@ -437,24 +436,11 @@ PROGRAM{
     SWAP
     SENDRAWMSG
   }>
-  $global_emit PROCREF:<{
+  $global_emit PROCINLINE:<{
     NEWC
-    3 PUSHINT
+    15211807202738752817960438464513 PUSHINT
     SWAP
-    2 STU
-    0 PUSHINT
-    SWAP
-    2 STU
-    0 PUSHINT
-    SWAP
-    2 STU
-    0 PUSHINT
-    SWAP
-    96 STU
-    FALSE
-    __tact_store_bool INLINECALLDICT
-    TRUE
-    __tact_store_bool INLINECALLDICT
+    104 STU
     STREF
     ENDC
     0 PUSHINT
@@ -744,12 +730,7 @@ PROGRAM{
     SWAP
     1 PUSHINT
     AND
-    1 EQINT
-    IF:<{
-      TRUE
-    }>ELSE<{
-      FALSE
-    }>
+    NEGATE
     SWAP
     LDMSGADDR
     SWAP

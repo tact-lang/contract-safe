@@ -11,7 +11,6 @@ slice __tact_verify_address(slice address) inline {
     throw_unless(136, address.slice_bits() == 267);
     var h = address.preload_uint(11);
     throw_unless(136, (h == 1024) | (h == 1279));
-    
     return address;
 }
 
@@ -111,15 +110,7 @@ forall X0, X1 -> tuple __tact_tuple_create_2((X0, X1) v) asm "2 TUPLE";
     send_raw_message($c, $params'mode);
 }
 
-() $global_emit(cell $body) impure inline_ref {
-    builder $b = begin_cell();
-    $b = store_uint($b, 3, 2);
-    $b = store_uint($b, 0, 2);
-    $b = store_uint($b, 0, 2);
-    $b = store_uint($b, 0, 96);
-    $b = __tact_store_bool($b, false);
-    $b = __tact_store_bool($b, true);
-    $b = store_ref($b, $body);
-    cell $c = end_cell($b);
+() $global_emit(cell $body) impure inline {
+    cell $c = end_cell(store_ref(store_uint(begin_cell(), 15211807202738752817960438464513, 104), $body));
     send_raw_message($c, 0);
 }

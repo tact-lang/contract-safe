@@ -82,13 +82,13 @@ builder $SafeContract$init$_store(builder build_0, (slice, int) v) inline;
 (slice, int, int, int) $SafeDeployerContract$_contract_init(slice $owner, int $devFee, int $deployValue) impure inline_ref;
 
 ;; $SafeDeployerContract$_contract_load
-(slice, int, int, int) $SafeDeployerContract$_contract_load() impure inline;
+(slice, int, int, int) $SafeDeployerContract$_contract_load() impure inline_ref;
 
 ;; $SafeDeployerContract$_contract_store
 () $SafeDeployerContract$_contract_store((slice, int, int, int) v) impure inline;
 
 ;; $global_contractAddress
-slice $global_contractAddress((cell, cell) $s) impure inline_ref;
+slice $global_contractAddress((cell, cell) $s) impure inline;
 
 ;; $global_send
 () $global_send((int, slice, int, int, cell, cell, cell) $params) impure inline_ref;
@@ -97,10 +97,10 @@ slice $global_contractAddress((cell, cell) $s) impure inline_ref;
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body(int bounce, slice to, int value, int mode, cell body) inline;
 
 ;; $global_reply
-() $global_reply(cell $body) impure inline_ref;
+() $global_reply(cell $body) impure inline;
 
 ;; $global_emit
-() $global_emit(cell $body) impure inline_ref;
+() $global_emit(cell $body) impure inline;
 
 ;; $SafeDeployParams$_constructor_deploy_devFee
 ((int, int)) $SafeDeployParams$_constructor_deploy_devFee(int deploy, int devFee) inline;

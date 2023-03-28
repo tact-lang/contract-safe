@@ -91,11 +91,11 @@ _ supported_interfaces() method_id {
     );
 }
 
-_ get_abi_ipfs() {
+_ get_abi_ipfs() method_id {
     return "ipfs://QmY6hZtoEAUqU3iw6QgkWUguTv3hvAWXgP3JW54t66W4q3";
 }
 
-_ lazy_deployment_completed() {
+_ lazy_deployment_completed() method_id {
     return get_data().begin_parse().load_int(1);
 }
 
@@ -149,7 +149,7 @@ _ lazy_deployment_completed() {
     ;; Context
     var cs = in_msg_cell.begin_parse();
     var msg_flags = cs~load_uint(4);
-    var msg_bounced = ((msg_flags & 1) == 1 ? true : false);
+    var msg_bounced = -(msg_flags & 1);
     slice msg_sender_addr = __tact_verify_address(cs~load_msg_addr());
     __tact_context = (msg_bounced, msg_sender_addr, msg_value, cs);
     __tact_context_sender = msg_sender_addr;

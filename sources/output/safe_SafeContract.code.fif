@@ -81,8 +81,8 @@ PROGRAM{
   89603 DECLMETHOD %isOwner
   84885 DECLMETHOD %owners
   113617 DECLMETHOD supported_interfaces
-  DECLPROC get_abi_ipfs
-  DECLPROC lazy_deployment_completed
+  121275 DECLMETHOD get_abi_ipfs
+  115390 DECLMETHOD lazy_deployment_completed
   DECLPROC $SafeContract$_contract_router
   DECLPROC recv_internal
   DECLGLOBVAR __tact_context
@@ -504,7 +504,7 @@ PROGRAM{
     1000000000 PUSHINT
     $SafeParameters$_constructor_timeout_requestPrice INLINECALLDICT
   }>
-  $SafeContract$_contract_load PROCINLINE:<{
+  $SafeContract$_contract_load PROCREF:<{
     c4 PUSH
     CTOS
     LDREF
@@ -512,16 +512,15 @@ PROGRAM{
     __tact_context_sys SETGLOB
     1 LDI
     SWAP
-    IF:<{
+    IFJMP:<{
       $SafeContract$_load INLINECALLDICT
       1 6 BLKDROP2
-    }>ELSE<{
-      $SafeContract$init$_load INLINECALLDICT
-      s0 s2 XCHG
-      ENDS
-      SWAP
-      $SafeContract$_contract_init INLINECALLDICT
     }>
+    $SafeContract$init$_load INLINECALLDICT
+    s0 s2 XCHG
+    ENDS
+    SWAP
+    $SafeContract$_contract_init INLINECALLDICT
   }>
   $SafeContract$_contract_store PROCINLINE:<{
     NEWC
@@ -536,7 +535,7 @@ PROGRAM{
     ENDC
     c4 POP
   }>
-  $global_contractAddress PROCREF:<{
+  $global_contractAddress PROCINLINE:<{
     0 PUSHINT
     -ROT
     __tact_compute_contract_address INLINECALLDICT
@@ -647,7 +646,7 @@ PROGRAM{
     PUSHNULL
     PUSHNULL
   }>
-  $global_reply PROCREF:<{
+  $global_reply PROCINLINE:<{
     TRUE
     __tact_context_get_sender INLINECALLDICT
     0 PUSHINT
@@ -1052,12 +1051,7 @@ PROGRAM{
     SWAP
     1 PUSHINT
     AND
-    1 EQINT
-    IF:<{
-      TRUE
-    }>ELSE<{
-      FALSE
-    }>
+    NEGATE
     SWAP
     LDMSGADDR
     SWAP

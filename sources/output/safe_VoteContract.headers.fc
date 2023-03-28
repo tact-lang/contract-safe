@@ -91,7 +91,7 @@ tuple $SafeOperations$_to_tuple(((cell, int)) v) inline;
 (cell, (slice, cell, int, int, int, (cell, int)), int, int, int) $VoteContract$_contract_init((slice, cell, int, int, int, (cell, int)) $args) impure inline_ref;
 
 ;; $VoteContract$_contract_load
-(cell, (slice, cell, int, int, int, (cell, int)), int, int, int) $VoteContract$_contract_load() impure inline;
+(cell, (slice, cell, int, int, int, (cell, int)), int, int, int) $VoteContract$_contract_load() impure inline_ref;
 
 ;; $VoteContract$_contract_store
 () $VoteContract$_contract_store((cell, (slice, cell, int, int, int, (cell, int)), int, int, int) v) impure inline;
@@ -100,7 +100,7 @@ tuple $SafeOperations$_to_tuple(((cell, int)) v) inline;
 () $global_send((int, slice, int, int, cell, cell, cell) $params) impure inline_ref;
 
 ;; $global_emit
-() $global_emit(cell $body) impure inline_ref;
+() $global_emit(cell $body) impure inline;
 
 ;; $SendParameters$_constructor_value_to_mode_bounce_body
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_value_to_mode_bounce_body(int value, slice to, int mode, int bounce, cell body) inline;

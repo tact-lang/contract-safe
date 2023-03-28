@@ -659,13 +659,13 @@
   dependencies:
     "@sinonjs/commons" "^2.0.0"
 
-"@tact-lang/compiler@1.1.0-beta.5":
-  version "1.1.0-beta.5"
-  resolved "https://registry.yarnpkg.com/@tact-lang/compiler/-/compiler-1.1.0-beta.5.tgz#4d79ebc1550975ce0c1839806bd306994272af95"
-  integrity sha512-jtyvoxFY3KZc6cQKtlv5DgayIHYJHYWFdPADdLnmgg0DXXfkBbsV0WlaSLggmaf65eLsoUetTV/dwoPG2oRnYw==
+"@tact-lang/compiler@1.1.0-beta.7":
+  version "1.1.0-beta.7"
+  resolved "https://registry.yarnpkg.com/@tact-lang/compiler/-/compiler-1.1.0-beta.7.tgz#8237f83f6991f6c09b6d309455fe41479264ee82"
+  integrity sha512-ezBDz32gSt/lIa4qhTGCVmfmbaj4P2CD93D/AwcvHb6t49y3lwLw2pstbtIJ60D6UiXf26t3hdTASBx68TYZZw==
   dependencies:
     "@ipld/dag-pb" "2.1.18"
-    "@tact-lang/opcode" "^0.0.3"
+    "@tact-lang/opcode" "^0.0.12"
     arg "^5.0.2"
     blockstore-core "1.0.5"
     change-case "^4.1.2"
@@ -676,16 +676,16 @@
     path-normalize "^6.0.10"
     prando "^6.0.1"
     qs "^6.11.0"
-    ton-core ">=0.48.0"
+    ton-core ">=0.49.0"
     ton-crypto "^3.2.0"
     zod "^3.20.2"
 
-"@tact-lang/coverage@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@tact-lang/coverage/-/coverage-0.0.4.tgz#ac6929bb54954090d157d8e243c9c4e687098d99"
-  integrity sha512-MKZ47N9lYVBr3wOl+u+J1o6qP+Blz0YZ/EqO7lih6md92/FO6EAI8B0gcnOfSrRGW8sOuM8lk3U/vM6wYcutdQ==
+"@tact-lang/coverage@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@tact-lang/coverage/-/coverage-0.0.5.tgz#8da0d25f2a48638712fe746bfd05491d14773afa"
+  integrity sha512-1vWP2DyXDTMFrThdX+oYCHus+7FpAYTF2Jx0zEfHMJi0g6QL/4zCOkouEBFrvueOtsOiTQKGR+IFgUcNzXjnFw==
   dependencies:
-    "@tact-lang/opcode" "^0.0.11"
+    "@tact-lang/opcode" "^0.0.12"
     glob "^9.3.2"
     prando "^6.0.1"
     teslabot "^1.5.0"
@@ -700,15 +700,10 @@
     teslabot "^1.5.0"
     zod "^3.20.2"
 
-"@tact-lang/opcode@^0.0.11":
-  version "0.0.11"
-  resolved "https://registry.yarnpkg.com/@tact-lang/opcode/-/opcode-0.0.11.tgz#2df96d683c8688d77baa04e1293e85dff30ca7b6"
-  integrity sha512-235t67lHVZgLq2cBvezKuCKb9TtycrzM4fP/frohOO0ZuK0GWCJ116ZZlhNZeH6hEJqp25vd+ZAV/r4I3bvPaA==
-
-"@tact-lang/opcode@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@tact-lang/opcode/-/opcode-0.0.3.tgz#8f526f25751ee8f69985bd188d8b157b72a0c743"
-  integrity sha512-W58WXIO9bDnf/t+z7FQyIL67Fyq2UWSZGI/fX3dvDKsJ3zTW8+ZAYHvK6j98FVKFgNVttwWkdcFA+a3O0t+Alw==
+"@tact-lang/opcode@^0.0.12":
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/@tact-lang/opcode/-/opcode-0.0.12.tgz#a186dc6ffaac91da39bdbf55dc28bd330be7a26b"
+  integrity sha512-iSLoENXb5KlD15d2XaH8omhSZFlmoF/uRMpblggnlt9WLxogCDNkMODyNS1EijhkhzBlAzXZIByFvWTLZda3bQ==
 
 "@tsconfig/node10@^1.0.7":
   version "1.0.9"
@@ -2806,13 +2801,6 @@ to-regex-range@^5.0.1:
   integrity sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==
   dependencies:
     is-number "^7.0.0"
-
-ton-core@>=0.48.0:
-  version "0.48.0"
-  resolved "https://registry.yarnpkg.com/ton-core/-/ton-core-0.48.0.tgz#df744c9b13b3193cb7eb8a9cbb715bcf0437e467"
-  integrity sha512-v3QL0CC8iQQ0cjUN0lI9hK7wEpLW2Wnm+N5Ukm+NSbtQ0vq36LGQR/BRywoOQZJm59XzmW4ATbtCWeas9ePrRA==
-  dependencies:
-    symbol.inspect "1.0.1"
 
 ton-core@>=0.49.0:
   version "0.49.0"
