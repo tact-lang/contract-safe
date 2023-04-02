@@ -88,6 +88,29 @@ contract VoteContract {
         });
     }
 
+    external("Timeout") {
+
+        // Checks
+        require(self.args.timeout < now(), "Not timeouted");
+        require(!self.completed, "Completed");
+        acceptMessage();
+
+        // Complete vote
+        self.completed = true;
+
+        // Emit event
+        emit(EventVoteCompleted{ success: false }.toCell());
+
+        // Send result
+        send(SendParameters{
+            value: 0, 
+            to: self.args.safe, 
+            mode: SendRemainingBalance + SendIgnoreErrors, 
+            bounce: false, 
+            body: VoteFailure{ args: self.args }.toCell()
+        });
+    }
+
     fun doVote(address: Address, yes: Bool) {
 
         // Checks

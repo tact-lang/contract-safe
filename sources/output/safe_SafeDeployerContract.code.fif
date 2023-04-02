@@ -42,15 +42,15 @@ PROGRAM{
   DECLPROC $EventSafeDeployed$_constructor_by_address
   DECLPROC $SendParameters$_constructor_to_value_mode
   DECLPROC $DeployOk$_constructor_queryId
-  DECLPROC $SafeDeployerContract$_receive_text_2d51e7ccd78be57b2c0bfaab585f0f535337c1219afb5421dd1de4b81f300226
-  DECLPROC $SafeDeployerContract$_receive_binary_ChangeOwner
-  DECLPROC $SafeDeployerContract$_receive_binary_Deploy
+  DECLPROC $SafeDeployerContract$_internal_text_2d51e7ccd78be57b2c0bfaab585f0f535337c1219afb5421dd1de4b81f300226
+  DECLPROC $SafeDeployerContract$_internal_binary_ChangeOwner
+  DECLPROC $SafeDeployerContract$_internal_binary_Deploy
   116437 DECLMETHOD %params
   83229 DECLMETHOD %owner
   113617 DECLMETHOD supported_interfaces
   121275 DECLMETHOD get_abi_ipfs
   115390 DECLMETHOD lazy_deployment_completed
-  DECLPROC $SafeDeployerContract$_contract_router
+  DECLPROC $SafeDeployerContract$_contract_router_internal
   DECLPROC recv_internal
   DECLGLOBVAR __tact_context
   DECLGLOBVAR __tact_context_sender
@@ -473,7 +473,7 @@ PROGRAM{
   }>
   $DeployOk$_constructor_queryId PROCINLINE:<{
   }>
-  $SafeDeployerContract$_receive_text_2d51e7ccd78be57b2c0bfaab585f0f535337c1219afb5421dd1de4b81f300226 PROCINLINE:<{
+  $SafeDeployerContract$_internal_text_2d51e7ccd78be57b2c0bfaab585f0f535337c1219afb5421dd1de4b81f300226 PROCINLINE:<{
     __tact_context_get INLINECALLDICT
     DROP
     s2 POP
@@ -505,12 +505,12 @@ PROGRAM{
     $SendParameters$_constructor_to_value_mode INLINECALLDICT
     $global_send INLINECALLDICT
   }>
-  $SafeDeployerContract$_receive_binary_ChangeOwner PROCINLINE:<{
+  $SafeDeployerContract$_internal_binary_ChangeOwner PROCINLINE:<{
     4 -ROLL
     $SafeDeployerContract$_fun_requireOwner INLINECALLDICT
     1 3 BLKDROP2
   }>
-  $SafeDeployerContract$_receive_binary_Deploy PROCINLINE:<{
+  $SafeDeployerContract$_internal_binary_Deploy PROCINLINE:<{
     $DeployOk$_constructor_queryId INLINECALLDICT
     $DeployOk$_store_cell INLINECALLDICT
     $global_reply INLINECALLDICT
@@ -535,7 +535,7 @@ PROGRAM{
     86142586315491086060343270784266291122 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d5936685a746f45415571553369773651676b5755677554763368764157586750334a57353474363657347133} PUSHSLICE
+    x{697066733a2f2f516d5352623877336163514e584331464e364a334d6954614b42567947344c415552726571443959664678624e33} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -543,7 +543,7 @@ PROGRAM{
     1 LDI
     SWAP
   }>
-  $SafeDeployerContract$_contract_router PROCREF:<{
+  $SafeDeployerContract$_contract_router_internal PROCREF:<{
     c2 SAVE
     SAMEALTSAVE
     0 PUSHINT
@@ -567,7 +567,7 @@ PROGRAM{
       NIP
       $ChangeOwner$_load INLINECALLDICT
       NIP
-      $SafeDeployerContract$_receive_binary_ChangeOwner INLINECALLDICT
+      $SafeDeployerContract$_internal_binary_ChangeOwner INLINECALLDICT
       TRUE
     }>
     OVER
@@ -577,7 +577,7 @@ PROGRAM{
       NIP
       $Deploy$_load INLINECALLDICT
       NIP
-      $SafeDeployerContract$_receive_binary_Deploy INLINECALLDICT
+      $SafeDeployerContract$_internal_binary_Deploy INLINECALLDICT
       TRUE
     }>
     SWAP
@@ -587,7 +587,7 @@ PROGRAM{
       20498792624428958080543629896125966949113331229865484728903968177412144890406 PUSHINT
       EQUAL
       IFJMP:<{
-        $SafeDeployerContract$_receive_text_2d51e7ccd78be57b2c0bfaab585f0f535337c1219afb5421dd1de4b81f300226 INLINECALLDICT
+        $SafeDeployerContract$_internal_text_2d51e7ccd78be57b2c0bfaab585f0f535337c1219afb5421dd1de4b81f300226 INLINECALLDICT
         TRUE
         RETALT
       }>
@@ -616,7 +616,7 @@ PROGRAM{
     __tact_context_sender SETGLOB
     $SafeDeployerContract$_contract_load INLINECALLDICT
     2 4 BLKSWAP
-    $SafeDeployerContract$_contract_router INLINECALLDICT
+    $SafeDeployerContract$_contract_router_internal INLINECALLDICT
     DROP
     $SafeDeployerContract$_contract_store INLINECALLDICT
   }>

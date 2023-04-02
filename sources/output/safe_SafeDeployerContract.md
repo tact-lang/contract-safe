@@ -3,7 +3,7 @@ Contract: SafeDeployerContract
 BOC Size: 1257 bytes
 
 # Types
-Total Types: 21
+Total Types: 24
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -34,24 +34,36 @@ TLB: `change_owner#0f474d03 newOwner:address = ChangeOwner`
 Signature: `ChangeOwner{newOwner:address}`
 
 ## SafeParameters
-TLB: `_ timeout:uint32 requestPrice:coins = SafeParameters`
-Signature: `SafeParameters{timeout:uint32,requestPrice:coins}`
+TLB: `_ timeout:uint32 requestPrice:coins timelock:uint32 = SafeParameters`
+Signature: `SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}`
 
 ## SafeOperations
-TLB: `_ ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}}> count:uint8 = SafeOperations`
-Signature: `SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}}>,count:uint8}`
+TLB: `_ ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}> count:uint8 = SafeOperations`
+Signature: `SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}>,count:uint8}`
 
 ## SafeOperation
-TLB: `_ transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell} parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}} = SafeOperation`
-Signature: `SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}}`
+TLB: `_ transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell} parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}} add:Maybe SafeOperationAdd{owner:address} remove:Maybe SafeOperationRemove{owner:address} replace:Maybe SafeOperationReplace{old:address,new:address} = SafeOperation`
+Signature: `SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}`
+
+## SafeOperationAdd
+TLB: `_ owner:address = SafeOperationAdd`
+Signature: `SafeOperationAdd{owner:address}`
+
+## SafeOperationRemove
+TLB: `_ owner:address = SafeOperationRemove`
+Signature: `SafeOperationRemove{owner:address}`
+
+## SafeOperationReplace
+TLB: `_ old:address new:address = SafeOperationReplace`
+Signature: `SafeOperationReplace{old:address,new:address}`
 
 ## SafeOperationTransfer
 TLB: `_ to:address value:coins mode:uint8 bounce:bool body:Maybe ^cell = SafeOperationTransfer`
 Signature: `SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell}`
 
 ## SafeOperationUpdateParameters
-TLB: `_ parameters:SafeParameters{timeout:uint32,requestPrice:coins} = SafeOperationUpdateParameters`
-Signature: `SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}`
+TLB: `_ parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32} = SafeOperationUpdateParameters`
+Signature: `SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}}`
 
 ## EventSafeDeployed
 TLB: `event_safe_deployed#51a47444 by:address address:address = EventSafeDeployed`
@@ -70,20 +82,20 @@ TLB: `safe_deployment#6eb08253 remaining:address = SafeDeployment`
 Signature: `SafeDeployment{remaining:address}`
 
 ## SafeRequestOperation
-TLB: `safe_request_operation#ff7de06c ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}}>,count:uint8} = SafeRequestOperation`
-Signature: `SafeRequestOperation{ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}}>,count:uint8}}`
+TLB: `safe_request_operation#348b938f ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}>,count:uint8} = SafeRequestOperation`
+Signature: `SafeRequestOperation{ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}>,count:uint8}}`
 
 ## VoteSuccess
-TLB: `vote_success#cdf42430 args:VoteArgs{safe:address,owners:dict<address, bool>,ownersCount:uint32,treshold:uint32,timeout:uint64,ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}}>,count:uint8}} = VoteSuccess`
-Signature: `VoteSuccess{args:VoteArgs{safe:address,owners:dict<address, bool>,ownersCount:uint32,treshold:uint32,timeout:uint64,ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}}>,count:uint8}}}`
+TLB: `vote_success#9a69710d args:VoteArgs{safe:address,owners:dict<address, bool>,ownersCount:uint32,treshold:uint32,timeout:uint64,ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}>,count:uint8}} = VoteSuccess`
+Signature: `VoteSuccess{args:VoteArgs{safe:address,owners:dict<address, bool>,ownersCount:uint32,treshold:uint32,timeout:uint64,ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}>,count:uint8}}}`
 
 ## VoteFailure
-TLB: `vote_failure#9895f337 args:VoteArgs{safe:address,owners:dict<address, bool>,ownersCount:uint32,treshold:uint32,timeout:uint64,ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}}>,count:uint8}} = VoteFailure`
-Signature: `VoteFailure{args:VoteArgs{safe:address,owners:dict<address, bool>,ownersCount:uint32,treshold:uint32,timeout:uint64,ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}}>,count:uint8}}}`
+TLB: `vote_failure#18be0c6b args:VoteArgs{safe:address,owners:dict<address, bool>,ownersCount:uint32,treshold:uint32,timeout:uint64,ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}>,count:uint8}} = VoteFailure`
+Signature: `VoteFailure{args:VoteArgs{safe:address,owners:dict<address, bool>,ownersCount:uint32,treshold:uint32,timeout:uint64,ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}>,count:uint8}}}`
 
 ## VoteArgs
-TLB: `_ safe:address owners:dict<address, bool> ownersCount:uint32 treshold:uint32 timeout:uint64 ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}}>,count:uint8} = VoteArgs`
-Signature: `VoteArgs{safe:address,owners:dict<address, bool>,ownersCount:uint32,treshold:uint32,timeout:uint64,ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}}>,count:uint8}}`
+TLB: `_ safe:address owners:dict<address, bool> ownersCount:uint32 treshold:uint32 timeout:uint64 ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}>,count:uint8} = VoteArgs`
+Signature: `VoteArgs{safe:address,owners:dict<address, bool>,ownersCount:uint32,treshold:uint32,timeout:uint64,ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}>,count:uint8}}`
 
 ## VoteDeploy
 TLB: `vote_deploy#56137615 queryId:uint64 = VoteDeploy`

@@ -659,10 +659,10 @@
   dependencies:
     "@sinonjs/commons" "^2.0.0"
 
-"@tact-lang/compiler@1.1.0-beta.7":
-  version "1.1.0-beta.7"
-  resolved "https://registry.yarnpkg.com/@tact-lang/compiler/-/compiler-1.1.0-beta.7.tgz#8237f83f6991f6c09b6d309455fe41479264ee82"
-  integrity sha512-ezBDz32gSt/lIa4qhTGCVmfmbaj4P2CD93D/AwcvHb6t49y3lwLw2pstbtIJ60D6UiXf26t3hdTASBx68TYZZw==
+"@tact-lang/compiler@1.1.0-beta.9":
+  version "1.1.0-beta.9"
+  resolved "https://registry.yarnpkg.com/@tact-lang/compiler/-/compiler-1.1.0-beta.9.tgz#017704f9c47bed0dfa874a26314460069be8059d"
+  integrity sha512-UtbE7xmKBpGG9+Kvi04wLoNoRSfc9Yl9KbPKCCBLaC0ptNXxH3ZlA/MiGj7BGwoVpbeMSE+ami8YOKD6HroBQQ==
   dependencies:
     "@ipld/dag-pb" "2.1.18"
     "@tact-lang/opcode" "^0.0.12"
@@ -2824,6 +2824,11 @@ ton-crypto@^3.2.0:
     jssha "3.2.0"
     ton-crypto-primitives "2.0.0"
     tweetnacl "1.0.3"
+
+ton-jest@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/ton-jest/-/ton-jest-0.0.3.tgz#87b905ff32f7b6a007fe0595bc830c12d761441c"
+  integrity sha512-9ngWRCsd2CZHeybmV0mASLnKnZOWGAfRyoFgHAyOoI3IIC3T9VgHT8BemZLdEQxoizwQgVybCoVtXwCZ9MM0pw==
 
 ton@^13.1.0:
   version "13.3.0"

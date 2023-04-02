@@ -35,7 +35,7 @@
 ;; Receivers of a Contract SafeDeployerContract
 ;;
 
-((slice, int, int, int), ()) $SafeDeployerContract$_receive_text_2d51e7ccd78be57b2c0bfaab585f0f535337c1219afb5421dd1de4b81f300226((slice, int, int, int) $self) impure inline {
+((slice, int, int, int), ()) $SafeDeployerContract$_internal_text_2d51e7ccd78be57b2c0bfaab585f0f535337c1219afb5421dd1de4b81f300226((slice, int, int, int) $self) impure inline {
     var ($self'owner, $self'devFee, $self'deployValue, $self'counter) = $self;
     var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
     throw_unless(25849, ($ctx'value >= ($self'devFee + $self'deployValue)));
@@ -49,7 +49,7 @@
     return (($self'owner, $self'devFee, $self'deployValue, $self'counter), ());
 }
 
-(((slice, int, int, int)), ()) $SafeDeployerContract$_receive_binary_ChangeOwner((slice, int, int, int) $self, (slice) $msg) impure inline {
+(((slice, int, int, int)), ()) $SafeDeployerContract$_internal_binary_ChangeOwner((slice, int, int, int) $self, (slice) $msg) impure inline {
     var ($self'owner, $self'devFee, $self'deployValue, $self'counter) = $self;
     var ($msg'newOwner) = $msg;
     ($self'owner, $self'devFee, $self'deployValue, $self'counter)~$SafeDeployerContract$_fun_requireOwner();
@@ -57,7 +57,7 @@
     return (($self'owner, $self'devFee, $self'deployValue, $self'counter), ());
 }
 
-(((slice, int, int, int)), ()) $SafeDeployerContract$_receive_binary_Deploy((slice, int, int, int) $self, (int) $deploy) impure inline {
+(((slice, int, int, int)), ()) $SafeDeployerContract$_internal_binary_Deploy((slice, int, int, int) $self, (int) $deploy) impure inline {
     var ($self'owner, $self'devFee, $self'deployValue, $self'counter) = $self;
     var ($deploy'queryId) = $deploy;
     $global_reply($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId)));
@@ -92,7 +92,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmY6hZtoEAUqU3iw6QgkWUguTv3hvAWXgP3JW54t66W4q3";
+    return "ipfs://QmSRb8w3acQNXC1FN6J3MiTaKBVyG4LAURreqD9YfFxbN3";
 }
 
 _ lazy_deployment_completed() method_id {
@@ -103,7 +103,7 @@ _ lazy_deployment_completed() method_id {
 ;; Routing of a Contract SafeDeployerContract
 ;;
 
-((slice, int, int, int), int) $SafeDeployerContract$_contract_router((slice, int, int, int) self, int msg_bounced, slice in_msg) impure inline_ref {
+((slice, int, int, int), int) $SafeDeployerContract$_contract_router_internal((slice, int, int, int) self, int msg_bounced, slice in_msg) impure inline_ref {
     
     ;; Parse incoming message
     int op = 0;
@@ -119,14 +119,14 @@ _ lazy_deployment_completed() method_id {
     ;; Receive ChangeOwner message
     if (op == 256331011) {
         var msg = in_msg~$ChangeOwner$_load();
-        self~$SafeDeployerContract$_receive_binary_ChangeOwner(msg);
+        self~$SafeDeployerContract$_internal_binary_ChangeOwner(msg);
         return (self, true);
     }
     
     ;; Receive Deploy message
     if (op == 2490013878) {
         var msg = in_msg~$Deploy$_load();
-        self~$SafeDeployerContract$_receive_binary_Deploy(msg);
+        self~$SafeDeployerContract$_internal_binary_Deploy(msg);
         return (self, true);
     }
     
@@ -136,7 +136,7 @@ _ lazy_deployment_completed() method_id {
         
         ;; Receive "Deploy new Safe" message
         if (text_op == 0x2d51e7ccd78be57b2c0bfaab585f0f535337c1219afb5421dd1de4b81f300226) {
-            self~$SafeDeployerContract$_receive_text_2d51e7ccd78be57b2c0bfaab585f0f535337c1219afb5421dd1de4b81f300226();
+            self~$SafeDeployerContract$_internal_text_2d51e7ccd78be57b2c0bfaab585f0f535337c1219afb5421dd1de4b81f300226();
             return (self, true);
         }
     }
@@ -158,7 +158,7 @@ _ lazy_deployment_completed() method_id {
     var self = $SafeDeployerContract$_contract_load();
     
     ;; Handle operation
-    int handled = self~$SafeDeployerContract$_contract_router(msg_bounced, in_msg);
+    int handled = self~$SafeDeployerContract$_contract_router_internal(msg_bounced, in_msg);
     
     ;; Throw if not handled
     throw_unless(handled, 130);

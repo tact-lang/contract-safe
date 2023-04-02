@@ -54,34 +54,36 @@ cell $DeployOk$_store_cell((int) v) inline {
 
 ;;
 ;; Type: SafeParameters
-;; TLB: _ timeout:uint32 requestPrice:coins = SafeParameters
+;; TLB: _ timeout:uint32 requestPrice:coins timelock:uint32 = SafeParameters
 ;;
 
-builder $SafeParameters$_store(builder build_0, (int, int) v) inline {
-    var (v'timeout, v'requestPrice) = v;
+builder $SafeParameters$_store(builder build_0, (int, int, int) v) inline {
+    var (v'timeout, v'requestPrice, v'timelock) = v;
     build_0 = build_0.store_uint(v'timeout, 32);
     build_0 = build_0.store_coins(v'requestPrice);
+    build_0 = build_0.store_uint(v'timelock, 32);
     return build_0;
 }
 
-(slice, ((int, int))) $SafeParameters$_load(slice sc_0) inline {
+(slice, ((int, int, int))) $SafeParameters$_load(slice sc_0) inline {
     var v'timeout = sc_0~load_uint(32);
     var v'requestPrice = sc_0~load_coins();
-    return (sc_0, (v'timeout, v'requestPrice));
+    var v'timelock = sc_0~load_uint(32);
+    return (sc_0, (v'timeout, v'requestPrice, v'timelock));
 }
 
-(int, int) $SafeParameters$_to_external(((int, int)) v) inline {
-    var (v'timeout, v'requestPrice) = v; 
-    return (v'timeout, v'requestPrice);
+(int, int, int) $SafeParameters$_to_external(((int, int, int)) v) inline {
+    var (v'timeout, v'requestPrice, v'timelock) = v; 
+    return (v'timeout, v'requestPrice, v'timelock);
 }
 
-((int, int)) $SafeParameters$_constructor_timeout_requestPrice(int timeout, int requestPrice) inline {
-    return (timeout, requestPrice);
+((int, int, int)) $SafeParameters$_constructor_timeout_requestPrice_timelock(int timeout, int requestPrice, int timelock) inline {
+    return (timeout, requestPrice, timelock);
 }
 
 ;;
 ;; Type: SafeOperations
-;; TLB: _ ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}}> count:uint8 = SafeOperations
+;; TLB: _ ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}> count:uint8 = SafeOperations
 ;;
 
 builder $SafeOperations$_store(builder build_0, (cell, int) v) inline {
@@ -126,46 +128,96 @@ tuple $SafeOperationTransfer$_as_optional((slice, int, int, int, cell) v) inline
 
 ;;
 ;; Type: SafeOperationUpdateParameters
-;; TLB: _ parameters:SafeParameters{timeout:uint32,requestPrice:coins} = SafeOperationUpdateParameters
+;; TLB: _ parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32} = SafeOperationUpdateParameters
 ;;
 
-(slice, (((int, int)))) $SafeOperationUpdateParameters$_load(slice sc_0) inline {
+(slice, (((int, int, int)))) $SafeOperationUpdateParameters$_load(slice sc_0) inline {
     var v'parameters = sc_0~$SafeParameters$_load();
     return (sc_0, (v'parameters));
 }
 
-tuple $SafeOperationUpdateParameters$_as_optional(((int, int)) v) inline {
-    var ((v'parameters'timeout, v'parameters'requestPrice)) = v;
-    return __tact_tuple_create_2(v'parameters'timeout, v'parameters'requestPrice);
+tuple $SafeOperationUpdateParameters$_as_optional(((int, int, int)) v) inline {
+    var ((v'parameters'timeout, v'parameters'requestPrice, v'parameters'timelock)) = v;
+    return __tact_tuple_create_3(v'parameters'timeout, v'parameters'requestPrice, v'parameters'timelock);
 }
 
-_ $SafeOperationUpdateParameters$_get_parameters(((int, int)) v) inline {
+_ $SafeOperationUpdateParameters$_get_parameters(((int, int, int)) v) inline {
     var (v'parameters) = v;
     return v'parameters;
 }
 
-(((int, int))) $SafeOperationUpdateParameters$_tensor_cast(((int, int)) v) asm "NOP";
+(((int, int, int))) $SafeOperationUpdateParameters$_tensor_cast(((int, int, int)) v) asm "NOP";
 
-(((int, int))) $SafeOperationUpdateParameters$_not_null(tuple v) inline {
+(((int, int, int))) $SafeOperationUpdateParameters$_not_null(tuple v) inline {
     throw_if(128, null?(v));
-    var (int vvv'parameters'timeout, int vvv'parameters'requestPrice) = __tact_tuple_destroy_2(v);
-    return ((vvv'parameters'timeout, vvv'parameters'requestPrice));
+    var (int vvv'parameters'timeout, int vvv'parameters'requestPrice, int vvv'parameters'timelock) = __tact_tuple_destroy_3(v);
+    return ((vvv'parameters'timeout, vvv'parameters'requestPrice, vvv'parameters'timelock));
+}
+
+;;
+;; Type: SafeOperationAdd
+;; TLB: _ owner:address = SafeOperationAdd
+;;
+
+(slice, ((slice))) $SafeOperationAdd$_load(slice sc_0) inline {
+    var v'owner = sc_0~__tact_load_address();
+    return (sc_0, (v'owner));
+}
+
+tuple $SafeOperationAdd$_as_optional((slice) v) inline {
+    var (v'owner) = v;
+    return __tact_tuple_create_1(v'owner);
+}
+
+;;
+;; Type: SafeOperationRemove
+;; TLB: _ owner:address = SafeOperationRemove
+;;
+
+(slice, ((slice))) $SafeOperationRemove$_load(slice sc_0) inline {
+    var v'owner = sc_0~__tact_load_address();
+    return (sc_0, (v'owner));
+}
+
+tuple $SafeOperationRemove$_as_optional((slice) v) inline {
+    var (v'owner) = v;
+    return __tact_tuple_create_1(v'owner);
+}
+
+;;
+;; Type: SafeOperationReplace
+;; TLB: _ old:address new:address = SafeOperationReplace
+;;
+
+(slice, ((slice, slice))) $SafeOperationReplace$_load(slice sc_0) inline {
+    var v'old = sc_0~__tact_load_address();
+    var v'new = sc_0~__tact_load_address();
+    return (sc_0, (v'old, v'new));
+}
+
+tuple $SafeOperationReplace$_as_optional((slice, slice) v) inline {
+    var (v'old, v'new) = v;
+    return __tact_tuple_create_2(v'old, v'new);
 }
 
 ;;
 ;; Type: SafeOperation
-;; TLB: _ transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell} parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}} = SafeOperation
+;; TLB: _ transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell} parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}} add:Maybe SafeOperationAdd{owner:address} remove:Maybe SafeOperationRemove{owner:address} replace:Maybe SafeOperationReplace{old:address,new:address} = SafeOperation
 ;;
 
-(slice, ((tuple, tuple))) $SafeOperation$_load(slice sc_0) inline {
+(slice, ((tuple, tuple, tuple, tuple, tuple))) $SafeOperation$_load(slice sc_0) inline {
     var v'transfer = sc_0~load_int(1) ? $SafeOperationTransfer$_as_optional(sc_0~$SafeOperationTransfer$_load()) : null();
     var v'parameters = sc_0~load_int(1) ? $SafeOperationUpdateParameters$_as_optional(sc_0~$SafeOperationUpdateParameters$_load()) : null();
-    return (sc_0, (v'transfer, v'parameters));
+    var v'add = sc_0~load_int(1) ? $SafeOperationAdd$_as_optional(sc_0~$SafeOperationAdd$_load()) : null();
+    slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'remove = sc_1~load_int(1) ? $SafeOperationRemove$_as_optional(sc_1~$SafeOperationRemove$_load()) : null();
+    var v'replace = sc_1~load_int(1) ? $SafeOperationReplace$_as_optional(sc_1~$SafeOperationReplace$_load()) : null();
+    return (sc_0, (v'transfer, v'parameters, v'add, v'remove, v'replace));
 }
 
-tuple $SafeOperation$_as_optional((tuple, tuple) v) inline {
-    var (v'transfer, v'parameters) = v;
-    return __tact_tuple_create_2(v'transfer, v'parameters);
+tuple $SafeOperation$_as_optional((tuple, tuple, tuple, tuple, tuple) v) inline {
+    var (v'transfer, v'parameters, v'add, v'remove, v'replace) = v;
+    return __tact_tuple_create_5(v'transfer, v'parameters, v'add, v'remove, v'replace);
 }
 
 tuple $SafeOperation$_load_opt(cell cl) inline {
@@ -176,12 +228,12 @@ tuple $SafeOperation$_load_opt(cell cl) inline {
     return $SafeOperation$_as_optional(sc~$SafeOperation$_load());
 }
 
-((tuple, tuple)) $SafeOperation$_tensor_cast((tuple, tuple) v) asm "NOP";
+((tuple, tuple, tuple, tuple, tuple)) $SafeOperation$_tensor_cast((tuple, tuple, tuple, tuple, tuple) v) asm "NOP";
 
-((tuple, tuple)) $SafeOperation$_not_null(tuple v) inline {
+((tuple, tuple, tuple, tuple, tuple)) $SafeOperation$_not_null(tuple v) inline {
     throw_if(128, null?(v));
-    var (tuple vvv'transfer, tuple vvv'parameters) = __tact_tuple_destroy_2(v);
-    return (vvv'transfer, vvv'parameters);
+    var (tuple vvv'transfer, tuple vvv'parameters, tuple vvv'add, tuple vvv'remove, tuple vvv'replace) = __tact_tuple_destroy_5(v);
+    return (vvv'transfer, vvv'parameters, vvv'add, vvv'remove, vvv'replace);
 }
 
 ;;
@@ -198,19 +250,19 @@ tuple $SafeOperation$_load_opt(cell cl) inline {
 
 ;;
 ;; Type: SafeRequestOperation
-;; Header: 0xff7de06c
-;; TLB: safe_request_operation#ff7de06c ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}}>,count:uint8} = SafeRequestOperation
+;; Header: 0x348b938f
+;; TLB: safe_request_operation#348b938f ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}>,count:uint8} = SafeRequestOperation
 ;;
 
 (slice, (((cell, int)))) $SafeRequestOperation$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 4286439532);
+    throw_unless(129, sc_0~load_uint(32) == 881562511);
     var v'ops = sc_0~$SafeOperations$_load();
     return (sc_0, (v'ops));
 }
 
 ;;
 ;; Type: VoteArgs
-;; TLB: _ safe:address owners:dict<address, bool> ownersCount:uint32 treshold:uint32 timeout:uint64 ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}}>,count:uint8} = VoteArgs
+;; TLB: _ safe:address owners:dict<address, bool> ownersCount:uint32 treshold:uint32 timeout:uint64 ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}>,count:uint8} = VoteArgs
 ;;
 
 builder $VoteArgs$_store(builder build_0, (slice, cell, int, int, int, (cell, int)) v) inline_ref {
@@ -240,24 +292,24 @@ builder $VoteArgs$_store(builder build_0, (slice, cell, int, int, int, (cell, in
 
 ;;
 ;; Type: VoteSuccess
-;; Header: 0xcdf42430
-;; TLB: vote_success#cdf42430 args:VoteArgs{safe:address,owners:dict<address, bool>,ownersCount:uint32,treshold:uint32,timeout:uint64,ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}}>,count:uint8}} = VoteSuccess
+;; Header: 0x9a69710d
+;; TLB: vote_success#9a69710d args:VoteArgs{safe:address,owners:dict<address, bool>,ownersCount:uint32,treshold:uint32,timeout:uint64,ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}>,count:uint8}} = VoteSuccess
 ;;
 
 (slice, (((slice, cell, int, int, int, (cell, int))))) $VoteSuccess$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 3455329328);
+    throw_unless(129, sc_0~load_uint(32) == 2590601485);
     var v'args = sc_0~$VoteArgs$_load();
     return (sc_0, (v'args));
 }
 
 ;;
 ;; Type: VoteFailure
-;; Header: 0x9895f337
-;; TLB: vote_failure#9895f337 args:VoteArgs{safe:address,owners:dict<address, bool>,ownersCount:uint32,treshold:uint32,timeout:uint64,ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}}>,count:uint8}} = VoteFailure
+;; Header: 0x18be0c6b
+;; TLB: vote_failure#18be0c6b args:VoteArgs{safe:address,owners:dict<address, bool>,ownersCount:uint32,treshold:uint32,timeout:uint64,ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}>,count:uint8}} = VoteFailure
 ;;
 
 (slice, (((slice, cell, int, int, int, (cell, int))))) $VoteFailure$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 2559963959);
+    throw_unless(129, sc_0~load_uint(32) == 415108203);
     var v'args = sc_0~$VoteArgs$_load();
     return (sc_0, (v'args));
 }
@@ -287,17 +339,17 @@ cell $VoteDeploy$_store_cell((int) v) inline {
 ;; Type: SafeContract
 ;;
 
-builder $SafeContract$_store(builder build_0, (int, cell, int, int, (int, int)) v) inline {
-    var (v'seqno, v'owners, v'ownersCount, v'treshold, (v'parameters'timeout, v'parameters'requestPrice)) = v;
+builder $SafeContract$_store(builder build_0, (int, cell, int, int, (int, int, int)) v) inline {
+    var (v'seqno, v'owners, v'ownersCount, v'treshold, (v'parameters'timeout, v'parameters'requestPrice, v'parameters'timelock)) = v;
     build_0 = build_0.store_uint(v'seqno, 64);
     build_0 = build_0.store_dict(v'owners);
     build_0 = build_0.store_int(v'ownersCount, 257);
     build_0 = build_0.store_int(v'treshold, 257);
-    build_0 = $SafeParameters$_store(build_0, (v'parameters'timeout, v'parameters'requestPrice));
+    build_0 = $SafeParameters$_store(build_0, (v'parameters'timeout, v'parameters'requestPrice, v'parameters'timelock));
     return build_0;
 }
 
-(slice, ((int, cell, int, int, (int, int)))) $SafeContract$_load(slice sc_0) inline {
+(slice, ((int, cell, int, int, (int, int, int)))) $SafeContract$_load(slice sc_0) inline {
     var v'seqno = sc_0~load_uint(64);
     var v'owners = sc_0~load_dict();
     var v'ownersCount = sc_0~load_int(257);
@@ -312,7 +364,7 @@ builder $SafeContract$_store(builder build_0, (int, cell, int, int, (int, int)) 
     return (sc_0, (v'owner, v'id));
 }
 
-(int, cell, int, int, (int, int)) $SafeContract$_contract_load() impure inline_ref {
+(int, cell, int, int, (int, int, int)) $SafeContract$_contract_load() impure inline_ref {
     slice $sc = get_data().begin_parse();
     __tact_context_sys = $sc~load_ref();
     int $loaded = $sc~load_int(1);
@@ -325,7 +377,7 @@ builder $SafeContract$_store(builder build_0, (int, cell, int, int, (int, int)) 
     }
 }
 
-() $SafeContract$_contract_store((int, cell, int, int, (int, int)) v) impure inline {
+() $SafeContract$_contract_store((int, cell, int, int, (int, int, int)) v) impure inline {
     builder b = begin_cell();
     b = b.store_ref(__tact_context_sys);
     b = b.store_int(true, 1);

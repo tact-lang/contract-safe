@@ -25,8 +25,14 @@ PROGRAM{
   DECLPROC $SafeOperations$_load
   DECLPROC $SafeOperationTransfer$_load
   DECLPROC $SafeOperationUpdateParameters$_load
+  DECLPROC $SafeOperationAdd$_load
+  DECLPROC $SafeOperationRemove$_load
+  DECLPROC $SafeOperationReplace$_load
   DECLPROC $SafeOperationTransfer$_as_optional
   DECLPROC $SafeOperationUpdateParameters$_as_optional
+  DECLPROC $SafeOperationAdd$_as_optional
+  DECLPROC $SafeOperationRemove$_as_optional
+  DECLPROC $SafeOperationReplace$_as_optional
   DECLPROC $SafeOperation$_load
   DECLPROC $SafeOperation$_as_optional
   DECLPROC $SafeOperation$_load_opt
@@ -47,7 +53,7 @@ PROGRAM{
   DECLPROC $SafeOperationUpdateParameters$_not_null
   DECLPROC $SafeContract$init$_load
   DECLPROC $VoteContract$init$_store
-  DECLPROC $SafeParameters$_constructor_timeout_requestPrice
+  DECLPROC $SafeParameters$_constructor_timeout_requestPrice_timelock
   DECLPROC $SafeContract$_contract_init
   DECLPROC $SafeContract$_contract_load
   DECLPROC $SafeContract$_contract_store
@@ -70,11 +76,11 @@ PROGRAM{
   DECLPROC $SendParameters$_constructor_value_to_mode_bounce_code_data_body
   DECLPROC $VoteDeploy$_constructor_queryId
   DECLPROC $DeployOk$_constructor_queryId
-  DECLPROC $SafeContract$_receive_binary_SafeDeployment
-  DECLPROC $SafeContract$_receive_binary_SafeRequestOperation
-  DECLPROC $SafeContract$_receive_binary_VoteFailure
-  DECLPROC $SafeContract$_receive_binary_VoteSuccess
-  DECLPROC $SafeContract$_receive_binary_Deploy
+  DECLPROC $SafeContract$_internal_binary_SafeDeployment
+  DECLPROC $SafeContract$_internal_binary_SafeRequestOperation
+  DECLPROC $SafeContract$_internal_binary_VoteFailure
+  DECLPROC $SafeContract$_internal_binary_VoteSuccess
+  DECLPROC $SafeContract$_internal_binary_Deploy
   68438 DECLMETHOD %parameters
   114048 DECLMETHOD %treshold
   85143 DECLMETHOD %seqno
@@ -83,7 +89,7 @@ PROGRAM{
   113617 DECLMETHOD supported_interfaces
   121275 DECLMETHOD get_abi_ipfs
   115390 DECLMETHOD lazy_deployment_completed
-  DECLPROC $SafeContract$_contract_router
+  DECLPROC $SafeContract$_contract_router_internal
   DECLPROC recv_internal
   DECLGLOBVAR __tact_context
   DECLGLOBVAR __tact_context_sender
@@ -278,15 +284,17 @@ PROGRAM{
     ENDC
   }>
   $SafeParameters$_store PROCINLINE:<{
-    s0 s2 XCHG
+    s2 s3 XCHG2
     32 STU
     SWAP
     STGRAMS
+    32 STU
   }>
   $SafeParameters$_load PROCINLINE:<{
     32 LDU
     LDGRAMS
-    -ROT
+    32 LDU
+    3 -ROLL
   }>
   $SafeOperations$_store PROCINLINE:<{
     s0 s2 XCHG
@@ -317,10 +325,31 @@ PROGRAM{
   $SafeOperationUpdateParameters$_load PROCINLINE:<{
     $SafeParameters$_load INLINECALLDICT
   }>
+  $SafeOperationAdd$_load PROCINLINE:<{
+    __tact_load_address INLINECALLDICT
+  }>
+  $SafeOperationRemove$_load PROCINLINE:<{
+    __tact_load_address INLINECALLDICT
+  }>
+  $SafeOperationReplace$_load PROCINLINE:<{
+    __tact_load_address INLINECALLDICT
+    SWAP
+    __tact_load_address INLINECALLDICT
+    s1 s2 XCHG
+  }>
   $SafeOperationTransfer$_as_optional PROCINLINE:<{
     5 TUPLE
   }>
   $SafeOperationUpdateParameters$_as_optional PROCINLINE:<{
+    3 TUPLE
+  }>
+  $SafeOperationAdd$_as_optional PROCINLINE:<{
+    1 TUPLE
+  }>
+  $SafeOperationRemove$_as_optional PROCINLINE:<{
+    1 TUPLE
+  }>
+  $SafeOperationReplace$_as_optional PROCINLINE:<{
     2 TUPLE
   }>
   $SafeOperation$_load PROCINLINE:<{
@@ -341,10 +370,44 @@ PROGRAM{
     }>ELSE<{
       PUSHNULL
     }>
-    s1 s2 XCHG
+    SWAP
+    1 LDI
+    SWAP
+    IF:<{
+      $SafeOperationAdd$_load INLINECALLDICT
+      $SafeOperationAdd$_as_optional INLINECALLDICT
+    }>ELSE<{
+      PUSHNULL
+    }>
+    SWAP
+    LDREF
+    SWAP
+    CTOS
+    1 LDI
+    SWAP
+    IF:<{
+      $SafeOperationRemove$_load INLINECALLDICT
+      $SafeOperationRemove$_as_optional INLINECALLDICT
+    }>ELSE<{
+      PUSHNULL
+    }>
+    SWAP
+    1 LDI
+    SWAP
+    IF:<{
+      $SafeOperationReplace$_load INLINECALLDICT
+      1 2 BLKDROP2
+      $SafeOperationReplace$_as_optional INLINECALLDICT
+    }>ELSE<{
+      DROP
+      PUSHNULL
+    }>
+    s2 s5 XCHG
+    s2 s4 XCHG
+    s2 s3 XCHG
   }>
   $SafeOperation$_as_optional PROCINLINE:<{
-    2 TUPLE
+    5 TUPLE
   }>
   $SafeOperation$_load_opt PROCINLINE:<{
     DUP
@@ -355,7 +418,7 @@ PROGRAM{
     }>ELSE<{
       CTOS
       $SafeOperation$_load INLINECALLDICT
-      1 2 BLKDROP2
+      1 5 BLKDROP2
       $SafeOperation$_as_optional INLINECALLDICT
     }>
   }>
@@ -370,7 +433,7 @@ PROGRAM{
   $SafeRequestOperation$_load PROCINLINE:<{
     32 LDU
     SWAP
-    4286439532 PUSHINT
+    881562511 PUSHINT
     EQUAL
     129 THROWIFNOT
     $SafeOperations$_load INLINECALLDICT
@@ -404,7 +467,7 @@ PROGRAM{
   $VoteSuccess$_load PROCINLINE:<{
     32 LDU
     SWAP
-    3455329328 PUSHINT
+    2590601485 PUSHINT
     EQUAL
     129 THROWIFNOT
     $VoteArgs$_load INLINECALLDICT
@@ -412,7 +475,7 @@ PROGRAM{
   $VoteFailure$_load PROCINLINE:<{
     32 LDU
     SWAP
-    2559963959 PUSHINT
+    415108203 PUSHINT
     EQUAL
     129 THROWIFNOT
     $VoteArgs$_load INLINECALLDICT
@@ -430,15 +493,16 @@ PROGRAM{
     ENDC
   }>
   $SafeContract$_store PROCINLINE:<{
-    s5 s6 XCHG2
+    s6 s7 XCHG2
     64 STU
-    s1 s3 XCHG
+    s1 s4 XCHG
     STDICT
+    s1 s2 XCHG
     257 PUSHINT
     STIX
     257 PUSHINT
     STIX
-    s0 s2 XCHG
+    s2 s3 XCHG2
     $SafeParameters$_store INLINECALLDICT
   }>
   $SafeContract$_load PROCINLINE:<{
@@ -449,10 +513,10 @@ PROGRAM{
     257 PUSHINT
     LDIX
     $SafeParameters$_load INLINECALLDICT
-    s2 s6 XCHG
-    s2 s5 XCHG
-    s2 s4 XCHG
-    s2 s3 XCHG
+    s3 s7 XCHG
+    s3 s6 XCHG
+    s3 s5 XCHG
+    s3 s4 XCHG
   }>
   $SafeParameters$_to_external PROCINLINE:<{
   }>
@@ -460,7 +524,7 @@ PROGRAM{
     DUP
     ISNULL
     128 THROWIF
-    2 UNTUPLE
+    5 UNTUPLE
   }>
   $SafeOperationTransfer$_not_null PROCINLINE:<{
     DUP
@@ -474,7 +538,7 @@ PROGRAM{
     DUP
     ISNULL
     128 THROWIF
-    2 UNTUPLE
+    3 UNTUPLE
   }>
   $SafeContract$init$_load PROCINLINE:<{
     __tact_load_address INLINECALLDICT
@@ -486,7 +550,7 @@ PROGRAM{
   $VoteContract$init$_store PROCINLINE:<{
     $VoteArgs$_store INLINECALLDICT
   }>
-  $SafeParameters$_constructor_timeout_requestPrice PROCINLINE:<{
+  $SafeParameters$_constructor_timeout_requestPrice_timelock PROCINLINE:<{
   }>
   $SafeContract$_contract_init PROCREF:<{
     DROP
@@ -502,7 +566,8 @@ PROGRAM{
     DUP
     86400 PUSHINT
     1000000000 PUSHINT
-    $SafeParameters$_constructor_timeout_requestPrice INLINECALLDICT
+    s5 PUSH
+    $SafeParameters$_constructor_timeout_requestPrice_timelock INLINECALLDICT
   }>
   $SafeContract$_contract_load PROCREF:<{
     c4 PUSH
@@ -514,7 +579,7 @@ PROGRAM{
     SWAP
     IFJMP:<{
       $SafeContract$_load INLINECALLDICT
-      1 6 BLKDROP2
+      1 7 BLKDROP2
     }>
     $SafeContract$init$_load INLINECALLDICT
     s0 s2 XCHG
@@ -530,7 +595,7 @@ PROGRAM{
     TRUE
     SWAP
     1 STI
-    6 -ROLL
+    7 -ROLL
     $SafeContract$_store INLINECALLDICT
     ENDC
     c4 POP
@@ -668,23 +733,25 @@ PROGRAM{
     $global_send INLINECALLDICT
   }>
   $SafeContract$_fun_executeParameters PROCREF:<{
-    2 2 BLKDROP2
+    3 3 BLKDROP2
   }>
   $SafeContract$_fun_execute PROCREF:<{
+    3 BLKDROP
     OVER
     ISNULL
     NOT
     IF:<{
       SWAP
       $SafeOperationTransfer$_not_null INLINECALLDICT
-      s10 s11 XCHG
-      s9 s11 XCHG
-      s8 s11 XCHG
-      s7 s11 XCHG
-      s6 s11 XCHG
-      s5 s11 XCHG
+      s11 s12 XCHG
+      s10 s12 XCHG
+      s9 s12 XCHG
+      s8 s12 XCHG
+      s7 s12 XCHG
+      s6 s12 XCHG
+      s5 s12 XCHG
       $SafeContract$_fun_executeTransfer INLINECALLDICT
-      6 ROLL
+      7 ROLL
     }>ELSE<{
       NIP
     }>
@@ -699,17 +766,17 @@ PROGRAM{
     }>
   }>
   $SafeContract$_fun_parameters PROCREF:<{
-    2DUP
+    s2 s1 s0 PUSH3
   }>
   $SafeContract$_fun_treshold PROCREF:<{
-    s2 PUSH
+    s3 PUSH
   }>
   $SafeContract$_fun_seqno PROCREF:<{
-    s5 PUSH
+    s6 PUSH
   }>
   $SafeContract$_fun_isOwner PROCREF:<{
     267 PUSHINT
-    s6 PUSH
+    s7 PUSH
     s0 s2 XCHG
     1 PUSHINT
     __tact_dict_get_slice_int INLINECALLDICT
@@ -717,7 +784,7 @@ PROGRAM{
     __tact_int_eq_nullable_one INLINECALLDICT
   }>
   $SafeContract$_fun_owners PROCREF:<{
-    s4 PUSH
+    s5 PUSH
   }>
   $VoteContract$_init_child PROCREF:<{
     s0 s7 XCHG
@@ -765,26 +832,26 @@ PROGRAM{
   }>
   $DeployOk$_constructor_queryId PROCINLINE:<{
   }>
-  $SafeContract$_receive_binary_SafeDeployment PROCINLINE:<{
+  $SafeContract$_internal_binary_SafeDeployment PROCINLINE:<{
     0 PUSHINT
     64 PUSHINT
     $SendParameters$_constructor_to_value_mode INLINECALLDICT
     $global_send INLINECALLDICT
   }>
-  $SafeContract$_receive_binary_SafeRequestOperation PROCINLINE:<{
+  $SafeContract$_internal_binary_SafeRequestOperation PROCINLINE:<{
     __tact_context_get INLINECALLDICT
     DROP
     s2 POP
     46307 PUSHINT
     267 PUSHINT
-    s10 s0 s2 PUXC2
+    s11 s0 s2 PUXC2
     1 PUSHINT
     __tact_dict_get_slice_int INLINECALLDICT
     TRUE
     __tact_int_eq_nullable_one INLINECALLDICT
     THROWANYIFNOT
     5165 PUSHINT
-    s1 s4 XCPU
+    s1 s5 XCPU
     GEQ
     THROWANYIFNOT
     0 PUSHINT
@@ -796,6 +863,7 @@ PROGRAM{
       __tact_dict_get_int_cell INLINECALLDICT
       $SafeOperation$_load_opt INLINECALLDICT
       $SafeOperation$_not_null INLINECALLDICT
+      3 BLKDROP
       0 PUSHINT
       s0 s2 XCHG
       ISNULL
@@ -810,6 +878,7 @@ PROGRAM{
       IF:<{
         $SafeOperationUpdateParameters$_not_null INLINECALLDICT
         $SafeOperationUpdateParameters$_get_parameters INLINECALLDICT
+        DROP
         7464 PUSHINT
         OVER
         10000000000 PUSHINT
@@ -838,11 +907,11 @@ PROGRAM{
     DROP
     MYADDR
     NOW
-    s5 PUSH
+    s6 PUSH
     ADD
-    s3 s0 s8 XC2PU
-    s3 s8 XCPU
-    s3 s8 XCPU
+    s3 s0 s9 XC2PU
+    s3 s9 XCPU
+    s3 s9 XCPU
     s3 s1 s3 XCHG3
     $VoteArgs$_constructor_safe_owners_ownersCount_treshold_timeout_ops INLINECALLDICT
     __tact_context_sys GETGLOB
@@ -862,10 +931,10 @@ PROGRAM{
     $SendParameters$_constructor_value_to_mode_bounce_code_data_body INLINECALLDICT
     $global_send INLINECALLDICT
   }>
-  $SafeContract$_receive_binary_VoteFailure PROCINLINE:<{
+  $SafeContract$_internal_binary_VoteFailure PROCINLINE:<{
     7 BLKDROP
   }>
-  $SafeContract$_receive_binary_VoteSuccess PROCINLINE:<{
+  $SafeContract$_internal_binary_VoteSuccess PROCINLINE:<{
     __tact_context_get INLINECALLDICT
     s2 s3 XCHG
     3 BLKDROP
@@ -875,15 +944,15 @@ PROGRAM{
     __tact_slice_eq_bits INLINECALLDICT
     THROWANYIFNOT
     8884 PUSHINT
-    s7 s13 PUSH2
+    s7 s14 PUSH2
     __tact_cell_eq_nullable INLINECALLDICT
     THROWANYIFNOT
     62638 PUSHINT
-    s6 s12 PUSH2
+    s6 s13 PUSH2
     EQUAL
     THROWANYIFNOT
     37479 PUSHINT
-    s5 s11 PUSH2
+    s5 s12 PUSH2
     EQUAL
     THROWANYIFNOT
     4755 PUSHINT
@@ -913,14 +982,16 @@ PROGRAM{
       __tact_dict_get_int_cell INLINECALLDICT
       $SafeOperation$_load_opt INLINECALLDICT
       $SafeOperation$_not_null INLINECALLDICT
-      s7 s9 XCHG
-      5 5 REVERSE
-      s4 s8 XCHG
-      s3 s9 XCHG
-      s2 s8 XCHG
+      s11 s13 XCHG
+      5 9 REVERSE
+      s8 s12 XCHG
+      s7 s13 XCHG
+      s6 s12 XCHG
+      s5 s13 XCHG
       $SafeContract$_fun_execute INLINECALLDICT
       s0 s7 XCHG
       INC
+      s6 s8 XCHG
       s5 s7 XCHG
       s4 s6 XCHG
       s3 s5 XCHG
@@ -929,7 +1000,7 @@ PROGRAM{
     }>
     2DROP
   }>
-  $SafeContract$_receive_binary_Deploy PROCINLINE:<{
+  $SafeContract$_internal_binary_Deploy PROCINLINE:<{
     $DeployOk$_constructor_queryId INLINECALLDICT
     $DeployOk$_store_cell INLINECALLDICT
     $global_reply INLINECALLDICT
@@ -937,30 +1008,30 @@ PROGRAM{
   %parameters PROC:<{
     $SafeContract$_contract_load INLINECALLDICT
     $SafeContract$_fun_parameters INLINECALLDICT
-    6 2 BLKDROP2
+    7 3 BLKDROP2
     $SafeParameters$_to_external INLINECALLDICT
   }>
   %treshold PROC:<{
     $SafeContract$_contract_load INLINECALLDICT
     $SafeContract$_fun_treshold INLINECALLDICT
-    6 1 BLKDROP2
+    7 1 BLKDROP2
   }>
   %seqno PROC:<{
     $SafeContract$_contract_load INLINECALLDICT
     $SafeContract$_fun_seqno INLINECALLDICT
-    6 1 BLKDROP2
+    7 1 BLKDROP2
   }>
   %isOwner PROC:<{
     __tact_verify_address INLINECALLDICT
     $SafeContract$_contract_load INLINECALLDICT
-    6 ROLL
+    7 ROLL
     $SafeContract$_fun_isOwner INLINECALLDICT
-    6 1 BLKDROP2
+    7 1 BLKDROP2
   }>
   %owners PROC:<{
     $SafeContract$_contract_load INLINECALLDICT
     $SafeContract$_fun_owners INLINECALLDICT
-    6 1 BLKDROP2
+    7 1 BLKDROP2
   }>
   supported_interfaces PROC:<{
     123515602279859691144772641439386770278 PUSHINT
@@ -969,7 +1040,7 @@ PROGRAM{
     289074767680806556846472852687671582181 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d614c4d39347676364775675043366742624c6f394d555a346f647a516a7a45744a7a41677662644c764d6a67} PUSHSLICE
+    x{697066733a2f2f516d556356527a504463465a7234685a394463503850534c766a4665324370326156724a5754414d754c68365966} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -977,7 +1048,7 @@ PROGRAM{
     1 LDI
     SWAP
   }>
-  $SafeContract$_contract_router PROCREF:<{
+  $SafeContract$_contract_router_internal PROCREF:<{
     0 PUSHINT
     OVER
     SBITS
@@ -999,37 +1070,37 @@ PROGRAM{
       NIP
       $SafeDeployment$_load INLINECALLDICT
       NIP
-      $SafeContract$_receive_binary_SafeDeployment INLINECALLDICT
+      $SafeContract$_internal_binary_SafeDeployment INLINECALLDICT
       TRUE
     }>
     OVER
-    4286439532 PUSHINT
+    881562511 PUSHINT
     EQUAL
     IFJMP:<{
       NIP
       $SafeRequestOperation$_load INLINECALLDICT
       1 2 BLKDROP2
-      $SafeContract$_receive_binary_SafeRequestOperation INLINECALLDICT
+      $SafeContract$_internal_binary_SafeRequestOperation INLINECALLDICT
       TRUE
     }>
     OVER
-    2559963959 PUSHINT
+    415108203 PUSHINT
     EQUAL
     IFJMP:<{
       NIP
       $VoteFailure$_load INLINECALLDICT
       1 7 BLKDROP2
-      $SafeContract$_receive_binary_VoteFailure INLINECALLDICT
+      $SafeContract$_internal_binary_VoteFailure INLINECALLDICT
       TRUE
     }>
     OVER
-    3455329328 PUSHINT
+    2590601485 PUSHINT
     EQUAL
     IFJMP:<{
       NIP
       $VoteSuccess$_load INLINECALLDICT
       1 7 BLKDROP2
-      $SafeContract$_receive_binary_VoteSuccess INLINECALLDICT
+      $SafeContract$_internal_binary_VoteSuccess INLINECALLDICT
       TRUE
     }>
     SWAP
@@ -1038,7 +1109,7 @@ PROGRAM{
     IFJMP:<{
       $Deploy$_load INLINECALLDICT
       NIP
-      $SafeContract$_receive_binary_Deploy INLINECALLDICT
+      $SafeContract$_internal_binary_Deploy INLINECALLDICT
       TRUE
     }>
     DROP
@@ -1063,8 +1134,8 @@ PROGRAM{
     s0 s2 XCHG
     __tact_context_sender SETGLOB
     $SafeContract$_contract_load INLINECALLDICT
-    2 6 BLKSWAP
-    $SafeContract$_contract_router INLINECALLDICT
+    2 7 BLKSWAP
+    $SafeContract$_contract_router_internal INLINECALLDICT
     DROP
     $SafeContract$_contract_store INLINECALLDICT
   }>

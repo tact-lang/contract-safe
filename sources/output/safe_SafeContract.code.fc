@@ -6,94 +6,94 @@
 ;; Contract SafeContract functions
 ;;
 
-(int, cell, int, int, (int, int)) $SafeContract$_contract_init(slice $owner, int $id) impure inline_ref {
-    var (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice))) = (null(), null(), null(), null(), null());
+(int, cell, int, int, (int, int, int)) $SafeContract$_contract_init(slice $owner, int $id) impure inline_ref {
+    var (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock))) = (null(), null(), null(), null(), null());
     $self'seqno = 0;
     $self'owners = null();
     $self'owners~__tact_dict_set_slice_int(267, $owner, true, 1);
     $self'ownersCount = 1;
     $self'treshold = 1;
-    ($self'parameters'timeout, $self'parameters'requestPrice) = $SafeParameters$_constructor_timeout_requestPrice(86400, 1000000000);
-    return ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice));
+    ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock) = $SafeParameters$_constructor_timeout_requestPrice_timelock(86400, 1000000000, 0);
+    return ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock));
 }
 
-((int, cell, int, int, (int, int)), ()) $SafeContract$_fun_executeTransfer((int, cell, int, int, (int, int)) $self, (slice, int, int, int, cell) $op) impure inline_ref {
-    var (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice))) = $self;
+((int, cell, int, int, (int, int, int)), ()) $SafeContract$_fun_executeTransfer((int, cell, int, int, (int, int, int)) $self, (slice, int, int, int, cell) $op) impure inline_ref {
+    var (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock))) = $self;
     var (($op'to, $op'value, $op'mode, $op'bounce, $op'body)) = $op;
     $global_send($SendParameters$_constructor_value_to_mode_bounce_body($op'value, $op'to, $op'mode, $op'bounce, $op'body));
-    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)), ());
+    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock)), ());
 }
 
-((int, cell, int, int, (int, int)), ()) $SafeContract$_fun_executeParameters((int, cell, int, int, (int, int)) $self, ((int, int)) $op) impure inline_ref {
-    var (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice))) = $self;
-    var ((($op'parameters'timeout, $op'parameters'requestPrice))) = $op;
-    ($self'parameters'timeout, $self'parameters'requestPrice) = ($op'parameters'timeout, $op'parameters'requestPrice);
-    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)), ());
+((int, cell, int, int, (int, int, int)), ()) $SafeContract$_fun_executeParameters((int, cell, int, int, (int, int, int)) $self, ((int, int, int)) $op) impure inline_ref {
+    var (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock))) = $self;
+    var ((($op'parameters'timeout, $op'parameters'requestPrice, $op'parameters'timelock))) = $op;
+    ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock) = ($op'parameters'timeout, $op'parameters'requestPrice, $op'parameters'timelock);
+    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock)), ());
 }
 
-((int, cell, int, int, (int, int)), ()) $SafeContract$_fun_execute((int, cell, int, int, (int, int)) $self, (tuple, tuple) $op) impure inline_ref {
-    var (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice))) = $self;
-    var (($op'transfer, $op'parameters)) = $op;
+((int, cell, int, int, (int, int, int)), ()) $SafeContract$_fun_execute((int, cell, int, int, (int, int, int)) $self, (tuple, tuple, tuple, tuple, tuple) $op) impure inline_ref {
+    var (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock))) = $self;
+    var (($op'transfer, $op'parameters, $op'add, $op'remove, $op'replace)) = $op;
     if ((~ null?($op'transfer))) {
-        ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice))~$SafeContract$_fun_executeTransfer($SafeOperationTransfer$_tensor_cast($SafeOperationTransfer$_not_null($op'transfer)));
+        ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock))~$SafeContract$_fun_executeTransfer($SafeOperationTransfer$_tensor_cast($SafeOperationTransfer$_not_null($op'transfer)));
     }
     if ((~ null?($op'parameters))) {
-        ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice))~$SafeContract$_fun_executeParameters($SafeOperationUpdateParameters$_tensor_cast($SafeOperationUpdateParameters$_not_null($op'parameters)));
+        ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock))~$SafeContract$_fun_executeParameters($SafeOperationUpdateParameters$_tensor_cast($SafeOperationUpdateParameters$_not_null($op'parameters)));
     }
-    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)), ());
+    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock)), ());
 }
 
-((int, cell, int, int, (int, int)), (int, int)) $SafeContract$_fun_parameters((int, cell, int, int, (int, int)) $self) impure inline_ref {
-    var (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice))) = $self;
-    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)), ($self'parameters'timeout, $self'parameters'requestPrice));
+((int, cell, int, int, (int, int, int)), (int, int, int)) $SafeContract$_fun_parameters((int, cell, int, int, (int, int, int)) $self) impure inline_ref {
+    var (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock))) = $self;
+    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock)), ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock));
 }
 
-((int, cell, int, int, (int, int)), int) $SafeContract$_fun_treshold((int, cell, int, int, (int, int)) $self) impure inline_ref {
-    var (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice))) = $self;
-    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)), $self'treshold);
+((int, cell, int, int, (int, int, int)), int) $SafeContract$_fun_treshold((int, cell, int, int, (int, int, int)) $self) impure inline_ref {
+    var (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock))) = $self;
+    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock)), $self'treshold);
 }
 
-((int, cell, int, int, (int, int)), int) $SafeContract$_fun_seqno((int, cell, int, int, (int, int)) $self) impure inline_ref {
-    var (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice))) = $self;
-    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)), $self'seqno);
+((int, cell, int, int, (int, int, int)), int) $SafeContract$_fun_seqno((int, cell, int, int, (int, int, int)) $self) impure inline_ref {
+    var (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock))) = $self;
+    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock)), $self'seqno);
 }
 
-((int, cell, int, int, (int, int)), int) $SafeContract$_fun_isOwner((int, cell, int, int, (int, int)) $self, slice $address) impure inline_ref {
-    var (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice))) = $self;
-    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)), __tact_int_eq_nullable_one(__tact_dict_get_slice_int($self'owners, 267, $address, 1), true));
+((int, cell, int, int, (int, int, int)), int) $SafeContract$_fun_isOwner((int, cell, int, int, (int, int, int)) $self, slice $address) impure inline_ref {
+    var (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock))) = $self;
+    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock)), __tact_int_eq_nullable_one(__tact_dict_get_slice_int($self'owners, 267, $address, 1), true));
 }
 
-((int, cell, int, int, (int, int)), cell) $SafeContract$_fun_owners((int, cell, int, int, (int, int)) $self) impure inline_ref {
-    var (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice))) = $self;
-    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)), $self'owners);
+((int, cell, int, int, (int, int, int)), cell) $SafeContract$_fun_owners((int, cell, int, int, (int, int, int)) $self) impure inline_ref {
+    var (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock))) = $self;
+    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock)), $self'owners);
 }
 
 ;;
 ;; Receivers of a Contract SafeContract
 ;;
 
-(((int, cell, int, int, (int, int))), ()) $SafeContract$_receive_binary_SafeDeployment((int, cell, int, int, (int, int)) $self, (slice) $deploy) impure inline {
-    var ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)) = $self;
+(((int, cell, int, int, (int, int, int))), ()) $SafeContract$_internal_binary_SafeDeployment((int, cell, int, int, (int, int, int)) $self, (slice) $deploy) impure inline {
+    var ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock)) = $self;
     var ($deploy'remaining) = $deploy;
     $global_send($SendParameters$_constructor_to_value_mode($deploy'remaining, 0, 64));
-    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)), ());
+    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock)), ());
 }
 
-(((int, cell, int, int, (int, int))), ()) $SafeContract$_receive_binary_SafeRequestOperation((int, cell, int, int, (int, int)) $self, ((cell, int)) $request) impure inline {
-    var ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)) = $self;
+(((int, cell, int, int, (int, int, int))), ()) $SafeContract$_internal_binary_SafeRequestOperation((int, cell, int, int, (int, int, int)) $self, ((cell, int)) $request) impure inline {
+    var ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock)) = $self;
     var (($request'ops'ops, $request'ops'count)) = $request;
     var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
     throw_unless(46307, __tact_int_eq_nullable_one(__tact_dict_get_slice_int($self'owners, 267, $ctx'sender, 1), true));
     throw_unless(5165, ($ctx'value >= $self'parameters'requestPrice));
     int $i = 0;
     repeat ($request'ops'count) {
-        var ($op'transfer, $op'parameters) = $SafeOperation$_not_null($SafeOperation$_load_opt(__tact_dict_get_int_cell($request'ops'ops, 257, $i)));
+        var ($op'transfer, $op'parameters, $op'add, $op'remove, $op'replace) = $SafeOperation$_not_null($SafeOperation$_load_opt(__tact_dict_get_int_cell($request'ops'ops, 257, $i)));
         int $notNullOperations = 0;
         if ((~ null?($op'transfer))) {
             $notNullOperations = ($notNullOperations + 1);
         }
         if ((~ null?($op'parameters))) {
-            var ($params'timeout, $params'requestPrice) = $SafeOperationUpdateParameters$_get_parameters($SafeOperationUpdateParameters$_not_null($op'parameters));
+            var ($params'timeout, $params'requestPrice, $params'timelock) = $SafeOperationUpdateParameters$_get_parameters($SafeOperationUpdateParameters$_not_null($op'parameters));
             throw_unless(7464, ($params'requestPrice <= 10000000000));
             throw_unless(38009, ($params'requestPrice >= 1000000000));
             throw_unless(31822, ($params'timeout < (((60 * 60) * 24) * 365)));
@@ -106,17 +106,17 @@
     var ($init'code, $init'data) = $VoteContract$_init_child(__tact_context_sys, ($args'safe, $args'owners, $args'ownersCount, $args'treshold, $args'timeout, ($args'ops'ops, $args'ops'count)));
     slice $address = $global_contractAddress(($init'code, $init'data));
     $global_send($SendParameters$_constructor_value_to_mode_bounce_code_data_body(0, $address, (64 + 2), true, $init'code, $init'data, $VoteDeploy$_store_cell($VoteDeploy$_constructor_queryId(0))));
-    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)), ());
+    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock)), ());
 }
 
-(((int, cell, int, int, (int, int))), ()) $SafeContract$_receive_binary_VoteFailure((int, cell, int, int, (int, int)) $self, ((slice, cell, int, int, int, (cell, int))) $aborted) impure inline {
-    var ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)) = $self;
+(((int, cell, int, int, (int, int, int))), ()) $SafeContract$_internal_binary_VoteFailure((int, cell, int, int, (int, int, int)) $self, ((slice, cell, int, int, int, (cell, int))) $aborted) impure inline {
+    var ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock)) = $self;
     var (($aborted'args'safe, $aborted'args'owners, $aborted'args'ownersCount, $aborted'args'treshold, $aborted'args'timeout, ($aborted'args'ops'ops, $aborted'args'ops'count))) = $aborted;
-    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)), ());
+    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock)), ());
 }
 
-(((int, cell, int, int, (int, int))), ()) $SafeContract$_receive_binary_VoteSuccess((int, cell, int, int, (int, int)) $self, ((slice, cell, int, int, int, (cell, int))) $signed) impure inline {
-    var ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)) = $self;
+(((int, cell, int, int, (int, int, int))), ()) $SafeContract$_internal_binary_VoteSuccess((int, cell, int, int, (int, int, int)) $self, ((slice, cell, int, int, int, (cell, int))) $signed) impure inline {
+    var ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock)) = $self;
     var (($signed'args'safe, $signed'args'owners, $signed'args'ownersCount, $signed'args'treshold, $signed'args'timeout, ($signed'args'ops'ops, $signed'args'ops'count))) = $signed;
     var ($args'safe, $args'owners, $args'ownersCount, $args'treshold, $args'timeout, ($args'ops'ops, $args'ops'count)) = ($signed'args'safe, $signed'args'owners, $signed'args'ownersCount, $signed'args'treshold, $signed'args'timeout, ($signed'args'ops'ops, $signed'args'ops'count));
     var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
@@ -130,18 +130,18 @@
     throw_unless(45379, ( __tact_slice_eq_bits($address, $ctx'sender) ));
     int $i = 0;
     repeat ($args'ops'count) {
-        var ($op'transfer, $op'parameters) = $SafeOperation$_not_null($SafeOperation$_load_opt(__tact_dict_get_int_cell($args'ops'ops, 257, $i)));
-        ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice))~$SafeContract$_fun_execute($SafeOperation$_tensor_cast(($op'transfer, $op'parameters)));
+        var ($op'transfer, $op'parameters, $op'add, $op'remove, $op'replace) = $SafeOperation$_not_null($SafeOperation$_load_opt(__tact_dict_get_int_cell($args'ops'ops, 257, $i)));
+        ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock))~$SafeContract$_fun_execute($SafeOperation$_tensor_cast(($op'transfer, $op'parameters, $op'add, $op'remove, $op'replace)));
         $i = ($i + 1);
     }
-    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)), ());
+    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock)), ());
 }
 
-(((int, cell, int, int, (int, int))), ()) $SafeContract$_receive_binary_Deploy((int, cell, int, int, (int, int)) $self, (int) $deploy) impure inline {
-    var ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)) = $self;
+(((int, cell, int, int, (int, int, int))), ()) $SafeContract$_internal_binary_Deploy((int, cell, int, int, (int, int, int)) $self, (int) $deploy) impure inline {
+    var ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock)) = $self;
     var ($deploy'queryId) = $deploy;
     $global_reply($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId)));
-    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice)), ());
+    return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock)), ());
 }
 
 ;;
@@ -189,7 +189,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmaLM94vv6GugPC6gBbLo9MUZ4odzQjzEtJzAgvbdLvMjg";
+    return "ipfs://QmUcVRzPDcFZr4hZ9DcP8PSLvjFe2Cp2aVrJWTAMuLh6Yf";
 }
 
 _ lazy_deployment_completed() method_id {
@@ -200,7 +200,7 @@ _ lazy_deployment_completed() method_id {
 ;; Routing of a Contract SafeContract
 ;;
 
-((int, cell, int, int, (int, int)), int) $SafeContract$_contract_router((int, cell, int, int, (int, int)) self, int msg_bounced, slice in_msg) impure inline_ref {
+((int, cell, int, int, (int, int, int)), int) $SafeContract$_contract_router_internal((int, cell, int, int, (int, int, int)) self, int msg_bounced, slice in_msg) impure inline_ref {
     
     ;; Parse incoming message
     int op = 0;
@@ -216,35 +216,35 @@ _ lazy_deployment_completed() method_id {
     ;; Receive SafeDeployment message
     if (op == 1857061459) {
         var msg = in_msg~$SafeDeployment$_load();
-        self~$SafeContract$_receive_binary_SafeDeployment(msg);
+        self~$SafeContract$_internal_binary_SafeDeployment(msg);
         return (self, true);
     }
     
     ;; Receive SafeRequestOperation message
-    if (op == 4286439532) {
+    if (op == 881562511) {
         var msg = in_msg~$SafeRequestOperation$_load();
-        self~$SafeContract$_receive_binary_SafeRequestOperation(msg);
+        self~$SafeContract$_internal_binary_SafeRequestOperation(msg);
         return (self, true);
     }
     
     ;; Receive VoteFailure message
-    if (op == 2559963959) {
+    if (op == 415108203) {
         var msg = in_msg~$VoteFailure$_load();
-        self~$SafeContract$_receive_binary_VoteFailure(msg);
+        self~$SafeContract$_internal_binary_VoteFailure(msg);
         return (self, true);
     }
     
     ;; Receive VoteSuccess message
-    if (op == 3455329328) {
+    if (op == 2590601485) {
         var msg = in_msg~$VoteSuccess$_load();
-        self~$SafeContract$_receive_binary_VoteSuccess(msg);
+        self~$SafeContract$_internal_binary_VoteSuccess(msg);
         return (self, true);
     }
     
     ;; Receive Deploy message
     if (op == 2490013878) {
         var msg = in_msg~$Deploy$_load();
-        self~$SafeContract$_receive_binary_Deploy(msg);
+        self~$SafeContract$_internal_binary_Deploy(msg);
         return (self, true);
     }
     
@@ -265,7 +265,7 @@ _ lazy_deployment_completed() method_id {
     var self = $SafeContract$_contract_load();
     
     ;; Handle operation
-    int handled = self~$SafeContract$_contract_router(msg_bounced, in_msg);
+    int handled = self~$SafeContract$_contract_router_internal(msg_bounced, in_msg);
     
     ;; Throw if not handled
     throw_unless(handled, 130);

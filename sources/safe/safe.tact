@@ -4,6 +4,7 @@ import "./vote.tact";
 
 const DEFAULT_REQUEST_PRICE: Int = ton("1");
 const DEFAULT_TIMEOUT: Int = 60 * 60 * 24; // 24 hours
+const DEFAULT_TIMELOCK: Int = 0; // No timelock
 
 message SafeDeployment {
     remaining: Address;
@@ -28,7 +29,8 @@ contract SafeContract with Deployable {
         self.treshold = 1;
         self.parameters = SafeParameters{
             timeout: DEFAULT_TIMEOUT,
-            requestPrice: DEFAULT_REQUEST_PRICE
+            requestPrice: DEFAULT_REQUEST_PRICE,
+            timelock: DEFAULT_TIMELOCK
         };
     }
 

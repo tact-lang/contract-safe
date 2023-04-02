@@ -79,9 +79,9 @@ exports[`contract should create request 2`] = `
             },
             "bounce": true,
             "from": "@safe",
-            "to": "kQBu3MvgeZgN5ZCXGfO75JvSUIaNgq97YbGy0uNgg-BzOIHO",
+            "to": "kQBCZ83ospVpgb5IsQY0HC2bPHvICwfJ29uvMep0wFGx4Ry1",
             "type": "internal",
-            "value": 967030000n,
+            "value": 964918000n,
           },
         ],
       },
@@ -114,7 +114,7 @@ exports[`contract should create vote: deploy 1`] = `
       },
       {
         "$type": "processed",
-        "gasUsed": 6135n,
+        "gasUsed": 6235n,
       },
     ],
   },
@@ -156,7 +156,7 @@ exports[`contract should create vote: double vote 1`] = `
           "from": "@signer",
           "to": "@treasure(owner1)",
           "type": "internal",
-          "value": 993709000n,
+          "value": 993609000n,
         },
       },
     ],
@@ -199,7 +199,7 @@ exports[`contract should create vote: invalid vote 1`] = `
           "from": "@signer",
           "to": "@treasure(unknown)",
           "type": "internal",
-          "value": 993709000n,
+          "value": 993609000n,
         },
       },
     ],
@@ -228,7 +228,7 @@ exports[`contract should create vote: vote 1`] = `
       },
       {
         "$type": "processed",
-        "gasUsed": 14272n,
+        "gasUsed": 14372n,
       },
       {
         "$type": "sent",
@@ -255,7 +255,7 @@ exports[`contract should create vote: vote 1`] = `
             "from": "@signer",
             "to": "@treasure(owner1)",
             "type": "internal",
-            "value": 984492000n,
+            "value": 984392000n,
           },
         ],
       },
@@ -285,7 +285,7 @@ exports[`contract should create vote: vote 2`] = `
       },
       {
         "$type": "processed",
-        "gasUsed": 19630n,
+        "gasUsed": 19730n,
       },
       {
         "$type": "sent",
@@ -312,7 +312,7 @@ exports[`contract should create vote: vote 2`] = `
             "from": "@signer",
             "to": "@treasure(owner2)",
             "type": "internal",
-            "value": 979134000n,
+            "value": 979034000n,
           },
         ],
       },
@@ -344,7 +344,7 @@ exports[`contract should create vote: vote 2`] = `
             "from": "@signer",
             "to": "@treasure(safe)",
             "type": "internal",
-            "value": 987541000n,
+            "value": 987441000n,
           },
         ],
       },
@@ -392,6 +392,312 @@ exports[`contract should deploy correctly 1`] = `
             "to": "@treasure(owner)",
             "type": "internal",
             "value": 990866000n,
+          },
+        ],
+      },
+    ],
+  },
+]
+`;
+
+exports[`contract should fail vote: after completed 1`] = `
+[
+  {
+    "$seq": 5,
+    "events": [
+      {
+        "$type": "received",
+        "message": {
+          "body": {
+            "text": "NO",
+            "type": "text",
+          },
+          "bounce": true,
+          "from": "@treasure(owner3)",
+          "to": "@signer",
+          "type": "internal",
+          "value": 1000000000n,
+        },
+      },
+      {
+        "$type": "failed",
+        "errorCode": 40810,
+        "errorMessage": "Completed",
+      },
+      {
+        "$type": "sent-bounced",
+        "message": {
+          "body": {
+            "cell": "x{FFFFFFFF000000004E4F}",
+            "type": "cell",
+          },
+          "bounce": false,
+          "from": "@signer",
+          "to": "@treasure(owner3)",
+          "type": "internal",
+          "value": 994076000n,
+        },
+      },
+    ],
+  },
+]
+`;
+
+exports[`contract should fail vote: deploy 1`] = `
+[
+  {
+    "$seq": 0,
+    "events": [
+      {
+        "$type": "deploy",
+      },
+      {
+        "$type": "received",
+        "message": {
+          "body": {
+            "cell": "x{561376150000000000000000}",
+            "type": "cell",
+          },
+          "bounce": true,
+          "from": "@treasure(safe)",
+          "to": "@signer",
+          "type": "internal",
+          "value": 1000000000n,
+        },
+      },
+      {
+        "$type": "processed",
+        "gasUsed": 6235n,
+      },
+    ],
+  },
+]
+`;
+
+exports[`contract should fail vote: double vote 1`] = `
+[
+  {
+    "$seq": 2,
+    "events": [
+      {
+        "$type": "received",
+        "message": {
+          "body": {
+            "text": "NO",
+            "type": "text",
+          },
+          "bounce": true,
+          "from": "@treasure(owner1)",
+          "to": "@signer",
+          "type": "internal",
+          "value": 1000000000n,
+        },
+      },
+      {
+        "$type": "failed",
+        "errorCode": 3094,
+        "errorMessage": "Already signed or not an owner",
+      },
+      {
+        "$type": "sent-bounced",
+        "message": {
+          "body": {
+            "cell": "x{FFFFFFFF000000004E4F}",
+            "type": "cell",
+          },
+          "bounce": false,
+          "from": "@signer",
+          "to": "@treasure(owner1)",
+          "type": "internal",
+          "value": 993506000n,
+        },
+      },
+    ],
+  },
+]
+`;
+
+exports[`contract should fail vote: invalid vote 1`] = `
+[
+  {
+    "$seq": 3,
+    "events": [
+      {
+        "$type": "received",
+        "message": {
+          "body": {
+            "text": "NO",
+            "type": "text",
+          },
+          "bounce": true,
+          "from": "@treasure(unknown)",
+          "to": "@signer",
+          "type": "internal",
+          "value": 1000000000n,
+        },
+      },
+      {
+        "$type": "failed",
+        "errorCode": 3094,
+        "errorMessage": "Already signed or not an owner",
+      },
+      {
+        "$type": "sent-bounced",
+        "message": {
+          "body": {
+            "cell": "x{FFFFFFFF000000004E4F}",
+            "type": "cell",
+          },
+          "bounce": false,
+          "from": "@signer",
+          "to": "@treasure(unknown)",
+          "type": "internal",
+          "value": 993506000n,
+        },
+      },
+    ],
+  },
+]
+`;
+
+exports[`contract should fail vote: vote 1`] = `
+[
+  {
+    "$seq": 1,
+    "events": [
+      {
+        "$type": "received",
+        "message": {
+          "body": {
+            "text": "NO",
+            "type": "text",
+          },
+          "bounce": true,
+          "from": "@treasure(owner1)",
+          "to": "@signer",
+          "type": "internal",
+          "value": 1000000000n,
+        },
+      },
+      {
+        "$type": "processed",
+        "gasUsed": 14511n,
+      },
+      {
+        "$type": "sent",
+        "messages": [
+          {
+            "body": {
+              "cell": "x{9DC5D639400AB084690786D4F70011428E4B6BC532BFB47076AC4855DC7DA8144B22F85364F}",
+              "type": "cell",
+            },
+            "to": null,
+            "type": "external-out",
+          },
+        ],
+      },
+      {
+        "$type": "sent",
+        "messages": [
+          {
+            "body": {
+              "text": "Vote accepted",
+              "type": "text",
+            },
+            "bounce": false,
+            "from": "@signer",
+            "to": "@treasure(owner1)",
+            "type": "internal",
+            "value": 984253000n,
+          },
+        ],
+      },
+    ],
+  },
+]
+`;
+
+exports[`contract should fail vote: vote 2`] = `
+[
+  {
+    "$seq": 4,
+    "events": [
+      {
+        "$type": "received",
+        "message": {
+          "body": {
+            "text": "NO",
+            "type": "text",
+          },
+          "bounce": true,
+          "from": "@treasure(owner2)",
+          "to": "@signer",
+          "type": "internal",
+          "value": 1000000000n,
+        },
+      },
+      {
+        "$type": "processed",
+        "gasUsed": 19769n,
+      },
+      {
+        "$type": "sent",
+        "messages": [
+          {
+            "body": {
+              "cell": "x{9DC5D6394000221528D67B5DFE51431A4453FDEA766A6642F184A3A3C5C6F16CC89465AB1EC}",
+              "type": "cell",
+            },
+            "to": null,
+            "type": "external-out",
+          },
+        ],
+      },
+      {
+        "$type": "sent",
+        "messages": [
+          {
+            "body": {
+              "text": "Vote accepted",
+              "type": "text",
+            },
+            "bounce": false,
+            "from": "@signer",
+            "to": "@treasure(owner2)",
+            "type": "internal",
+            "value": 978995000n,
+          },
+        ],
+      },
+      {
+        "$type": "sent",
+        "messages": [
+          {
+            "body": {
+              "cell": "x{E7E1407C4_}",
+              "type": "cell",
+            },
+            "to": null,
+            "type": "external-out",
+          },
+        ],
+      },
+      {
+        "$type": "sent",
+        "messages": [
+          {
+            "body": {
+              "cell": "x{9895F337800AB60B6F3F99430109C97E1BE903020AA7211D122BF269A5ECE534A6217AE119500000003000000020000000000002AF8004_}
+ x{817002_}
+  x{BFC110A946B3DAEFF28A18D2229FEF53B35332178C251D1E2E378B6644A32D58F66_}
+  x{BFD58423483C36A7B8008A14725B5E2995FDA383B56242AEE3ED40A25917C29B27E_}",
+              "type": "cell",
+            },
+            "bounce": false,
+            "from": "@signer",
+            "to": "@treasure(safe)",
+            "type": "internal",
+            "value": 987441000n,
           },
         ],
       },

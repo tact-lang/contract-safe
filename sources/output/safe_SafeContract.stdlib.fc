@@ -115,9 +115,13 @@ cell __tact_dict_get_code(cell dict, int id) inline {
     return data;
 }
 
+forall X0 -> tuple __tact_tuple_create_1((X0) v) asm "1 TUPLE";
+
 forall X0, X1 -> tuple __tact_tuple_create_2((X0, X1) v) asm "2 TUPLE";
 
-forall X0, X1 -> (X0, X1) __tact_tuple_destroy_2(tuple v) asm "2 UNTUPLE";
+forall X0, X1, X2 -> tuple __tact_tuple_create_3((X0, X1, X2) v) asm "3 TUPLE";
+
+forall X0, X1, X2 -> (X0, X1, X2) __tact_tuple_destroy_3(tuple v) asm "3 UNTUPLE";
 
 forall X0, X1, X2, X3, X4 -> tuple __tact_tuple_create_5((X0, X1, X2, X3, X4) v) asm "5 TUPLE";
 

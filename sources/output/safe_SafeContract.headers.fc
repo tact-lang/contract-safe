@@ -64,10 +64,10 @@ builder $DeployOk$_store(builder build_0, (int) v) inline;
 cell $DeployOk$_store_cell((int) v) inline;
 
 ;; $SafeParameters$_store
-builder $SafeParameters$_store(builder build_0, (int, int) v) inline;
+builder $SafeParameters$_store(builder build_0, (int, int, int) v) inline;
 
 ;; $SafeParameters$_load
-(slice, ((int, int))) $SafeParameters$_load(slice sc_0) inline;
+(slice, ((int, int, int))) $SafeParameters$_load(slice sc_0) inline;
 
 ;; $SafeOperations$_store
 builder $SafeOperations$_store(builder build_0, (cell, int) v) inline;
@@ -79,19 +79,37 @@ builder $SafeOperations$_store(builder build_0, (cell, int) v) inline;
 (slice, ((slice, int, int, int, cell))) $SafeOperationTransfer$_load(slice sc_0) inline;
 
 ;; $SafeOperationUpdateParameters$_load
-(slice, (((int, int)))) $SafeOperationUpdateParameters$_load(slice sc_0) inline;
+(slice, (((int, int, int)))) $SafeOperationUpdateParameters$_load(slice sc_0) inline;
+
+;; $SafeOperationAdd$_load
+(slice, ((slice))) $SafeOperationAdd$_load(slice sc_0) inline;
+
+;; $SafeOperationRemove$_load
+(slice, ((slice))) $SafeOperationRemove$_load(slice sc_0) inline;
+
+;; $SafeOperationReplace$_load
+(slice, ((slice, slice))) $SafeOperationReplace$_load(slice sc_0) inline;
 
 ;; $SafeOperationTransfer$_as_optional
 tuple $SafeOperationTransfer$_as_optional((slice, int, int, int, cell) v) inline;
 
 ;; $SafeOperationUpdateParameters$_as_optional
-tuple $SafeOperationUpdateParameters$_as_optional(((int, int)) v) inline;
+tuple $SafeOperationUpdateParameters$_as_optional(((int, int, int)) v) inline;
+
+;; $SafeOperationAdd$_as_optional
+tuple $SafeOperationAdd$_as_optional((slice) v) inline;
+
+;; $SafeOperationRemove$_as_optional
+tuple $SafeOperationRemove$_as_optional((slice) v) inline;
+
+;; $SafeOperationReplace$_as_optional
+tuple $SafeOperationReplace$_as_optional((slice, slice) v) inline;
 
 ;; $SafeOperation$_load
-(slice, ((tuple, tuple))) $SafeOperation$_load(slice sc_0) inline;
+(slice, ((tuple, tuple, tuple, tuple, tuple))) $SafeOperation$_load(slice sc_0) inline;
 
 ;; $SafeOperation$_as_optional
-tuple $SafeOperation$_as_optional((tuple, tuple) v) inline;
+tuple $SafeOperation$_as_optional((tuple, tuple, tuple, tuple, tuple) v) inline;
 
 ;; $SafeOperation$_load_opt
 tuple $SafeOperation$_load_opt(cell cl) inline;
@@ -121,25 +139,25 @@ builder $VoteDeploy$_store(builder build_0, (int) v) inline;
 cell $VoteDeploy$_store_cell((int) v) inline;
 
 ;; $SafeContract$_store
-builder $SafeContract$_store(builder build_0, (int, cell, int, int, (int, int)) v) inline;
+builder $SafeContract$_store(builder build_0, (int, cell, int, int, (int, int, int)) v) inline;
 
 ;; $SafeContract$_load
-(slice, ((int, cell, int, int, (int, int)))) $SafeContract$_load(slice sc_0) inline;
+(slice, ((int, cell, int, int, (int, int, int)))) $SafeContract$_load(slice sc_0) inline;
 
 ;; $SafeParameters$_to_external
-(int, int) $SafeParameters$_to_external(((int, int)) v) inline;
+(int, int, int) $SafeParameters$_to_external(((int, int, int)) v) inline;
 
 ;; $SafeOperation$_not_null
-((tuple, tuple)) $SafeOperation$_not_null(tuple v) inline;
+((tuple, tuple, tuple, tuple, tuple)) $SafeOperation$_not_null(tuple v) inline;
 
 ;; $SafeOperationTransfer$_not_null
 ((slice, int, int, int, cell)) $SafeOperationTransfer$_not_null(tuple v) inline;
 
 ;; $SafeOperationUpdateParameters$_get_parameters
-_ $SafeOperationUpdateParameters$_get_parameters(((int, int)) v) inline;
+_ $SafeOperationUpdateParameters$_get_parameters(((int, int, int)) v) inline;
 
 ;; $SafeOperationUpdateParameters$_not_null
-(((int, int))) $SafeOperationUpdateParameters$_not_null(tuple v) inline;
+(((int, int, int))) $SafeOperationUpdateParameters$_not_null(tuple v) inline;
 
 ;; $SafeContract$init$_load
 (slice, ((slice, int))) $SafeContract$init$_load(slice sc_0) inline;
@@ -147,17 +165,17 @@ _ $SafeOperationUpdateParameters$_get_parameters(((int, int)) v) inline;
 ;; $VoteContract$init$_store
 builder $VoteContract$init$_store(builder build_0, ((slice, cell, int, int, int, (cell, int))) v) inline;
 
-;; $SafeParameters$_constructor_timeout_requestPrice
-((int, int)) $SafeParameters$_constructor_timeout_requestPrice(int timeout, int requestPrice) inline;
+;; $SafeParameters$_constructor_timeout_requestPrice_timelock
+((int, int, int)) $SafeParameters$_constructor_timeout_requestPrice_timelock(int timeout, int requestPrice, int timelock) inline;
 
 ;; $SafeContract$_contract_init
-(int, cell, int, int, (int, int)) $SafeContract$_contract_init(slice $owner, int $id) impure inline_ref;
+(int, cell, int, int, (int, int, int)) $SafeContract$_contract_init(slice $owner, int $id) impure inline_ref;
 
 ;; $SafeContract$_contract_load
-(int, cell, int, int, (int, int)) $SafeContract$_contract_load() impure inline_ref;
+(int, cell, int, int, (int, int, int)) $SafeContract$_contract_load() impure inline_ref;
 
 ;; $SafeContract$_contract_store
-() $SafeContract$_contract_store((int, cell, int, int, (int, int)) v) impure inline;
+() $SafeContract$_contract_store((int, cell, int, int, (int, int, int)) v) impure inline;
 
 ;; $global_contractAddress
 slice $global_contractAddress((cell, cell) $s) impure inline;
@@ -175,28 +193,28 @@ slice $global_contractAddress((cell, cell) $s) impure inline;
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_value_to_mode_bounce_body(int value, slice to, int mode, int bounce, cell body) inline;
 
 ;; $SafeContract$_fun_executeTransfer
-((int, cell, int, int, (int, int)), ()) $SafeContract$_fun_executeTransfer((int, cell, int, int, (int, int)) $self, (slice, int, int, int, cell) $op) impure inline_ref;
+((int, cell, int, int, (int, int, int)), ()) $SafeContract$_fun_executeTransfer((int, cell, int, int, (int, int, int)) $self, (slice, int, int, int, cell) $op) impure inline_ref;
 
 ;; $SafeContract$_fun_executeParameters
-((int, cell, int, int, (int, int)), ()) $SafeContract$_fun_executeParameters((int, cell, int, int, (int, int)) $self, ((int, int)) $op) impure inline_ref;
+((int, cell, int, int, (int, int, int)), ()) $SafeContract$_fun_executeParameters((int, cell, int, int, (int, int, int)) $self, ((int, int, int)) $op) impure inline_ref;
 
 ;; $SafeContract$_fun_execute
-((int, cell, int, int, (int, int)), ()) $SafeContract$_fun_execute((int, cell, int, int, (int, int)) $self, (tuple, tuple) $op) impure inline_ref;
+((int, cell, int, int, (int, int, int)), ()) $SafeContract$_fun_execute((int, cell, int, int, (int, int, int)) $self, (tuple, tuple, tuple, tuple, tuple) $op) impure inline_ref;
 
 ;; $SafeContract$_fun_parameters
-((int, cell, int, int, (int, int)), (int, int)) $SafeContract$_fun_parameters((int, cell, int, int, (int, int)) $self) impure inline_ref;
+((int, cell, int, int, (int, int, int)), (int, int, int)) $SafeContract$_fun_parameters((int, cell, int, int, (int, int, int)) $self) impure inline_ref;
 
 ;; $SafeContract$_fun_treshold
-((int, cell, int, int, (int, int)), int) $SafeContract$_fun_treshold((int, cell, int, int, (int, int)) $self) impure inline_ref;
+((int, cell, int, int, (int, int, int)), int) $SafeContract$_fun_treshold((int, cell, int, int, (int, int, int)) $self) impure inline_ref;
 
 ;; $SafeContract$_fun_seqno
-((int, cell, int, int, (int, int)), int) $SafeContract$_fun_seqno((int, cell, int, int, (int, int)) $self) impure inline_ref;
+((int, cell, int, int, (int, int, int)), int) $SafeContract$_fun_seqno((int, cell, int, int, (int, int, int)) $self) impure inline_ref;
 
 ;; $SafeContract$_fun_isOwner
-((int, cell, int, int, (int, int)), int) $SafeContract$_fun_isOwner((int, cell, int, int, (int, int)) $self, slice $address) impure inline_ref;
+((int, cell, int, int, (int, int, int)), int) $SafeContract$_fun_isOwner((int, cell, int, int, (int, int, int)) $self, slice $address) impure inline_ref;
 
 ;; $SafeContract$_fun_owners
-((int, cell, int, int, (int, int)), cell) $SafeContract$_fun_owners((int, cell, int, int, (int, int)) $self) impure inline_ref;
+((int, cell, int, int, (int, int, int)), cell) $SafeContract$_fun_owners((int, cell, int, int, (int, int, int)) $self) impure inline_ref;
 
 ;; $VoteContract$_init_child
 (cell, cell) $VoteContract$_init_child(cell sys', (slice, cell, int, int, int, (cell, int)) $args) inline_ref;

@@ -43,10 +43,11 @@ PROGRAM{
   DECLPROC $VoteContract$_fun_votedYes
   DECLPROC $VoteContract$_fun_votedNo
   DECLPROC $VoteContract$_fun_remaining
-  DECLPROC $VoteContract$_receive_binary_VoteDeploy
-  DECLPROC $VoteContract$_receive_text_22aee6d0a6dc146577277dd58d06ae3090a3cdd3d8a88561184208ae5f6eb039
-  DECLPROC $VoteContract$_receive_text_d2b49fc8a4b6f1b29ab560efb4cd746561d04ee83824fc2d9a475349b1a3aefd
-  DECLPROC $VoteContract$_receive_text_43156e03a0f86c1864e9a07c66091e6b90ee194be48b1606262f7eb1bb7e912b
+  DECLPROC $VoteContract$_internal_binary_VoteDeploy
+  DECLPROC $VoteContract$_internal_text_22aee6d0a6dc146577277dd58d06ae3090a3cdd3d8a88561184208ae5f6eb039
+  DECLPROC $VoteContract$_internal_text_d2b49fc8a4b6f1b29ab560efb4cd746561d04ee83824fc2d9a475349b1a3aefd
+  DECLPROC $VoteContract$_internal_text_43156e03a0f86c1864e9a07c66091e6b90ee194be48b1606262f7eb1bb7e912b
+  DECLPROC $VoteContract$_external_text_c3c1f3e19ef67964f6f1da1ad85bd08b35f8b02ffb881418fb6c1fb3b468d462
   83271 DECLMETHOD %args
   79554 DECLMETHOD %completed
   104917 DECLMETHOD %votedYes
@@ -55,8 +56,10 @@ PROGRAM{
   113617 DECLMETHOD supported_interfaces
   121275 DECLMETHOD get_abi_ipfs
   115390 DECLMETHOD lazy_deployment_completed
-  DECLPROC $VoteContract$_contract_router
+  DECLPROC $VoteContract$_contract_router_internal
+  DECLPROC $VoteContract$_contract_router_external
   DECLPROC recv_internal
+  DECLPROC recv_external
   DECLGLOBVAR __tact_context
   DECLGLOBVAR __tact_context_sender
   DECLGLOBVAR __tact_context_sys
@@ -204,7 +207,7 @@ PROGRAM{
     s2 s3 XCHG
   }>
   $VoteSuccess$_store PROCINLINE:<{
-    3455329328 PUSHINT
+    2590601485 PUSHINT
     s0 s8 XCHG2
     32 STU
     s0 s7 XCHG
@@ -217,7 +220,7 @@ PROGRAM{
     ENDC
   }>
   $VoteFailure$_store PROCINLINE:<{
-    2559963959 PUSHINT
+    415108203 PUSHINT
     s0 s8 XCHG2
     32 STU
     s0 s7 XCHG
@@ -570,20 +573,20 @@ PROGRAM{
   $VoteContract$_fun_remaining PROCREF:<{
     s10 PUSH
   }>
-  $VoteContract$_receive_binary_VoteDeploy PROCINLINE:<{
+  $VoteContract$_internal_binary_VoteDeploy PROCINLINE:<{
     DROP
   }>
-  $VoteContract$_receive_text_22aee6d0a6dc146577277dd58d06ae3090a3cdd3d8a88561184208ae5f6eb039 PROCINLINE:<{
+  $VoteContract$_internal_text_22aee6d0a6dc146577277dd58d06ae3090a3cdd3d8a88561184208ae5f6eb039 PROCINLINE:<{
     __tact_context_get_sender INLINECALLDICT
     TRUE
     $VoteContract$_fun_doVote INLINECALLDICT
   }>
-  $VoteContract$_receive_text_d2b49fc8a4b6f1b29ab560efb4cd746561d04ee83824fc2d9a475349b1a3aefd PROCINLINE:<{
+  $VoteContract$_internal_text_d2b49fc8a4b6f1b29ab560efb4cd746561d04ee83824fc2d9a475349b1a3aefd PROCINLINE:<{
     __tact_context_get_sender INLINECALLDICT
     FALSE
     $VoteContract$_fun_doVote INLINECALLDICT
   }>
-  $VoteContract$_receive_text_43156e03a0f86c1864e9a07c66091e6b90ee194be48b1606262f7eb1bb7e912b PROCINLINE:<{
+  $VoteContract$_internal_text_43156e03a0f86c1864e9a07c66091e6b90ee194be48b1606262f7eb1bb7e912b PROCINLINE:<{
     __tact_context_get_sender INLINECALLDICT
     17702 PUSHINT
     s7 PUSH
@@ -604,6 +607,35 @@ PROGRAM{
     s3 s5 XCHG
     $SendParameters$_constructor_value_to_mode_bounce_body INLINECALLDICT
     $global_send INLINECALLDICT
+    FALSE
+    $EventVoteCompleted$_constructor_success INLINECALLDICT
+    $EventVoteCompleted$_store_cell INLINECALLDICT
+    $global_emit INLINECALLDICT
+    0 PUSHINT
+    130 PUSHINT
+    FALSE
+    s12 s11 s10 PUSH3
+    s12 s11 s10 PUSH3
+    s12 PUSH
+    $VoteFailure$_constructor_args INLINECALLDICT
+    $VoteFailure$_store_cell INLINECALLDICT
+    s13 PUSH
+    3 -ROLL
+    $SendParameters$_constructor_value_to_mode_bounce_body INLINECALLDICT
+    $global_send INLINECALLDICT
+  }>
+  $VoteContract$_external_text_c3c1f3e19ef67964f6f1da1ad85bd08b35f8b02ffb881418fb6c1fb3b468d462 PROCINLINE:<{
+    17702 PUSHINT
+    s6 PUSH
+    NOW
+    LESS
+    THROWANYIFNOT
+    40810 PUSHINT
+    SWAP
+    NOT
+    THROWANYIFNOT
+    ACCEPT
+    TRUE
     FALSE
     $EventVoteCompleted$_constructor_success INLINECALLDICT
     $EventVoteCompleted$_store_cell INLINECALLDICT
@@ -654,7 +686,7 @@ PROGRAM{
     289074767680806556846472852687671582181 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d584447704a33426a4d5534394455716a564b7946337273334244564756473855446f4677313672774e624a38} PUSHSLICE
+    x{697066733a2f2f516d64724d6f474663314a6a4875546867697a70505972416d4675784a5378386675446e634554646b4d61315862} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -662,7 +694,7 @@ PROGRAM{
     1 LDI
     SWAP
   }>
-  $VoteContract$_contract_router PROCREF:<{
+  $VoteContract$_contract_router_internal PROCREF:<{
     c2 SAVE
     SAMEALTSAVE
     0 PUSHINT
@@ -686,7 +718,7 @@ PROGRAM{
       NIP
       $VoteDeploy$_load INLINECALLDICT
       NIP
-      $VoteContract$_receive_binary_VoteDeploy INLINECALLDICT
+      $VoteContract$_internal_binary_VoteDeploy INLINECALLDICT
       TRUE
     }>
     SWAP
@@ -698,7 +730,7 @@ PROGRAM{
       EQUAL
       IFJMP:<{
         DROP
-        $VoteContract$_receive_text_22aee6d0a6dc146577277dd58d06ae3090a3cdd3d8a88561184208ae5f6eb039 INLINECALLDICT
+        $VoteContract$_internal_text_22aee6d0a6dc146577277dd58d06ae3090a3cdd3d8a88561184208ae5f6eb039 INLINECALLDICT
         TRUE
         RETALT
       }>
@@ -707,14 +739,41 @@ PROGRAM{
       EQUAL
       IFJMP:<{
         DROP
-        $VoteContract$_receive_text_d2b49fc8a4b6f1b29ab560efb4cd746561d04ee83824fc2d9a475349b1a3aefd INLINECALLDICT
+        $VoteContract$_internal_text_d2b49fc8a4b6f1b29ab560efb4cd746561d04ee83824fc2d9a475349b1a3aefd INLINECALLDICT
         TRUE
         RETALT
       }>
       30342823933369342707359161330529694986825731392577937704917065674025909260587 PUSHINT
       EQUAL
       IFJMP:<{
-        $VoteContract$_receive_text_43156e03a0f86c1864e9a07c66091e6b90ee194be48b1606262f7eb1bb7e912b INLINECALLDICT
+        $VoteContract$_internal_text_43156e03a0f86c1864e9a07c66091e6b90ee194be48b1606262f7eb1bb7e912b INLINECALLDICT
+        TRUE
+        RETALT
+      }>
+    }>ELSE<{
+      DROP
+    }>
+    FALSE
+  }>
+  $VoteContract$_contract_router_external PROCREF:<{
+    c2 SAVE
+    SAMEALTSAVE
+    0 PUSHINT
+    OVER
+    SBITS
+    31 GTINT
+    IF:<{
+      DROP
+      DUP
+      32 PLDU
+    }>
+    0 EQINT
+    IF:<{
+      HASHSU
+      88543690164330179811477973912487838692102358940333217862290846308145337783394 PUSHINT
+      EQUAL
+      IFJMP:<{
+        $VoteContract$_external_text_c3c1f3e19ef67964f6f1da1ad85bd08b35f8b02ffb881418fb6c1fb3b468d462 INLINECALLDICT
         TRUE
         RETALT
       }>
@@ -743,7 +802,14 @@ PROGRAM{
     __tact_context_sender SETGLOB
     $VoteContract$_contract_load INLINECALLDICT
     2 11 BLKSWAP
-    $VoteContract$_contract_router INLINECALLDICT
+    $VoteContract$_contract_router_internal INLINECALLDICT
+    DROP
+    $VoteContract$_contract_store INLINECALLDICT
+  }>
+  recv_external PROC:<{
+    $VoteContract$_contract_load INLINECALLDICT
+    11 ROLL
+    $VoteContract$_contract_router_external INLINECALLDICT
     DROP
     $VoteContract$_contract_store INLINECALLDICT
   }>

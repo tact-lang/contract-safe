@@ -9,7 +9,7 @@
 
 ;;
 ;; Type: SafeOperations
-;; TLB: _ ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}}> count:uint8 = SafeOperations
+;; TLB: _ ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}> count:uint8 = SafeOperations
 ;;
 
 builder $SafeOperations$_store(builder build_0, (cell, int) v) inline {
@@ -75,7 +75,7 @@ cell $EventVoteCompleted$_store_cell((int) v) inline {
 
 ;;
 ;; Type: VoteArgs
-;; TLB: _ safe:address owners:dict<address, bool> ownersCount:uint32 treshold:uint32 timeout:uint64 ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}}>,count:uint8} = VoteArgs
+;; TLB: _ safe:address owners:dict<address, bool> ownersCount:uint32 treshold:uint32 timeout:uint64 ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}>,count:uint8} = VoteArgs
 ;;
 
 builder $VoteArgs$_store(builder build_0, (slice, cell, int, int, int, (cell, int)) v) inline_ref {
@@ -106,13 +106,13 @@ builder $VoteArgs$_store(builder build_0, (slice, cell, int, int, int, (cell, in
 
 ;;
 ;; Type: VoteSuccess
-;; Header: 0xcdf42430
-;; TLB: vote_success#cdf42430 args:VoteArgs{safe:address,owners:dict<address, bool>,ownersCount:uint32,treshold:uint32,timeout:uint64,ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}}>,count:uint8}} = VoteSuccess
+;; Header: 0x9a69710d
+;; TLB: vote_success#9a69710d args:VoteArgs{safe:address,owners:dict<address, bool>,ownersCount:uint32,treshold:uint32,timeout:uint64,ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}>,count:uint8}} = VoteSuccess
 ;;
 
 builder $VoteSuccess$_store(builder build_0, ((slice, cell, int, int, int, (cell, int))) v) inline {
     var ((v'args'safe, v'args'owners, v'args'ownersCount, v'args'treshold, v'args'timeout, (v'args'ops'ops, v'args'ops'count))) = v;
-    build_0 = store_uint(build_0, 3455329328, 32);
+    build_0 = store_uint(build_0, 2590601485, 32);
     build_0 = $VoteArgs$_store(build_0, (v'args'safe, v'args'owners, v'args'ownersCount, v'args'treshold, v'args'timeout, (v'args'ops'ops, v'args'ops'count)));
     return build_0;
 }
@@ -127,13 +127,13 @@ cell $VoteSuccess$_store_cell(((slice, cell, int, int, int, (cell, int))) v) inl
 
 ;;
 ;; Type: VoteFailure
-;; Header: 0x9895f337
-;; TLB: vote_failure#9895f337 args:VoteArgs{safe:address,owners:dict<address, bool>,ownersCount:uint32,treshold:uint32,timeout:uint64,ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins}}}>,count:uint8}} = VoteFailure
+;; Header: 0x18be0c6b
+;; TLB: vote_failure#18be0c6b args:VoteArgs{safe:address,owners:dict<address, bool>,ownersCount:uint32,treshold:uint32,timeout:uint64,ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}>,count:uint8}} = VoteFailure
 ;;
 
 builder $VoteFailure$_store(builder build_0, ((slice, cell, int, int, int, (cell, int))) v) inline {
     var ((v'args'safe, v'args'owners, v'args'ownersCount, v'args'treshold, v'args'timeout, (v'args'ops'ops, v'args'ops'count))) = v;
-    build_0 = store_uint(build_0, 2559963959, 32);
+    build_0 = store_uint(build_0, 415108203, 32);
     build_0 = $VoteArgs$_store(build_0, (v'args'safe, v'args'owners, v'args'ownersCount, v'args'treshold, v'args'timeout, (v'args'ops'ops, v'args'ops'count)));
     return build_0;
 }

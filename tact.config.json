@@ -5,7 +5,8 @@
             "path": "./sources/contract.tact",
             "output": "./sources/output",
             "options": {
-                "masterchain": true
+                "masterchain": true,
+                "external": true
             }
         }
     ]
