@@ -43,7 +43,7 @@ PROGRAM{
   DECLPROC $SafeDeployerContract$_fun_requireOwner
   DECLPROC $SafeDeployerContract$_fun_owner
   DECLPROC $SafeContract$_init_child
-  DECLPROC $SendParameters$_constructor_to_value_body
+  DECLPROC $SendParameters$_constructor_to_value_code_data_body
   DECLPROC $SafeDeployment$_constructor_remaining
   DECLPROC $EventSafeDeployed$_constructor_by_address
   DECLPROC $SendParameters$_constructor_to_value_mode
@@ -442,6 +442,27 @@ PROGRAM{
     }>ELSE<{
       s2 POP
     }>
+    __tact_context_get INLINECALLDICT
+    s1 s3 XCHG
+    3 BLKDROP
+    __tact_my_balance INLINECALLDICT
+    SWAP
+    SUB
+    100000000 PUSHINT
+    LESS
+    IFJMP:<{
+      100000000 PUSHINT
+      0 PUSHINT
+      RAWRESERVE
+      s2 s4 XCHG
+      0 PUSHINT
+      s0 s3 XCHG
+      s0 s4 XCHG
+      130 PUSHINT
+      s2 s3 XCHG2
+      $SendParameters$_constructor_bounce_to_value_mode_body_code_data INLINECALLDICT
+      $global_send INLINECALLDICT
+    }>
     s2 s4 XCHG
     0 PUSHINT
     s0 s3 XCHG
@@ -508,13 +529,13 @@ PROGRAM{
     $SafeContract$init$_store INLINECALLDICT
     ENDC
   }>
-  $SendParameters$_constructor_to_value_body PROCINLINE:<{
+  $SendParameters$_constructor_to_value_code_data_body PROCINLINE:<{
     TRUE
+    s0 s5 XCHG
+    s0 s4 XCHG
     s0 s3 XCHG
     0 PUSHINT
-    s3 s0 s3 XCHG3
-    PUSHNULL
-    PUSHNULL
+    s0 s3 XCHG
   }>
   $SafeDeployment$_constructor_remaining PROCINLINE:<{
   }>
@@ -547,12 +568,16 @@ PROGRAM{
     __tact_context_sys GETGLOB
     s0 s2 s3 XCPUXC
     $SafeContract$_init_child INLINECALLDICT
+    2DUP
     $global_contractAddress INLINECALLDICT
-    s5 PUSH
+    s7 PUSH
     $SafeDeployment$_constructor_remaining INLINECALLDICT
     $SafeDeployment$_store_cell INLINECALLDICT
-    s1 s4 s(-2) PU2XC
-    $SendParameters$_constructor_to_value_body INLINECALLDICT
+    s1 s0 s2 PUXC2
+    s7 PUSH
+    s0 s3 XCHG
+    s5 s1 s5 XCHG3
+    $SendParameters$_constructor_to_value_code_data_body INLINECALLDICT
     $global_send INLINECALLDICT
     $EventSafeDeployed$_constructor_by_address INLINECALLDICT
     $EventSafeDeployed$_store_cell INLINECALLDICT
@@ -599,7 +624,7 @@ PROGRAM{
     86142586315491086060343270784266291122 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d65626e41547669776d6a5a7a6131515050373672334536374a52644c5a4d3936337354565063616565516a33} PUSHSLICE
+    x{697066733a2f2f516d594178783552446954327a673433477064337942526855424261555276396439366d46554a6d454252794455} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH

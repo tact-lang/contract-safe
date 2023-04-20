@@ -69,7 +69,8 @@ contract SafeContract with Deployable {
                 let params: SafeParameters = (op.parameters!!).parameters;
                 require(params.requestPrice <= ton("10"), "Request price must be less or equals than 10 TON");
                 require(params.requestPrice >= ton("1"), "Request price must be more or equals than 1 TON");
-                require(params.timeout < 60 * 60 * 24 * 365, "Timeout must be less than a year");
+                require(params.timeout <= 60 * 60 * 24 * 365, "Timeout must be less than a year");
+                require(params.timeout >= 60 * 60, "Timeout must be more than an hour");
                 notNullOperations = notNullOperations + 1;
             }
             require(notNullOperations != 1, "Exactly one operation must be specified");

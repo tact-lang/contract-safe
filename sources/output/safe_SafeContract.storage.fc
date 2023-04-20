@@ -94,7 +94,7 @@ builder $SafeParameters$_store(builder build_0, (int, int, int) v) inline {
 
 ;;
 ;; Type: SafeOperations
-;; TLB: _ ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}> count:uint8 = SafeOperations
+;; TLB: _ ops:dict<uint8, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}> count:uint8 = SafeOperations
 ;;
 
 builder $SafeOperations$_store(builder build_0, (cell, int) v) inline {
@@ -261,19 +261,19 @@ tuple $SafeOperation$_load_opt(cell cl) inline {
 
 ;;
 ;; Type: SafeRequestOperation
-;; Header: 0x348b938f
-;; TLB: safe_request_operation#348b938f ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}>,count:uint8} = SafeRequestOperation
+;; Header: 0xa46a3a3d
+;; TLB: safe_request_operation#a46a3a3d ops:SafeOperations{ops:dict<uint8, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}>,count:uint8} = SafeRequestOperation
 ;;
 
 (slice, (((cell, int)))) $SafeRequestOperation$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 881562511);
+    throw_unless(129, sc_0~load_uint(32) == 2758425149);
     var v'ops = sc_0~$SafeOperations$_load();
     return (sc_0, (v'ops));
 }
 
 ;;
 ;; Type: VoteArgs
-;; TLB: _ safe:address owners:dict<address, bool> ownersCount:uint32 treshold:uint32 timeout:uint64 ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}>,count:uint8} = VoteArgs
+;; TLB: _ safe:address owners:dict<address, bool> ownersCount:uint32 treshold:uint32 timeout:uint64 ops:SafeOperations{ops:dict<uint8, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}>,count:uint8} = VoteArgs
 ;;
 
 builder $VoteArgs$_store(builder build_0, (slice, cell, int, int, int, (cell, int)) v) inline_ref {
@@ -303,24 +303,24 @@ builder $VoteArgs$_store(builder build_0, (slice, cell, int, int, int, (cell, in
 
 ;;
 ;; Type: VoteSuccess
-;; Header: 0x9a69710d
-;; TLB: vote_success#9a69710d args:VoteArgs{safe:address,owners:dict<address, bool>,ownersCount:uint32,treshold:uint32,timeout:uint64,ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}>,count:uint8}} = VoteSuccess
+;; Header: 0x74a2fc69
+;; TLB: vote_success#74a2fc69 args:VoteArgs{safe:address,owners:dict<address, bool>,ownersCount:uint32,treshold:uint32,timeout:uint64,ops:SafeOperations{ops:dict<uint8, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}>,count:uint8}} = VoteSuccess
 ;;
 
 (slice, (((slice, cell, int, int, int, (cell, int))))) $VoteSuccess$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 2590601485);
+    throw_unless(129, sc_0~load_uint(32) == 1956838505);
     var v'args = sc_0~$VoteArgs$_load();
     return (sc_0, (v'args));
 }
 
 ;;
 ;; Type: VoteFailure
-;; Header: 0x18be0c6b
-;; TLB: vote_failure#18be0c6b args:VoteArgs{safe:address,owners:dict<address, bool>,ownersCount:uint32,treshold:uint32,timeout:uint64,ops:SafeOperations{ops:dict<int, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}>,count:uint8}} = VoteFailure
+;; Header: 0x407aa202
+;; TLB: vote_failure#407aa202 args:VoteArgs{safe:address,owners:dict<address, bool>,ownersCount:uint32,treshold:uint32,timeout:uint64,ops:SafeOperations{ops:dict<uint8, ^SafeOperation{transfer:Maybe SafeOperationTransfer{to:address,value:coins,mode:uint8,bounce:bool,body:Maybe ^cell},parameters:Maybe SafeOperationUpdateParameters{parameters:SafeParameters{timeout:uint32,requestPrice:coins,timelock:uint32}},add:Maybe SafeOperationAdd{owner:address},remove:Maybe SafeOperationRemove{owner:address},replace:Maybe SafeOperationReplace{old:address,new:address}}>,count:uint8}} = VoteFailure
 ;;
 
 (slice, (((slice, cell, int, int, int, (cell, int))))) $VoteFailure$_load(slice sc_0) inline {
-    throw_unless(129, sc_0~load_uint(32) == 415108203);
+    throw_unless(129, sc_0~load_uint(32) == 1081778690);
     var v'args = sc_0~$VoteArgs$_load();
     return (sc_0, (v'args));
 }

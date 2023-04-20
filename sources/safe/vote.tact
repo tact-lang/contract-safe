@@ -23,6 +23,7 @@ message VoteDeploy {
 }
 
 contract VoteContract {
+    override const storageReserve: Int = ton("0.1");
     owners: map<Address, Bool>;
     args: VoteArgs;
     votedYes: Int as uint32;
@@ -67,13 +68,7 @@ contract VoteContract {
         self.completed = true;
 
         // Send cashback
-        send(SendParameters{
-            value: 0, 
-            to: sender, 
-            mode: SendIgnoreErrors + SendRemainingValue,
-            bounce: false, 
-            body: "Recovery completed".asComment()
-        });
+        self.notify("Recovery completed".asComment());
 
         // Emit event
         emit(EventVoteCompleted{ success: false }.toCell());
@@ -128,13 +123,7 @@ contract VoteContract {
         emit(EventVote{ yes: yes, address: address }.toCell());
 
         // Cashback
-        send(SendParameters{
-            value: 0, 
-            to: address, 
-            mode: SendIgnoreErrors + SendRemainingValue,
-            bounce: false, 
-            body: "Vote accepted".asComment()
-        });
+        self.notify("Vote accepted".asComment());
 
         // Complete if treshold reached
         if (self.votedYes >= self.args.treshold) {

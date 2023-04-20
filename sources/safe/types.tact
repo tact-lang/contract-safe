@@ -5,7 +5,7 @@ struct SafeParameters {
 }
 
 struct SafeOperations {
-    ops: map<Int, SafeOperation>;
+    ops: map<Int as uint8, SafeOperation>;
     count: Int as uint8;
 }
 

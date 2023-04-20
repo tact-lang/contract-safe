@@ -18,8 +18,8 @@
     return (bounce, to, value, mode, body, code, data);
 }
 
-((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_body(slice to, int value, cell body) inline {
-    return (true, to, value, 0, body, null(), null());
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_code_data_body(slice to, int value, cell code, cell data, cell body) inline {
+    return (true, to, value, 0, body, code, data);
 }
 
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_mode(slice to, int value, int mode) inline {

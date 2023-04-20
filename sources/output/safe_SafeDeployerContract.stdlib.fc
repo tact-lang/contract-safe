@@ -139,12 +139,12 @@ slice $global_contractAddress((cell, cell) $s) impure inline {
         $code = $init2'code;
         $data = $init2'data;
     }
-    if ((0 > 0)) {
+    if ((100000000 > 0)) {
         var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
         int $balance = __tact_my_balance();
         int $balanceBeforeMessage = ($balance - $ctx'value);
-        if (($balanceBeforeMessage < 0)) {
-            raw_reserve(0, 0);
+        if (($balanceBeforeMessage < 100000000)) {
+            raw_reserve(100000000, 0);
             $global_send($SendParameters$_constructor_bounce_to_value_mode_body_code_data($bounce, $to, 0, (128 + 2), $body, $code, $data));
             return (($self'owner, $self'devFee, $self'deployValue, $self'counter), ());
         }

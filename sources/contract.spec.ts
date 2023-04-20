@@ -7,13 +7,13 @@ import { beginCoverage, completeCoverage } from "@tact-lang/coverage";
 
 describe("contract", () => {
 
-  beforeAll(() => {
-    beginCoverage();
-  });
+  // beforeAll(() => {
+  //   beginCoverage();
+  // });
 
-  afterAll(() => {
-    completeCoverage(__dirname + '/output/*.boc');
-  });
+  // afterAll(() => {
+  //   completeCoverage(__dirname + '/output/*.boc');
+  // });
 
   it("should deploy correctly", async () => {
     let system = await ContractSystem.create();
@@ -44,7 +44,7 @@ describe("contract", () => {
     expect(tracker.collect()).toMatchSnapshot();
 
     // Create request
-    let operations = Dictionary.empty<bigint, SafeOperation>();
+    let operations = Dictionary.empty<number, SafeOperation>();
     await contract.send(owner, { value: toNano(1) }, {
       $$type: 'SafeRequestOperation',
       ops: {
@@ -79,7 +79,7 @@ describe("contract", () => {
       timeout: BigInt(now + 10000),
       ops: {
         $$type: 'SafeOperations',
-        ops: Dictionary.empty<bigint, SafeOperation>(),
+        ops: Dictionary.empty<number, SafeOperation>(),
         count: 0n
       }
     };
@@ -134,7 +134,7 @@ describe("contract", () => {
       timeout: BigInt(now + 10000),
       ops: {
         $$type: 'SafeOperations',
-        ops: Dictionary.empty<bigint, SafeOperation>(),
+        ops: Dictionary.empty<number, SafeOperation>(),
         count: 0n
       }
     };

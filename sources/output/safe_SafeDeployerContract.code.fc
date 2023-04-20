@@ -47,7 +47,7 @@
     $self'counter = ($self'counter + 1);
     var ($init'code, $init'data) = $SafeContract$_init_child(__tact_context_sys, $ctx'sender, $counter);
     slice $safeAddress = $global_contractAddress(($init'code, $init'data));
-    $global_send($SendParameters$_constructor_to_value_body($safeAddress, $self'deployValue, $SafeDeployment$_store_cell($SafeDeployment$_constructor_remaining($self'owner))));
+    $global_send($SendParameters$_constructor_to_value_code_data_body($safeAddress, $self'deployValue, $init'code, $init'data, $SafeDeployment$_store_cell($SafeDeployment$_constructor_remaining($self'owner))));
     $global_emit($EventSafeDeployed$_store_cell($EventSafeDeployed$_constructor_by_address($ctx'sender, $safeAddress)));
     $global_send($SendParameters$_constructor_to_value_mode($self'owner, 0, (64 + 2)));
     return (($self'owner, $self'devFee, $self'deployValue, $self'counter), ());
@@ -97,7 +97,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmebnATviwmjZza1QPP76r3E67JRdLZM963sTVPcaeeQj3";
+    return "ipfs://QmYAxx5RDiT2zg43Gpd3yBRhUBBaURv9d96mFUJmEBRyDU";
 }
 
 _ lazy_deployment_completed() method_id {

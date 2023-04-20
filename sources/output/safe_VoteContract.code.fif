@@ -2,7 +2,9 @@ PROGRAM{
   DECLPROC __tact_verify_address
   DECLPROC __tact_load_address
   DECLPROC __tact_store_address
+  DECLPROC __tact_my_balance
   DECLPROC __tact_not_null
+  DECLPROC __tact_context_get
   DECLPROC __tact_context_get_sender
   DECLPROC __tact_store_bool
   DECLPROC __tact_dict_set_slice_int
@@ -24,6 +26,7 @@ PROGRAM{
   DECLPROC $VoteDeploy$_load
   DECLPROC $VoteContract$_store
   DECLPROC $VoteContract$_load
+  DECLPROC $StateInit$_not_null
   DECLPROC $SafeOperations$_to_tuple
   DECLPROC $VoteArgs$_to_external
   DECLPROC $VoteContract$init$_load
@@ -32,11 +35,14 @@ PROGRAM{
   DECLPROC $VoteContract$_contract_store
   DECLPROC $global_send
   DECLPROC $global_emit
+  DECLPROC $SendParameters$_constructor_bounce_to_value_mode_body_code_data
   DECLPROC $SendParameters$_constructor_value_to_mode_bounce_body
   DECLPROC $EventVote$_constructor_yes_address
   DECLPROC $EventVoteCompleted$_constructor_success
   DECLPROC $VoteSuccess$_constructor_args
   DECLPROC $VoteFailure$_constructor_args
+  DECLPROC $VoteContract$_fun_forward
+  DECLPROC $VoteContract$_fun_notify
   DECLPROC $VoteContract$_fun_doVote
   DECLPROC $VoteContract$_fun_args
   DECLPROC $VoteContract$_fun_completed
@@ -90,10 +96,18 @@ PROGRAM{
     __tact_verify_address INLINECALLDICT
     STSLICER
   }>
+  __tact_my_balance PROCINLINE:<{
+    BALANCE
+    FIRST
+  }>
   __tact_not_null PROCINLINE:<{
     DUP
     ISNULL
     128 THROWIF
+  }>
+  __tact_context_get PROCINLINE:<{
+    __tact_context GETGLOB
+    4 UNTUPLE
   }>
   __tact_context_get_sender PROCINLINE:<{
     __tact_context_sender GETGLOB
@@ -207,7 +221,7 @@ PROGRAM{
     s2 s3 XCHG
   }>
   $VoteSuccess$_store PROCINLINE:<{
-    2590601485 PUSHINT
+    1956838505 PUSHINT
     s0 s8 XCHG2
     32 STU
     s0 s7 XCHG
@@ -220,7 +234,7 @@ PROGRAM{
     ENDC
   }>
   $VoteFailure$_store PROCINLINE:<{
-    415108203 PUSHINT
+    1081778690 PUSHINT
     s0 s8 XCHG2
     32 STU
     s0 s7 XCHG
@@ -279,6 +293,12 @@ PROGRAM{
     s5 s6 XCHG
     s4 s5 XCHG
     s3 s4 XCHG
+  }>
+  $StateInit$_not_null PROCINLINE:<{
+    DUP
+    ISNULL
+    128 THROWIF
+    2 UNTUPLE
   }>
   $SafeOperations$_to_tuple PROCINLINE:<{
     2 TUPLE
@@ -449,6 +469,8 @@ PROGRAM{
     0 PUSHINT
     SENDRAWMSG
   }>
+  $SendParameters$_constructor_bounce_to_value_mode_body_code_data PROCINLINE:<{
+  }>
   $SendParameters$_constructor_value_to_mode_bounce_body PROCINLINE:<{
     s4 s4 s0 XCHG3
     PUSHNULL
@@ -461,6 +483,56 @@ PROGRAM{
   $VoteSuccess$_constructor_args PROCINLINE:<{
   }>
   $VoteFailure$_constructor_args PROCINLINE:<{
+  }>
+  $VoteContract$_fun_forward PROCREF:<{
+    PUSHNULL
+    PUSHNULL
+    s2 PUSH
+    ISNULL
+    NOT
+    IF:<{
+      2DROP
+      $StateInit$_not_null INLINECALLDICT
+      SWAP
+    }>ELSE<{
+      s2 POP
+    }>
+    __tact_context_get INLINECALLDICT
+    s1 s3 XCHG
+    3 BLKDROP
+    __tact_my_balance INLINECALLDICT
+    SWAP
+    SUB
+    100000000 PUSHINT
+    LESS
+    IFJMP:<{
+      100000000 PUSHINT
+      0 PUSHINT
+      RAWRESERVE
+      s2 s4 XCHG
+      0 PUSHINT
+      s0 s3 XCHG
+      s0 s4 XCHG
+      130 PUSHINT
+      s2 s3 XCHG2
+      $SendParameters$_constructor_bounce_to_value_mode_body_code_data INLINECALLDICT
+      $global_send INLINECALLDICT
+    }>
+    s2 s4 XCHG
+    0 PUSHINT
+    s0 s3 XCHG
+    s0 s4 XCHG
+    66 PUSHINT
+    s2 s3 XCHG2
+    $SendParameters$_constructor_bounce_to_value_mode_body_code_data INLINECALLDICT
+    $global_send INLINECALLDICT
+  }>
+  $VoteContract$_fun_notify PROCINLINE:<{
+    __tact_context_get_sender INLINECALLDICT
+    SWAP
+    FALSE
+    PUSHNULL
+    $VoteContract$_fun_forward INLINECALLDICT
   }>
   $VoteContract$_fun_doVote PROCREF:<{
     4755 PUSHINT
@@ -497,18 +569,14 @@ PROGRAM{
       s0 s3 XCHG
       s0 s4 XCHG
     }>
-    s12 s1 XCPU
+    s12 s12 XCHG2
     $EventVote$_constructor_yes_address INLINECALLDICT
     $EventVote$_store_cell INLINECALLDICT
     $global_emit INLINECALLDICT
-    0 PUSHINT
-    66 PUSHINT
-    FALSE
     B{b5ee9c7241010101001300002200000000566f74652061636365707465647bd31171} B>boc PUSHREF
-    s3 s4 XCHG
-    $SendParameters$_constructor_value_to_mode_bounce_body INLINECALLDICT
-    $global_send INLINECALLDICT
-    s10 s6 PUSH2
+    s3 s11 XCHG
+    $VoteContract$_fun_notify INLINECALLDICT
+    s2 s6 PUSH2
     GEQ
     IF:<{
       DROP
@@ -554,7 +622,6 @@ PROGRAM{
       $SendParameters$_constructor_value_to_mode_bounce_body INLINECALLDICT
       $global_send INLINECALLDICT
     }>
-    s2 s10 XCHG
   }>
   $VoteContract$_fun_args PROCREF:<{
     s9 s8 s7 PUSH3
@@ -587,26 +654,18 @@ PROGRAM{
     $VoteContract$_fun_doVote INLINECALLDICT
   }>
   $VoteContract$_internal_text_43156e03a0f86c1864e9a07c66091e6b90ee194be48b1606262f7eb1bb7e912b PROCINLINE:<{
-    __tact_context_get_sender INLINECALLDICT
     17702 PUSHINT
-    s7 PUSH
+    s6 PUSH
     NOW
     LESS
     THROWANYIFNOT
     40810 PUSHINT
-    s0 s2 XCHG
+    SWAP
     NOT
-    s1 s2 XCHG
     THROWANYIFNOT
     TRUE
-    0 PUSHINT
-    66 PUSHINT
-    FALSE
     B{b5ee9c7241010101001800002c000000005265636f7665727920636f6d706c65746564e3e19884} B>boc PUSHREF
-    s3 s4 XCHG
-    s3 s5 XCHG
-    $SendParameters$_constructor_value_to_mode_bounce_body INLINECALLDICT
-    $global_send INLINECALLDICT
+    $VoteContract$_fun_notify INLINECALLDICT
     FALSE
     $EventVoteCompleted$_constructor_success INLINECALLDICT
     $EventVoteCompleted$_store_cell INLINECALLDICT
@@ -686,7 +745,7 @@ PROGRAM{
     289074767680806556846472852687671582181 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d6551783554417a38715a6a78546b7532583748484653744b757339324e4859634b5951385151423962736861} PUSHSLICE
+    x{697066733a2f2f516d566d585a524d554c31784a555542444a4e70556b475a37733634387668326f337759514447324e3472674642} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH

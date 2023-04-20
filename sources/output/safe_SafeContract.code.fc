@@ -91,7 +91,7 @@
     throw_unless(5165, ($ctx'value >= $self'parameters'requestPrice));
     int $i = 0;
     repeat ($request'ops'count) {
-        var ($op'transfer, $op'parameters, $op'add, $op'remove, $op'replace) = $SafeOperation$_not_null($SafeOperation$_load_opt(__tact_dict_get_int_cell($request'ops'ops, 257, $i)));
+        var ($op'transfer, $op'parameters, $op'add, $op'remove, $op'replace) = $SafeOperation$_not_null($SafeOperation$_load_opt(__tact_dict_get_uint_cell($request'ops'ops, 8, $i)));
         int $notNullOperations = 0;
         if ((~ null?($op'transfer))) {
             $notNullOperations = ($notNullOperations + 1);
@@ -100,7 +100,8 @@
             var ($params'timeout, $params'requestPrice, $params'timelock) = $SafeOperationUpdateParameters$_get_parameters($SafeOperationUpdateParameters$_not_null($op'parameters));
             throw_unless(7464, ($params'requestPrice <= 10000000000));
             throw_unless(38009, ($params'requestPrice >= 1000000000));
-            throw_unless(31822, ($params'timeout < (((60 * 60) * 24) * 365)));
+            throw_unless(31822, ($params'timeout <= (((60 * 60) * 24) * 365)));
+            throw_unless(35981, ($params'timeout >= (60 * 60)));
             $notNullOperations = ($notNullOperations + 1);
         }
         throw_unless(44757, ($notNullOperations != 1));
@@ -134,7 +135,7 @@
     throw_unless(45379, ( __tact_slice_eq_bits($address, $ctx'sender) ));
     int $i = 0;
     repeat ($args'ops'count) {
-        var ($op'transfer, $op'parameters, $op'add, $op'remove, $op'replace) = $SafeOperation$_not_null($SafeOperation$_load_opt(__tact_dict_get_int_cell($args'ops'ops, 257, $i)));
+        var ($op'transfer, $op'parameters, $op'add, $op'remove, $op'replace) = $SafeOperation$_not_null($SafeOperation$_load_opt(__tact_dict_get_uint_cell($args'ops'ops, 8, $i)));
         ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock))~$SafeContract$_fun_execute($SafeOperation$_tensor_cast(($op'transfer, $op'parameters, $op'add, $op'remove, $op'replace)));
         $i = ($i + 1);
     }
@@ -193,7 +194,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmPkBpf3oEKCCubroJEZ4vvnZZEKD9XPRSEuAY2BdvdE6q";
+    return "ipfs://QmbS4B8jUZrMsDVkThPNMHFtWdcTKHrpiXrnhNxA6xJi5u";
 }
 
 _ lazy_deployment_completed() method_id {
@@ -225,21 +226,21 @@ _ lazy_deployment_completed() method_id {
     }
     
     ;; Receive SafeRequestOperation message
-    if (op == 881562511) {
+    if (op == 2758425149) {
         var msg = in_msg~$SafeRequestOperation$_load();
         self~$SafeContract$_internal_binary_SafeRequestOperation(msg);
         return (self, true);
     }
     
     ;; Receive VoteFailure message
-    if (op == 415108203) {
+    if (op == 1081778690) {
         var msg = in_msg~$VoteFailure$_load();
         self~$SafeContract$_internal_binary_VoteFailure(msg);
         return (self, true);
     }
     
     ;; Receive VoteSuccess message
-    if (op == 2590601485) {
+    if (op == 1956838505) {
         var msg = in_msg~$VoteSuccess$_load();
         self~$SafeContract$_internal_binary_VoteSuccess(msg);
         return (self, true);

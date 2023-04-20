@@ -9,7 +9,7 @@ PROGRAM{
   DECLPROC __tact_context_get
   DECLPROC __tact_context_get_sender
   DECLPROC __tact_store_bool
-  DECLPROC __tact_dict_get_int_cell
+  DECLPROC __tact_dict_get_uint_cell
   DECLPROC __tact_dict_set_slice_int
   DECLPROC __tact_dict_get_slice_int
   DECLPROC __tact_slice_eq_bits
@@ -177,9 +177,9 @@ PROGRAM{
     SWAP
     1 STI
   }>
-  __tact_dict_get_int_cell PROCINLINE:<{
+  __tact_dict_get_uint_cell PROCINLINE:<{
     -ROT
-    DICTIGETREF
+    DICTUGETREF
     NULLSWAPIFNOT
     IF:<{
     }>ELSE<{
@@ -440,7 +440,7 @@ PROGRAM{
   $SafeRequestOperation$_load PROCINLINE:<{
     32 LDU
     SWAP
-    881562511 PUSHINT
+    2758425149 PUSHINT
     EQUAL
     129 THROWIFNOT
     $SafeOperations$_load INLINECALLDICT
@@ -474,7 +474,7 @@ PROGRAM{
   $VoteSuccess$_load PROCINLINE:<{
     32 LDU
     SWAP
-    2590601485 PUSHINT
+    1956838505 PUSHINT
     EQUAL
     129 THROWIFNOT
     $VoteArgs$_load INLINECALLDICT
@@ -482,7 +482,7 @@ PROGRAM{
   $VoteFailure$_load PROCINLINE:<{
     32 LDU
     SWAP
-    415108203 PUSHINT
+    1081778690 PUSHINT
     EQUAL
     129 THROWIFNOT
     $VoteArgs$_load INLINECALLDICT
@@ -887,9 +887,9 @@ PROGRAM{
     OVER
     REPEAT:<{
       s2 PUSH
-      257 PUSHINT
+      8 PUSHINT
       s2 PUSH
-      __tact_dict_get_int_cell INLINECALLDICT
+      __tact_dict_get_uint_cell INLINECALLDICT
       $SafeOperation$_load_opt INLINECALLDICT
       $SafeOperation$_not_null INLINECALLDICT
       3 BLKDROP
@@ -919,9 +919,14 @@ PROGRAM{
         GEQ
         THROWANYIFNOT
         31822 PUSHINT
-        SWAP
+        OVER
         31536000 PUSHINT
-        LESS
+        LEQ
+        THROWANYIFNOT
+        35981 PUSHINT
+        SWAP
+        3600 PUSHINT
+        GEQ
         THROWANYIFNOT
         INC
       }>ELSE<{
@@ -1006,9 +1011,9 @@ PROGRAM{
     s0 s2 XCHG
     REPEAT:<{
       DUP
-      257 PUSHINT
+      8 PUSHINT
       s3 PUSH
-      __tact_dict_get_int_cell INLINECALLDICT
+      __tact_dict_get_uint_cell INLINECALLDICT
       $SafeOperation$_load_opt INLINECALLDICT
       $SafeOperation$_not_null INLINECALLDICT
       s11 s13 XCHG
@@ -1069,7 +1074,7 @@ PROGRAM{
     289074767680806556846472852687671582181 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d506b427066336f454b43437562726f4a455a3476766e5a5a454b443958505253457541593242647664453671} PUSHSLICE
+    x{697066733a2f2f516d62533442386a555a724d7344566b5468504e4d484674576463544b4872706958726e684e784136784a693575} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -1103,7 +1108,7 @@ PROGRAM{
       TRUE
     }>
     DUP
-    881562511 PUSHINT
+    2758425149 PUSHINT
     EQUAL
     IFJMP:<{
       DROP
@@ -1113,7 +1118,7 @@ PROGRAM{
       TRUE
     }>
     DUP
-    415108203 PUSHINT
+    1081778690 PUSHINT
     EQUAL
     IFJMP:<{
       DROP
@@ -1123,7 +1128,7 @@ PROGRAM{
       TRUE
     }>
     DUP
-    2590601485 PUSHINT
+    1956838505 PUSHINT
     EQUAL
     IFJMP:<{
       DROP

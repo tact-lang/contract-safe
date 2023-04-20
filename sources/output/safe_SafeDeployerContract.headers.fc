@@ -135,8 +135,8 @@ slice $global_contractAddress((cell, cell) $s) impure inline;
 ;; $SafeContract$_init_child
 (cell, cell) $SafeContract$_init_child(cell sys', slice $owner, int $id) inline_ref;
 
-;; $SendParameters$_constructor_to_value_body
-((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_body(slice to, int value, cell body) inline;
+;; $SendParameters$_constructor_to_value_code_data_body
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_code_data_body(slice to, int value, cell code, cell data, cell body) inline;
 
 ;; $SafeDeployment$_constructor_remaining
 ((slice)) $SafeDeployment$_constructor_remaining(slice remaining) inline;

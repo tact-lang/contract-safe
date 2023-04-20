@@ -9,6 +9,7 @@ struct SafeDeployParams {
 }
 
 contract SafeDeployerContract with OwnableTransferable, Deployable {
+    override const storageReserve: Int = ton("0.1");
 
     owner: Address;
     devFee: Int as coins;
@@ -42,6 +43,8 @@ contract SafeDeployerContract with OwnableTransferable, Deployable {
         send(SendParameters{
             to: safeAddress,
             value: self.deployValue,
+            code: init.code,
+            data: init.data,
             body: SafeDeployment{
                 remaining: self.owner
             }.toCell()

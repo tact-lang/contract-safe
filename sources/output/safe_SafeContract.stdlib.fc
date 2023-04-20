@@ -64,8 +64,8 @@ builder __tact_store_bool(builder b, int v) inline {
     return b.store_int(v, 1);
 }
 
-cell __tact_dict_get_int_cell(cell d, int kl, int k) inline {
-    var (r, ok) = idict_get_ref?(d, kl, k);
+cell __tact_dict_get_uint_cell(cell d, int kl, int k) inline {
+    var (r, ok) = udict_get_ref?(d, kl, k);
     if (ok) {
         return r;
     } else {
