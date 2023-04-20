@@ -686,7 +686,7 @@ PROGRAM{
     289074767680806556846472852687671582181 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d64724d6f474663314a6a4875546867697a70505972416d4675784a5378386675446e634554646b4d61315862} PUSHSLICE
+    x{697066733a2f2f516d6551783554417a38715a6a78546b7532583748484653744b757339324e4859634b5951385151423962736861} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -697,6 +697,11 @@ PROGRAM{
   $VoteContract$_contract_router_internal PROCREF:<{
     c2 SAVE
     SAMEALTSAVE
+    SWAP
+    IFJMP:<{
+      DROP
+      TRUE
+    }>
     0 PUSHINT
     OVER
     SBITS
@@ -706,22 +711,16 @@ PROGRAM{
       DUP
       32 PLDU
     }>
-    s0 s2 XCHG
-    IFJMP:<{
-      2DROP
-      TRUE
-    }>
-    OVER
+    DUP
     1444115989 PUSHINT
     EQUAL
     IFJMP:<{
-      NIP
+      DROP
       $VoteDeploy$_load INLINECALLDICT
       NIP
       $VoteContract$_internal_binary_VoteDeploy INLINECALLDICT
       TRUE
     }>
-    SWAP
     0 EQINT
     IF:<{
       HASHSU
@@ -803,7 +802,7 @@ PROGRAM{
     $VoteContract$_contract_load INLINECALLDICT
     2 11 BLKSWAP
     $VoteContract$_contract_router_internal INLINECALLDICT
-    DROP
+    130 THROWIFNOT
     $VoteContract$_contract_store INLINECALLDICT
   }>
   recv_external PROC:<{

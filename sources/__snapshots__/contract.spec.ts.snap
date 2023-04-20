@@ -19,12 +19,12 @@ exports[`contract should create request 1`] = `
           "from": "@treasure(owner)",
           "to": "@safe",
           "type": "internal",
-          "value": 1000000000n,
+          "value": "1",
         },
       },
       {
         "$type": "processed",
-        "gasUsed": 7933n,
+        "gasUsed": 8027n,
       },
       {
         "$type": "sent",
@@ -37,7 +37,7 @@ exports[`contract should create request 1`] = `
             "from": "@safe",
             "to": "@treasure(owner)",
             "type": "internal",
-            "value": 991067000n,
+            "value": "0.990973",
           },
         ],
       },
@@ -55,19 +55,19 @@ exports[`contract should create request 2`] = `
         "$type": "received",
         "message": {
           "body": {
-            "cell": "x{FF7DE06C004_}",
+            "cell": "x{348B938F004_}",
             "type": "cell",
           },
           "bounce": true,
           "from": "@treasure(owner)",
           "to": "@safe",
           "type": "internal",
-          "value": 1000000000n,
+          "value": "1",
         },
       },
       {
         "$type": "processed",
-        "gasUsed": 15645n,
+        "gasUsed": 15755n,
       },
       {
         "$type": "sent",
@@ -79,9 +79,9 @@ exports[`contract should create request 2`] = `
             },
             "bounce": true,
             "from": "@safe",
-            "to": "kQBCZ83ospVpgb5IsQY0HC2bPHvICwfJ29uvMep0wFGx4Ry1",
+            "to": "kQDoW8_xse1Qzm1RCaW9cvhfkbR25IXVorhoz779sd8vjnWY",
             "type": "internal",
-            "value": 964918000n,
+            "value": "0.9648",
           },
         ],
       },
@@ -109,12 +109,12 @@ exports[`contract should create vote: deploy 1`] = `
           "from": "@treasure(safe)",
           "to": "@signer",
           "type": "internal",
-          "value": 1000000000n,
+          "value": "1",
         },
       },
       {
         "$type": "processed",
-        "gasUsed": 6235n,
+        "gasUsed": 6251n,
       },
     ],
   },
@@ -127,6 +127,10 @@ exports[`contract should create vote: double vote 1`] = `
     "$seq": 2,
     "events": [
       {
+        "$type": "storage-charged",
+        "amount": "0.00000001",
+      },
+      {
         "$type": "received",
         "message": {
           "body": {
@@ -137,7 +141,7 @@ exports[`contract should create vote: double vote 1`] = `
           "from": "@treasure(owner1)",
           "to": "@signer",
           "type": "internal",
-          "value": 1000000000n,
+          "value": "1",
         },
       },
       {
@@ -156,7 +160,7 @@ exports[`contract should create vote: double vote 1`] = `
           "from": "@signer",
           "to": "@treasure(owner1)",
           "type": "internal",
-          "value": 993609000n,
+          "value": "0.993627",
         },
       },
     ],
@@ -170,6 +174,10 @@ exports[`contract should create vote: invalid vote 1`] = `
     "$seq": 3,
     "events": [
       {
+        "$type": "storage-charged",
+        "amount": "0.00000001",
+      },
+      {
         "$type": "received",
         "message": {
           "body": {
@@ -180,7 +188,7 @@ exports[`contract should create vote: invalid vote 1`] = `
           "from": "@treasure(unknown)",
           "to": "@signer",
           "type": "internal",
-          "value": 1000000000n,
+          "value": "1",
         },
       },
       {
@@ -199,7 +207,7 @@ exports[`contract should create vote: invalid vote 1`] = `
           "from": "@signer",
           "to": "@treasure(unknown)",
           "type": "internal",
-          "value": 993609000n,
+          "value": "0.993627",
         },
       },
     ],
@@ -213,6 +221,10 @@ exports[`contract should create vote: vote 1`] = `
     "$seq": 1,
     "events": [
       {
+        "$type": "storage-charged",
+        "amount": "0.00000001",
+      },
+      {
         "$type": "received",
         "message": {
           "body": {
@@ -223,12 +235,12 @@ exports[`contract should create vote: vote 1`] = `
           "from": "@treasure(owner1)",
           "to": "@signer",
           "type": "internal",
-          "value": 1000000000n,
+          "value": "1",
         },
       },
       {
         "$type": "processed",
-        "gasUsed": 14372n,
+        "gasUsed": 14370n,
       },
       {
         "$type": "sent",
@@ -255,7 +267,7 @@ exports[`contract should create vote: vote 1`] = `
             "from": "@signer",
             "to": "@treasure(owner1)",
             "type": "internal",
-            "value": 984392000n,
+            "value": "0.984394",
           },
         ],
       },
@@ -270,6 +282,10 @@ exports[`contract should create vote: vote 2`] = `
     "$seq": 4,
     "events": [
       {
+        "$type": "storage-charged",
+        "amount": "0.00000001",
+      },
+      {
         "$type": "received",
         "message": {
           "body": {
@@ -280,12 +296,12 @@ exports[`contract should create vote: vote 2`] = `
           "from": "@treasure(owner2)",
           "to": "@signer",
           "type": "internal",
-          "value": 1000000000n,
+          "value": "1",
         },
       },
       {
         "$type": "processed",
-        "gasUsed": 19730n,
+        "gasUsed": 19728n,
       },
       {
         "$type": "sent",
@@ -312,7 +328,7 @@ exports[`contract should create vote: vote 2`] = `
             "from": "@signer",
             "to": "@treasure(owner2)",
             "type": "internal",
-            "value": 979034000n,
+            "value": "0.979036",
           },
         ],
       },
@@ -334,7 +350,7 @@ exports[`contract should create vote: vote 2`] = `
         "messages": [
           {
             "body": {
-              "cell": "x{CDF42430800AB60B6F3F99430109C97E1BE903020AA7211D122BF269A5ECE534A6217AE119500000002000000020000000000002AF8004_}
+              "cell": "x{9A69710D800AB60B6F3F99430109C97E1BE903020AA7211D122BF269A5ECE534A6217AE119500000002000000020000000000002AF8004_}
  x{817002_}
   x{BFC110A946B3DAEFF28A18D2229FEF53B35332178C251D1E2E378B6644A32D58F66_}
   x{BFD58423483C36A7B8008A14725B5E2995FDA383B56242AEE3ED40A25917C29B27E_}",
@@ -344,7 +360,7 @@ exports[`contract should create vote: vote 2`] = `
             "from": "@signer",
             "to": "@treasure(safe)",
             "type": "internal",
-            "value": 987441000n,
+            "value": "0.98742496",
           },
         ],
       },
@@ -372,12 +388,12 @@ exports[`contract should deploy correctly 1`] = `
           "from": "@treasure(owner)",
           "to": "@deployer",
           "type": "internal",
-          "value": 1000000000n,
+          "value": "1",
         },
       },
       {
         "$type": "processed",
-        "gasUsed": 7938n,
+        "gasUsed": 8186n,
       },
       {
         "$type": "sent",
@@ -387,11 +403,11 @@ exports[`contract should deploy correctly 1`] = `
               "cell": "x{AFF90F570000000000000000}",
               "type": "cell",
             },
-            "bounce": true,
+            "bounce": false,
             "from": "@deployer",
             "to": "@treasure(owner)",
             "type": "internal",
-            "value": 990866000n,
+            "value": "0.990618",
           },
         ],
       },
@@ -416,7 +432,7 @@ exports[`contract should fail vote: after completed 1`] = `
           "from": "@treasure(owner3)",
           "to": "@signer",
           "type": "internal",
-          "value": 1000000000n,
+          "value": "1",
         },
       },
       {
@@ -435,7 +451,7 @@ exports[`contract should fail vote: after completed 1`] = `
           "from": "@signer",
           "to": "@treasure(owner3)",
           "type": "internal",
-          "value": 994076000n,
+          "value": "0.994094",
         },
       },
     ],
@@ -462,12 +478,12 @@ exports[`contract should fail vote: deploy 1`] = `
           "from": "@treasure(safe)",
           "to": "@signer",
           "type": "internal",
-          "value": 1000000000n,
+          "value": "1",
         },
       },
       {
         "$type": "processed",
-        "gasUsed": 6235n,
+        "gasUsed": 6251n,
       },
     ],
   },
@@ -480,6 +496,10 @@ exports[`contract should fail vote: double vote 1`] = `
     "$seq": 2,
     "events": [
       {
+        "$type": "storage-charged",
+        "amount": "0.00000001",
+      },
+      {
         "$type": "received",
         "message": {
           "body": {
@@ -490,7 +510,7 @@ exports[`contract should fail vote: double vote 1`] = `
           "from": "@treasure(owner1)",
           "to": "@signer",
           "type": "internal",
-          "value": 1000000000n,
+          "value": "1",
         },
       },
       {
@@ -509,7 +529,7 @@ exports[`contract should fail vote: double vote 1`] = `
           "from": "@signer",
           "to": "@treasure(owner1)",
           "type": "internal",
-          "value": 993506000n,
+          "value": "0.993524",
         },
       },
     ],
@@ -523,6 +543,10 @@ exports[`contract should fail vote: invalid vote 1`] = `
     "$seq": 3,
     "events": [
       {
+        "$type": "storage-charged",
+        "amount": "0.00000001",
+      },
+      {
         "$type": "received",
         "message": {
           "body": {
@@ -533,7 +557,7 @@ exports[`contract should fail vote: invalid vote 1`] = `
           "from": "@treasure(unknown)",
           "to": "@signer",
           "type": "internal",
-          "value": 1000000000n,
+          "value": "1",
         },
       },
       {
@@ -552,7 +576,7 @@ exports[`contract should fail vote: invalid vote 1`] = `
           "from": "@signer",
           "to": "@treasure(unknown)",
           "type": "internal",
-          "value": 993506000n,
+          "value": "0.993524",
         },
       },
     ],
@@ -566,6 +590,10 @@ exports[`contract should fail vote: vote 1`] = `
     "$seq": 1,
     "events": [
       {
+        "$type": "storage-charged",
+        "amount": "0.00000001",
+      },
+      {
         "$type": "received",
         "message": {
           "body": {
@@ -576,12 +604,12 @@ exports[`contract should fail vote: vote 1`] = `
           "from": "@treasure(owner1)",
           "to": "@signer",
           "type": "internal",
-          "value": 1000000000n,
+          "value": "1",
         },
       },
       {
         "$type": "processed",
-        "gasUsed": 14511n,
+        "gasUsed": 14509n,
       },
       {
         "$type": "sent",
@@ -608,7 +636,7 @@ exports[`contract should fail vote: vote 1`] = `
             "from": "@signer",
             "to": "@treasure(owner1)",
             "type": "internal",
-            "value": 984253000n,
+            "value": "0.984255",
           },
         ],
       },
@@ -623,6 +651,10 @@ exports[`contract should fail vote: vote 2`] = `
     "$seq": 4,
     "events": [
       {
+        "$type": "storage-charged",
+        "amount": "0.00000001",
+      },
+      {
         "$type": "received",
         "message": {
           "body": {
@@ -633,12 +665,12 @@ exports[`contract should fail vote: vote 2`] = `
           "from": "@treasure(owner2)",
           "to": "@signer",
           "type": "internal",
-          "value": 1000000000n,
+          "value": "1",
         },
       },
       {
         "$type": "processed",
-        "gasUsed": 19769n,
+        "gasUsed": 19767n,
       },
       {
         "$type": "sent",
@@ -665,7 +697,7 @@ exports[`contract should fail vote: vote 2`] = `
             "from": "@signer",
             "to": "@treasure(owner2)",
             "type": "internal",
-            "value": 978995000n,
+            "value": "0.978997",
           },
         ],
       },
@@ -687,7 +719,7 @@ exports[`contract should fail vote: vote 2`] = `
         "messages": [
           {
             "body": {
-              "cell": "x{9895F337800AB60B6F3F99430109C97E1BE903020AA7211D122BF269A5ECE534A6217AE119500000003000000020000000000002AF8004_}
+              "cell": "x{18BE0C6B800AB60B6F3F99430109C97E1BE903020AA7211D122BF269A5ECE534A6217AE119500000003000000020000000000002AF8004_}
  x{817002_}
   x{BFC110A946B3DAEFF28A18D2229FEF53B35332178C251D1E2E378B6644A32D58F66_}
   x{BFD58423483C36A7B8008A14725B5E2995FDA383B56242AEE3ED40A25917C29B27E_}",
@@ -697,7 +729,7 @@ exports[`contract should fail vote: vote 2`] = `
             "from": "@signer",
             "to": "@treasure(safe)",
             "type": "internal",
-            "value": 987441000n,
+            "value": "0.98742496",
           },
         ],
       },

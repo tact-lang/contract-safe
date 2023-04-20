@@ -1,3 +1,7 @@
+#pragma version =0.4.3;
+#pragma allow-post-modification;
+#pragma compute-asm-ltr;
+
 #include "safe_VoteContract.headers.fc";
 #include "safe_VoteContract.stdlib.fc";
 #include "safe_VoteContract.constants.fc";
@@ -161,7 +165,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmdrMoGFc1JjHuThgizpPYrAmFuxJSx8fuDncETdkMa1Xb";
+    return "ipfs://QmeQx5TAz8qZjxTku2X7HHFStKus92NHYcKYQ8QQB9bsha";
 }
 
 _ lazy_deployment_completed() method_id {
@@ -173,6 +177,10 @@ _ lazy_deployment_completed() method_id {
 ;;
 
 ((cell, (slice, cell, int, int, int, (cell, int)), int, int, int), int) $VoteContract$_contract_router_internal((cell, (slice, cell, int, int, int, (cell, int)), int, int, int) self, int msg_bounced, slice in_msg) impure inline_ref {
+    ;; Handle bounced messages
+    if (msg_bounced) {
+        return (self, true);
+    }
     
     ;; Parse incoming message
     int op = 0;
@@ -180,10 +188,6 @@ _ lazy_deployment_completed() method_id {
         op = in_msg.preload_uint(32);
     }
     
-    ;; Handle bounced messages
-    if (msg_bounced) {
-        return (self, true);
-    }
     
     ;; Receive VoteDeploy message
     if (op == 1444115989) {
@@ -258,7 +262,7 @@ _ lazy_deployment_completed() method_id {
     int handled = self~$VoteContract$_contract_router_internal(msg_bounced, in_msg);
     
     ;; Throw if not handled
-    throw_unless(handled, 130);
+    throw_unless(130, handled);
     
     ;; Persist state
     $VoteContract$_contract_store(self);

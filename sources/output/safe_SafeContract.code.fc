@@ -1,3 +1,7 @@
+#pragma version =0.4.3;
+#pragma allow-post-modification;
+#pragma compute-asm-ltr;
+
 #include "safe_SafeContract.headers.fc";
 #include "safe_SafeContract.stdlib.fc";
 #include "safe_SafeContract.storage.fc";
@@ -140,7 +144,7 @@
 (((int, cell, int, int, (int, int, int))), ()) $SafeContract$_internal_binary_Deploy((int, cell, int, int, (int, int, int)) $self, (int) $deploy) impure inline {
     var ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock)) = $self;
     var ($deploy'queryId) = $deploy;
-    $global_reply($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId)));
+    ($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock))~$SafeContract$_fun_notify($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId)));
     return (($self'seqno, $self'owners, $self'ownersCount, $self'treshold, ($self'parameters'timeout, $self'parameters'requestPrice, $self'parameters'timelock)), ());
 }
 
@@ -189,7 +193,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmUcVRzPDcFZr4hZ9DcP8PSLvjFe2Cp2aVrJWTAMuLh6Yf";
+    return "ipfs://QmPkBpf3oEKCCubroJEZ4vvnZZEKD9XPRSEuAY2BdvdE6q";
 }
 
 _ lazy_deployment_completed() method_id {
@@ -201,6 +205,10 @@ _ lazy_deployment_completed() method_id {
 ;;
 
 ((int, cell, int, int, (int, int, int)), int) $SafeContract$_contract_router_internal((int, cell, int, int, (int, int, int)) self, int msg_bounced, slice in_msg) impure inline_ref {
+    ;; Handle bounced messages
+    if (msg_bounced) {
+        return (self, true);
+    }
     
     ;; Parse incoming message
     int op = 0;
@@ -208,10 +216,6 @@ _ lazy_deployment_completed() method_id {
         op = in_msg.preload_uint(32);
     }
     
-    ;; Handle bounced messages
-    if (msg_bounced) {
-        return (self, true);
-    }
     
     ;; Receive SafeDeployment message
     if (op == 1857061459) {
@@ -268,7 +272,7 @@ _ lazy_deployment_completed() method_id {
     int handled = self~$SafeContract$_contract_router_internal(msg_bounced, in_msg);
     
     ;; Throw if not handled
-    throw_unless(handled, 130);
+    throw_unless(130, handled);
     
     ;; Persist state
     $SafeContract$_contract_store(self);

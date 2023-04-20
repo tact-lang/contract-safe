@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: SafeContract
-BOC Size: 2046 bytes
+BOC Size: 2073 bytes
 
 # Types
-Total Types: 24
+Total Types: 26
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -29,9 +29,17 @@ Signature: `Deploy{queryId:uint64}`
 TLB: `deploy_ok#aff90f57 queryId:uint64 = DeployOk`
 Signature: `DeployOk{queryId:uint64}`
 
+## FactoryDeploy
+TLB: `factory_deploy#6d0ff13b queryId:uint64 cashback:address = FactoryDeploy`
+Signature: `FactoryDeploy{queryId:uint64,cashback:address}`
+
 ## ChangeOwner
-TLB: `change_owner#0f474d03 newOwner:address = ChangeOwner`
-Signature: `ChangeOwner{newOwner:address}`
+TLB: `change_owner#819dbe99 queryId:uint64 newOwner:address = ChangeOwner`
+Signature: `ChangeOwner{queryId:uint64,newOwner:address}`
+
+## ChangeOwnerOk
+TLB: `change_owner_ok#327b2b4a queryId:uint64 newOwner:address = ChangeOwnerOk`
+Signature: `ChangeOwnerOk{queryId:uint64,newOwner:address}`
 
 ## SafeParameters
 TLB: `_ timeout:uint32 requestPrice:coins timelock:uint32 = SafeParameters`

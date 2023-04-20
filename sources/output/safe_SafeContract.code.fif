@@ -4,6 +4,7 @@ PROGRAM{
   DECLPROC __tact_store_address
   DECLPROC __tact_create_address
   DECLPROC __tact_compute_contract_address
+  DECLPROC __tact_my_balance
   DECLPROC __tact_not_null
   DECLPROC __tact_context_get
   DECLPROC __tact_context_get_sender
@@ -46,6 +47,7 @@ PROGRAM{
   DECLPROC $VoteDeploy$_store_cell
   DECLPROC $SafeContract$_store
   DECLPROC $SafeContract$_load
+  DECLPROC $StateInit$_not_null
   DECLPROC $SafeParameters$_to_external
   DECLPROC $SafeOperation$_not_null
   DECLPROC $SafeOperationTransfer$_not_null
@@ -59,8 +61,7 @@ PROGRAM{
   DECLPROC $SafeContract$_contract_store
   DECLPROC $global_contractAddress
   DECLPROC $global_send
-  DECLPROC $SendParameters$_constructor_bounce_to_value_mode_body
-  DECLPROC $global_reply
+  DECLPROC $SendParameters$_constructor_bounce_to_value_mode_body_code_data
   DECLPROC $SendParameters$_constructor_value_to_mode_bounce_body
   DECLPROC $SafeContract$_fun_executeTransfer
   DECLPROC $SafeContract$_fun_executeParameters
@@ -70,6 +71,8 @@ PROGRAM{
   DECLPROC $SafeContract$_fun_seqno
   DECLPROC $SafeContract$_fun_isOwner
   DECLPROC $SafeContract$_fun_owners
+  DECLPROC $SafeContract$_fun_forward
+  DECLPROC $SafeContract$_fun_notify
   DECLPROC $VoteContract$_init_child
   DECLPROC $SendParameters$_constructor_to_value_mode
   DECLPROC $VoteArgs$_constructor_safe_owners_ownersCount_treshold_timeout_ops
@@ -153,6 +156,10 @@ PROGRAM{
     ENDC
     HASHCU
     __tact_create_address INLINECALLDICT
+  }>
+  __tact_my_balance PROCINLINE:<{
+    BALANCE
+    FIRST
   }>
   __tact_not_null PROCINLINE:<{
     DUP
@@ -518,6 +525,12 @@ PROGRAM{
     s3 s5 XCHG
     s3 s4 XCHG
   }>
+  $StateInit$_not_null PROCINLINE:<{
+    DUP
+    ISNULL
+    128 THROWIF
+    2 UNTUPLE
+  }>
   $SafeParameters$_to_external PROCINLINE:<{
   }>
   $SafeOperation$_not_null PROCINLINE:<{
@@ -707,20 +720,7 @@ PROGRAM{
     SWAP
     SENDRAWMSG
   }>
-  $SendParameters$_constructor_bounce_to_value_mode_body PROCINLINE:<{
-    PUSHNULL
-    PUSHNULL
-  }>
-  $global_reply PROCINLINE:<{
-    TRUE
-    __tact_context_get_sender INLINECALLDICT
-    0 PUSHINT
-    ROT
-    s0 s3 XCHG
-    66 PUSHINT
-    SWAP
-    $SendParameters$_constructor_bounce_to_value_mode_body INLINECALLDICT
-    $global_send INLINECALLDICT
+  $SendParameters$_constructor_bounce_to_value_mode_body_code_data PROCINLINE:<{
   }>
   $SendParameters$_constructor_value_to_mode_bounce_body PROCINLINE:<{
     s4 s4 s0 XCHG3
@@ -785,6 +785,35 @@ PROGRAM{
   }>
   $SafeContract$_fun_owners PROCREF:<{
     s5 PUSH
+  }>
+  $SafeContract$_fun_forward PROCREF:<{
+    PUSHNULL
+    PUSHNULL
+    s2 PUSH
+    ISNULL
+    NOT
+    IF:<{
+      2DROP
+      $StateInit$_not_null INLINECALLDICT
+      SWAP
+    }>ELSE<{
+      s2 POP
+    }>
+    s2 s4 XCHG
+    0 PUSHINT
+    s0 s3 XCHG
+    s0 s4 XCHG
+    66 PUSHINT
+    s2 s3 XCHG2
+    $SendParameters$_constructor_bounce_to_value_mode_body_code_data INLINECALLDICT
+    $global_send INLINECALLDICT
+  }>
+  $SafeContract$_fun_notify PROCINLINE:<{
+    __tact_context_get_sender INLINECALLDICT
+    SWAP
+    FALSE
+    PUSHNULL
+    $SafeContract$_fun_forward INLINECALLDICT
   }>
   $VoteContract$_init_child PROCREF:<{
     s0 s7 XCHG
@@ -1003,7 +1032,7 @@ PROGRAM{
   $SafeContract$_internal_binary_Deploy PROCINLINE:<{
     $DeployOk$_constructor_queryId INLINECALLDICT
     $DeployOk$_store_cell INLINECALLDICT
-    $global_reply INLINECALLDICT
+    $SafeContract$_fun_notify INLINECALLDICT
   }>
   %parameters PROC:<{
     $SafeContract$_contract_load INLINECALLDICT
@@ -1040,7 +1069,7 @@ PROGRAM{
     289074767680806556846472852687671582181 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d556356527a504463465a7234685a394463503850534c766a4665324370326156724a5754414d754c68365966} PUSHSLICE
+    x{697066733a2f2f516d506b427066336f454b43437562726f4a455a3476766e5a5a454b443958505253457541593242647664453671} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -1049,6 +1078,11 @@ PROGRAM{
     SWAP
   }>
   $SafeContract$_contract_router_internal PROCREF:<{
+    SWAP
+    IFJMP:<{
+      DROP
+      TRUE
+    }>
     0 PUSHINT
     OVER
     SBITS
@@ -1058,52 +1092,46 @@ PROGRAM{
       DUP
       32 PLDU
     }>
-    s0 s2 XCHG
-    IFJMP:<{
-      2DROP
-      TRUE
-    }>
-    OVER
+    DUP
     1857061459 PUSHINT
     EQUAL
     IFJMP:<{
-      NIP
+      DROP
       $SafeDeployment$_load INLINECALLDICT
       NIP
       $SafeContract$_internal_binary_SafeDeployment INLINECALLDICT
       TRUE
     }>
-    OVER
+    DUP
     881562511 PUSHINT
     EQUAL
     IFJMP:<{
-      NIP
+      DROP
       $SafeRequestOperation$_load INLINECALLDICT
       1 2 BLKDROP2
       $SafeContract$_internal_binary_SafeRequestOperation INLINECALLDICT
       TRUE
     }>
-    OVER
+    DUP
     415108203 PUSHINT
     EQUAL
     IFJMP:<{
-      NIP
+      DROP
       $VoteFailure$_load INLINECALLDICT
       1 7 BLKDROP2
       $SafeContract$_internal_binary_VoteFailure INLINECALLDICT
       TRUE
     }>
-    OVER
+    DUP
     2590601485 PUSHINT
     EQUAL
     IFJMP:<{
-      NIP
+      DROP
       $VoteSuccess$_load INLINECALLDICT
       1 7 BLKDROP2
       $SafeContract$_internal_binary_VoteSuccess INLINECALLDICT
       TRUE
     }>
-    SWAP
     2490013878 PUSHINT
     EQUAL
     IFJMP:<{
@@ -1136,7 +1164,7 @@ PROGRAM{
     $SafeContract$_contract_load INLINECALLDICT
     2 7 BLKSWAP
     $SafeContract$_contract_router_internal INLINECALLDICT
-    DROP
+    130 THROWIFNOT
     $SafeContract$_contract_store INLINECALLDICT
   }>
 }END>c

@@ -659,13 +659,13 @@
   dependencies:
     "@sinonjs/commons" "^2.0.0"
 
-"@tact-lang/compiler@1.1.0-beta.9":
-  version "1.1.0-beta.9"
-  resolved "https://registry.yarnpkg.com/@tact-lang/compiler/-/compiler-1.1.0-beta.9.tgz#017704f9c47bed0dfa874a26314460069be8059d"
-  integrity sha512-UtbE7xmKBpGG9+Kvi04wLoNoRSfc9Yl9KbPKCCBLaC0ptNXxH3ZlA/MiGj7BGwoVpbeMSE+ami8YOKD6HroBQQ==
+"@tact-lang/compiler@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@tact-lang/compiler/-/compiler-1.1.0.tgz#ebb2eaadc5be370f918e5179c23603c428339091"
+  integrity sha512-l7G6X8rZMGtOHPkowBMml5e4tyhp8nr645toene/8i5xRwrvvkYKc0CvUrh306GkDuxNPny8ghebhDP7GmFusQ==
   dependencies:
     "@ipld/dag-pb" "2.1.18"
-    "@tact-lang/opcode" "^0.0.12"
+    "@tact-lang/opcode" "^0.0.13"
     arg "^5.0.2"
     blockstore-core "1.0.5"
     change-case "^4.1.2"
@@ -680,30 +680,30 @@
     ton-crypto "^3.2.0"
     zod "^3.20.2"
 
-"@tact-lang/coverage@^0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@tact-lang/coverage/-/coverage-0.0.5.tgz#8da0d25f2a48638712fe746bfd05491d14773afa"
-  integrity sha512-1vWP2DyXDTMFrThdX+oYCHus+7FpAYTF2Jx0zEfHMJi0g6QL/4zCOkouEBFrvueOtsOiTQKGR+IFgUcNzXjnFw==
+"@tact-lang/coverage@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@tact-lang/coverage/-/coverage-0.0.6.tgz#d4fff38a7a1f633b24c09c26a2cd79bb8966ec9e"
+  integrity sha512-oo/fg02/Z6Ly2G3Ml4bm7jl0nzxFO+/01vbhgPUlODJgIHPRz0EAx9Qx/nMjLVDdcvqT5feyrTx1fIBUVZwNUw==
   dependencies:
-    "@tact-lang/opcode" "^0.0.12"
+    "@tact-lang/opcode" "^0.0.13"
     glob "^9.3.2"
     prando "^6.0.1"
     teslabot "^1.5.0"
     zod "^3.20.2"
 
-"@tact-lang/emulator@^3.4.1":
-  version "3.4.1"
-  resolved "https://registry.yarnpkg.com/@tact-lang/emulator/-/emulator-3.4.1.tgz#974fef4859ef8977dcbaa665c05f296410791ef6"
-  integrity sha512-+elgvFUCmjqBPWTFcxiyWQM+CxP+r8nqcd59HxJ2YkboiarC3IkjTcXkXAKIP9gMFfNRrbYjF1w/iC+5Mylgew==
+"@tact-lang/emulator@^4.0.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@tact-lang/emulator/-/emulator-4.1.0.tgz#3700e39343ebdfd8b4a18e47f223ae7babdfe758"
+  integrity sha512-0qrytl4aYYmNE1IjlpYx7HjAFz9bQq5Qen8rPkjAk1P0V1KCh9g7Jvfn8+eWEQvvHSFDGEaFgIDjhWZlCgJdKA==
   dependencies:
     prando "^6.0.1"
     teslabot "^1.5.0"
     zod "^3.20.2"
 
-"@tact-lang/opcode@^0.0.12":
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/@tact-lang/opcode/-/opcode-0.0.12.tgz#a186dc6ffaac91da39bdbf55dc28bd330be7a26b"
-  integrity sha512-iSLoENXb5KlD15d2XaH8omhSZFlmoF/uRMpblggnlt9WLxogCDNkMODyNS1EijhkhzBlAzXZIByFvWTLZda3bQ==
+"@tact-lang/opcode@^0.0.13":
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/@tact-lang/opcode/-/opcode-0.0.13.tgz#a168df5269809be7903f663fc216f0b9486a291a"
+  integrity sha512-4FGp1p3ahVrXr2QbyD2FqmnvXTMYapTlRJSPhj4O1L2yIq7dp0CkFL9EdKOCUfyirT0X5en78PHLfj0CuQGD7A==
 
 "@tsconfig/node10@^1.0.7":
   version "1.0.9"
